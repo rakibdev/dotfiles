@@ -1,0 +1,86 @@
+$foreground: #eaf2fc;
+$surface: #192a36;
+$primary: #7dc2f6;
+$primary-90: #004163;
+$primary-70: #2373a3;
+
+* {
+  all: unset;
+}
+
+.icon {
+  font-family: Material Icons Outlined;
+  font-size: 16px;
+}
+
+button {
+  padding: 8px;
+  border-radius: 30px;
+}
+
+button:hover {
+  background-color: rgba(125, 194, 246, 0.1);
+}
+
+.topbar {
+  border-radius: 30px;
+  color: $foreground;
+  background-color: $surface;
+  font: 14px Google Sans;
+}
+
+/* larger mouseout area */
+.topbar.open {
+  margin: 0 0 40px 300px;
+}
+
+.controls {
+  padding: 0 8px;
+}
+
+.music .progress trough {
+  min-width: 160px;
+  min-height: 24px;
+  border-radius: 30px;
+  background-color: $primary-90;
+}
+
+.music .progress highlight {
+  border-radius: 30px;
+  background-color: $primary-70;
+}
+
+.apps,
+.power-menu {
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.apps {
+  background-color: $surface;
+
+  .search {
+    padding: 0 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    margin-bottom: 8px;
+
+    .icon {
+      font-size: 20px;
+    }
+  }
+
+  .app {
+    border-radius: 10px;
+    padding: 0 16px;
+
+    &:first-child {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .icon {
+      background-repeat: no-repeat;
+      background-size: 40px;
+    }
+  }
+}
