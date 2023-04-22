@@ -1,0 +1,15 @@
+[
+  {
+    "key": "ctrl+s",
+    "command": "workbench.action.files.saveFiles"
+  },
+  {
+    "key": "ctrl+q",
+    "command": "-workbench.action.quit"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "-workbench.action.closeGroup",
+    "when": "activeEditorGroupEmpty && multipleEditorGroups"
+  }
+]
