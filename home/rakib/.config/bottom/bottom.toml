@@ -1,0 +1,19 @@
+[flags]
+group_processes = true
+mem_as_value = true
+enable_gpu_memory = true
+hide_table_gap = true
+
+[[row]]
+  ratio=30
+  [[row.child]]
+  type="mem"
+  [[row.child]]
+  type="cpu"
+  [[row.child]]
+  type="temp"
+[[row]]
+  ratio=70
+  [[row.child]]
+  type="proc"
+  default=true
