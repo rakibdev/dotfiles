@@ -1,0 +1,131 @@
+:root {
+  --surface: rgba(255, 255, 255, 0.1);
+  --primary: #006493;
+  --background: #141c23;
+}
+
+* {
+  font-family: Google Sans !important;
+}
+
+/* change app start flash color */
+#tabbrowser-tabpanels,
+#tabbrowser-tabpanels[pendingpaint],
+browser {
+  background-color: var(--background) !important;
+}
+
+#navigator-toolbox {
+  /* toolbar one line */
+  display: flex;
+  flex-direction: row-reverse;
+
+  border-bottom: none !important;
+}
+
+#titlebar {
+  flex-grow: 1;
+}
+/* hide bookmark toolbar */
+#PersonalToolbar {
+  display: none;
+}
+
+.toolbarbutton-icon {
+  --toolbarbutton-border-radius: 10px;
+}
+
+/* search toolbar */
+#nav-bar {
+  background-color: transparent !important;
+}
+#forward-button {
+  display: none;
+}
+#developer-button {
+  display: none;
+}
+
+/* search */
+#urlbar-container:not(:focus-within) {
+  min-width: 240px !important;
+}
+#urlbar {
+  --urlbar-height: 100% !important;
+}
+#urlbar-background {
+  /* remove focus outline */
+  outline: none !important;
+  /* remove autocomplete opened shadow */
+  box-shadow: none !important;
+}
+.urlbar-page-action {
+  border-radius: 30px !important;
+}
+#tracking-protection-icon-container,
+#urlbar-go-button,
+#identity-box,
+#nav-bar-overflow-button {
+  display: none;
+}
+/* appears when doing ctrl+k */
+#urlbar-search-mode-indicator {
+  height: 32px;
+  margin: auto 8px auto 0;
+  border-radius: 30px !important;
+  background-color: var(--surface) !important;
+}
+
+/* tabs */
+.tab-background {
+  border-radius: 30px !important;
+}
+.tab-background[selected='true'] {
+  background-color: var(--surface) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* tabs material 3 mono icon */
+.tab-icon-stack {
+  background-color: var(--primary);
+  border-radius: 30px;
+  overflow: hidden;
+  margin-right: 4px;
+}
+.tab-icon-image {
+  mix-blend-mode: luminosity;
+  margin-inline-end: 0 !important;
+}
+/* sound playing icon */
+.tab-icon-overlay {
+  display: none;
+}
+
+/* "playing" label */
+.tab-secondary-label {
+  display: none;
+}
+
+/* tab scroll buttons */
+#scrollbutton-up,
+#scrollbutton-down {
+  display: none;
+}
+#alltabs-button {
+  display: none;
+}
+
+/* menupopup: context menu
+  panel: toolbar menu */
+menupopup,
+panel {
+  --panel-border-radius: 10px !important;
+  /* remove outline. only context menu */
+  --panel-border-color: transparent !important;
+}
+
+menuseparator,
+toolbarseparator {
+  display: none;
+}
