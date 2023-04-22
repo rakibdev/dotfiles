@@ -1,0 +1,91 @@
+{
+  "window.title": " ",
+  "window.titleBarStyle": "custom",
+  "window.dialogStyle": "custom",
+
+  "workbench.colorTheme": "Material Code",
+  "workbench.iconTheme": "eq-material-theme-icons-light",
+  "workbench.startupEditor": "none",
+  "workbench.activityBar.visible": false,
+  "workbench.layoutControl.enabled": false,
+  "workbench.list.mouseWheelScrollSensitivity": 6,
+  "workbench.settings.editor": "json",
+
+  "editor.fontFamily": "SF Mono",
+  "editor.fontSize": 16,
+  "editor.tabSize": 2,
+  "editor.lineNumbers": "off",
+  "editor.renderWhitespace": "none",
+  "editor.hover.enabled": false,
+  "editor.minimap.enabled": false,
+  "editor.guides.bracketPairs": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.suggestFontSize": 14,
+  "editor.suggestSelection": "recentlyUsed",
+  "editor.mouseWheelScrollSensitivity": 6,
+  "editor.copyWithSyntaxHighlighting": false,
+  "editor.accessibilitySupport": "off",
+  "editor.formatOnSave": true,
+  "breadcrumbs.enabled": false,
+  "problems.decorations.enabled": false,
+
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.rightClickBehavior": "copyPaste",
+  "terminal.integrated.enablePersistentSessions": false,
+
+  "update.mode": "manual",
+  "update.showReleaseNotes": false,
+  "security.workspace.trust.enabled": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "telemetry.telemetryLevel": "off",
+  "extensions.ignoreRecommendations": true,
+
+  // to use keymap using wtype. e.g. close tab (ctrl+w) with mouse side button.
+  // https://github.com/Microsoft/vscode/issues/23991
+  "keyboard.dispatch": "keyCode",
+
+  "files.enableTrash": false,
+  "files.exclude": {
+    "**/build": true,
+    "**/node_modules": true
+  },
+
+  "git.confirmSync": false,
+
+  "prettier.semi": false,
+  "prettier.printWidth": 120,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "none",
+  "prettier.arrowParens": "avoid",
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "javascript.suggest.autoImports": false,
+  "typescript.surveys.enabled": false,
+
+  "githd.editor.disabled": true,
+  "githd.logView.displayExpressStatus": false
+}
