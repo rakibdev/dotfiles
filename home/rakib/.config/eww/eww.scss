@@ -50,9 +50,8 @@ button:hover {
   background-color: $primary-70;
 }
 
-.apps,
-.power-menu {
-  border-radius: 10px;
+.apps {
+  border-radius: 16px;
   padding: 16px;
 }
 
@@ -71,7 +70,7 @@ button:hover {
   }
 
   .app {
-    border-radius: 10px;
+    border-radius: 16px;
     padding: 0 16px;
 
     &:first-child {

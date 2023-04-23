@@ -93,7 +93,7 @@
         (for app in apps
           (button :onclick "./apps.sh close & eval '${app.exec}'"
             (box :spacing 16 :space-evenly false
-              (image :path {app.icon?:"./arch.png"} :image-width 24 :image-height 24)
+              (image :path {app.icon} :image-width 30 :image-height 30)
               (label :text {app.label} :limit-width 30)
             )
           )
