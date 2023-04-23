@@ -1,65 +1,64 @@
-(defvar open true)
+(defvar topbar_open true)
 (defvar poll_media false)
 (defvar apps "[]")
-(defpoll media :interval "500ms" :initial "{}" :run-while {open && poll_media} "./media.sh")
-(defpoll bluetooth :interval "1s" :initial "{}" :run-while open "./bluetooth.sh")
-(defpoll general :interval "500ms" :initial "{}" :run-while open "./general.sh")
-(defpoll eww_run_while_fix :interval "24h" "sleep 1s && eww update open=false")
+(defpoll media :interval "500ms" :initial "{}" :run-while {topbar_open && poll_media} "./media.sh")
+(defpoll bluetooth :interval "1s" :initial "{}" :run-while topbar_open "./bluetooth.sh")
+(defpoll general :interval "500ms" :initial "{}" :run-while topbar_open "./general.sh")
+(defpoll eww_run_while_fix :interval "24h" "sleep 1s && eww update topbar_open=false")
 
-(defwindow bar
+(defwindow topbar
   :monitor 0
   :geometry (geometry :anchor "top right")
-  (eventbox :onhover "eww update open=true" :onhoverlost "eww update open=false"
-    (box :space-evenly false :class { open ? "topbar open" :  "topbar" }
-      (revealer :reveal open :transition "slideleft" :duration "100ms"
-        (box :space-evenly false
-          (controls)
-          (music)
-        )
+  (eventbox :onhover "eww update topbar_open=true" :onhoverlost "eww update topbar_open=false"
+    (box :space-evenly false :class "body ${topbar_open ? "open" : ""}"
+      (revealer :reveal topbar_open :transition "slideleft" :duration "100ms"
+        (controls)
       )
-      (button :class "icon" "keyboard_arrow_left")
+      (button :class "icon" :visible {!topbar_open} "keyboard_arrow_left")
       {eww_run_while_fix}
     )
   )
 )
 
 (defwidget controls []
-  (box :class "controls" :spacing 16 :space-evenly false
+  (box :spacing 16 :space-evenly false
     (box
       (button :class "icon" :onclick "systemctl poweroff" "power_settings_new" )
       (button :class "icon" :onclick "systemctl reboot" "restart_alt" )
     )
     (label :tooltip {general.today} :text {general.time})
-    (box :space-evenly false :valign "center"
-      (label :class "icon" :text "memory")
-      (label :text {EWW_CPU.avg})
-    )
-    (eventbox :onclick "foot --title=system-monitor btm"
-      (box :space-evenly false :valign "center"
-        (label :class "icon" :text "straighten")
-        (label :text {EWW_RAM.used_mem_perc})
+    (eventbox :onclick "foot --title=system-monitor btm &"
+      (box :valign "center" :space-evenly false
+        (label :class "icon start" :text "memory")
+        (label :text "${round(EWW_CPU.avg, 0)}% · ${EWW_TEMPS.AMDGPU_EDGE}°C")
+      ))
+    (eventbox :onclick "foot --title=system-monitor btm &"
+      (box :space-evenly false :valign "center" :tooltip "Ram: ${round(EWW_RAM.total_mem / 1000000000, 1)}GB"
+        (label :class "icon start" :text "straighten")
+        (label :text "${round(EWW_RAM.used_mem / 1000000000, 1)} GB")
       )
     )
     (eventbox
       :onscroll "if [ '{}' == 'up' ]; then amixer -q sset Master 10%+; else amixer -q sset Master 10%-; fi"
       (box :space-evenly false :valign "center"
-        (label :class "icon" :text "volume_up")
+        (label :class "icon start" :text "volume_up")
         (label :text {general.volume})
       )
     )
     (eventbox
       :tooltip {bluetooth.connected_device}
       :onclick "./bluetooth.sh toggle &"
-      (box :space-evenly false :valign "center"
+      (box :class "button" :space-evenly false :valign "center"
         (label :class "icon" :text {strlength(bluetooth.connected_device) > 0 ? "bluetooth_connected" : "bluetooth"})
         (label :text "${bluetooth.battery}%" :visible {strlength(bluetooth.connected_device) > 0})
       )
     )
+    (media)
   )
 )
 
-(defwidget music []
-  (box :class "music" :space-evenly false
+(defwidget media []
+  (box :class "media" :visible {strlength(media.label) > 0} :space-evenly false
     (eventbox
       :onscroll "if [ '{}' == 'up' ]; then ./media.sh next; else ./media.sh previous; fi"
       (button :class "icon" :onclick "./media.sh play-pause" {media.status == "Playing" ? "music_note" : "play_arrow"})
@@ -85,7 +84,7 @@
 (defwidget apps []
   (box :class "apps" :orientation "vertical" :space-evenly false
     (box :class "search" :height 44 :space-evenly false
-      (label :class "icon" :text "search")
+      (label :class "icon start" :text "search")
       (input :onchange "./apps.sh query {}" :onaccept "./apps.sh close & eval '${apps[0]?.exec}'" :timeout "500ms")
     )
     (scroll :width 300 :height 300

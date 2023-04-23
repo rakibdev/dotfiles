@@ -22,40 +22,52 @@ button:hover {
   background-color: rgba(125, 194, 246, 0.1);
 }
 
-.topbar {
-  border-radius: 30px;
-  color: $foreground;
+tooltip.background {
   background-color: $surface;
-  font: 14px Google Sans;
-}
-
-/* larger mouseout area */
-.topbar.open {
-  margin: 0 0 40px 300px;
-}
-
-.controls {
-  padding: 0 8px;
-}
-
-.music .progress trough {
-  min-width: 160px;
-  min-height: 24px;
   border-radius: 30px;
-  background-color: $primary-90;
 }
 
-.music .progress highlight {
-  border-radius: 30px;
-  background-color: $primary-70;
+tooltip label {
+  color: $primary;
+  margin: 0 4px;
+}
+
+.icon.start {
+  margin-right: 4px;
+}
+
+.topbar {
+  .body {
+    background-color: $surface;
+    color: $primary;
+    border-radius: 30px;
+    font: 14px Google Sans;
+  }
+
+  .body.open {
+    padding: 0 8px;
+    /* larger mouseout area */
+    margin: 0 0 40px 100px;
+  }
+}
+
+.media .progress {
+  trough {
+    min-width: 160px;
+    min-height: 24px;
+    border-radius: 30px;
+    background-color: $primary-90;
+  }
+
+  highlight {
+    border-radius: 30px;
+    background-color: $primary-70;
+  }
 }
 
 .apps {
   border-radius: 16px;
-  padding: 16px;
-}
-
-.apps {
+  padding: 16px 16px 0 16px;
   background-color: $surface;
 
   .search {

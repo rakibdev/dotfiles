@@ -1,5 +1,5 @@
 cancel () {
-    echo "{}"
+    echo '{ "label": "" }'
     exit 0
 }
 
