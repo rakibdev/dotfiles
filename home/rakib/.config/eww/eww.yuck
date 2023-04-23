@@ -39,17 +39,18 @@
       )
     )
     (eventbox
-      :onscroll "if [ '{}' == 'up' ]; then amixer -q sset Master 10%+; else amixer -q sset Master 10%-; fi"
+      :onscroll "if [ '{}' == 'up' ]; then wpctl set-volume @DEFAULT_SINK@ 10%+; else wpctl set-volume @DEFAULT_SINK@ 10%-; fi"
       (box :space-evenly false :valign "center"
         (label :class "icon start" :text "volume_up")
-        (label :text {general.volume})
+        (label :text "${general.volume}%")
       )
     )
     (eventbox
       :tooltip {bluetooth.connected_device}
       :onclick "./bluetooth.sh toggle &"
       (box :class "button" :space-evenly false :valign "center"
-        (label :class "icon" :text {strlength(bluetooth.connected_device) > 0 ? "bluetooth_connected" : "bluetooth"})
+        (label :class "icon" :visible {!bluetooth.enabled} :text "bluetooth_disabled")
+        (label :class "icon" :visible {bluetooth.enabled} :text {strlength(bluetooth.connected_device) > 0 ? "bluetooth_connected" : "bluetooth"})
         (label :text "${bluetooth.battery}%" :visible {strlength(bluetooth.connected_device) > 0})
       )
     )

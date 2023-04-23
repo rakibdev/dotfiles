@@ -13,12 +13,14 @@ $primary-70: #2373a3;
   font-size: 16px;
 }
 
-button {
+button,
+.button {
   padding: 8px;
   border-radius: 30px;
 }
 
-button:hover {
+button:hover,
+.button:hover {
   background-color: rgba(125, 194, 246, 0.1);
 }
 

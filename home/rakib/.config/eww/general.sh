@@ -1,5 +1,5 @@
 time=$(date '+%I:%M')
 today=$(date '+%A, %b %d')
-volume=$(amixer sget Master | grep 'Front Left:' | awk -F'[][]' '{ print $2 }')
+volume=$(wpctl get-volume @DEFAULT_SINK@ | tr -d -c 0-9 | sed 's/^0//')
 
 echo '{ "time":"'$time'", "today":"'$today'", "volume":"'$volume'" }'
