@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Open Terminal</name>
+	<submenu></submenu>
+	<unique-id>1673204532732458-1</unique-id>
+	<command>foot</command>
+	<description>Foot terminal toolbar shortcut.</description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+</actions>
