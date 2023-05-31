@@ -11,5 +11,15 @@
     "key": "ctrl+w",
     "command": "-workbench.action.closeGroup",
     "when": "activeEditorGroupEmpty && multipleEditorGroups"
+  },
+  {
+    "key": "alt+left",
+    "command": "workbench.action.navigateBack",
+    "when": "canNavigateBack"
+  },
+  {
+    "key": "alt+right",
+    "command": "workbench.action.navigateForward",
+    "when": "canNavigateForward"
   }
 ]
