@@ -1,5 +1,6 @@
 $foreground: #eaf2fc;
 $surface: #192a36;
+$surface-2: rgba(125, 194, 246, 0.1);
 $primary: #7dc2f6;
 $primary-90: #004163;
 $primary-70: #2373a3;
@@ -9,19 +10,20 @@ $primary-70: #2373a3;
 }
 
 .icon {
-  font-family: Material Icons Outlined;
-  font-size: 16px;
+  font: 16px Material Icons Outlined;
 }
 
-button,
-.button {
+.icon.start {
+  margin-right: 4px;
+}
+
+button {
   padding: 8px;
   border-radius: 30px;
 }
 
-button:hover,
-.button:hover {
-  background-color: rgba(125, 194, 246, 0.1);
+button:hover {
+  background-color: $surface-2;
 }
 
 tooltip.background {
@@ -30,20 +32,16 @@ tooltip.background {
 }
 
 tooltip label {
-  color: $primary;
+  color: $foreground;
   margin: 0 4px;
-}
-
-.icon.start {
-  margin-right: 4px;
 }
 
 .topbar {
   .body {
-    background-color: $surface;
-    color: $primary;
-    border-radius: 30px;
     font: 14px Google Sans;
+    border-radius: 30px;
+    background-color: $surface;
+    color: $foreground;
   }
 
   .body.open {
@@ -55,7 +53,7 @@ tooltip label {
 
 .media .progress {
   trough {
-    min-width: 160px;
+    min-width: 164px;
     min-height: 24px;
     border-radius: 30px;
     background-color: $primary-90;
@@ -68,32 +66,18 @@ tooltip label {
 }
 
 .apps {
-  border-radius: 16px;
   padding: 16px 16px 0 16px;
+  border-radius: 16px;
   background-color: $surface;
 
   .search {
     padding: 0 16px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 30px;
     margin-bottom: 8px;
+    border-radius: 30px;
+    background-color: $surface-2;
 
     .icon {
       font-size: 20px;
-    }
-  }
-
-  .app {
-    border-radius: 16px;
-    padding: 0 16px;
-
-    &:first-child {
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .icon {
-      background-repeat: no-repeat;
-      background-size: 40px;
     }
   }
 }

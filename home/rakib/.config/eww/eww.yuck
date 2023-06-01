@@ -1,60 +1,58 @@
-(defvar topbar_open true)
+(defvar topbar_opened true)
 (defvar poll_media false)
 (defvar apps "[]")
-(defpoll media :interval "500ms" :initial "{}" :run-while {topbar_open && poll_media} "./media.sh")
-(defpoll bluetooth :interval "1s" :initial "{}" :run-while topbar_open "./bluetooth.sh")
-(defpoll general :interval "500ms" :initial "{}" :run-while topbar_open "./general.sh")
-(defpoll eww_run_while_fix :interval "24h" "sleep 1s && eww update topbar_open=false")
+(defpoll media :interval "500ms" :initial "{}" :run-while {topbar_opened && poll_media} "./media.sh")
+(defpoll bluetooth :interval "1s" :initial "{}" :run-while topbar_opened "./bluetooth.sh")
+(defpoll general :interval "500ms" :initial "{}" :run-while topbar_opened "./general.sh")
+
+; https://github.com/elkowar/eww/issues/691
+(defpoll prevent_run_while_autostart :interval "24h" "sleep 1s && eww update topbar_opened=false")
 
 (defwindow topbar
   :monitor 0
   :geometry (geometry :anchor "top right")
-  (eventbox :onhover "eww update topbar_open=true" :onhoverlost "eww update topbar_open=false"
-    (box :space-evenly false :class "body ${topbar_open ? "open" : ""}"
-      (revealer :reveal topbar_open :transition "slideleft" :duration "100ms"
-        (controls)
+  (eventbox :onhover "eww update topbar_opened=true" :onhoverlost "eww update topbar_opened=false"
+    (box :class "body ${topbar_opened ? "open" : ""}" :space-evenly false
+      (revealer :reveal topbar_opened :transition "slideleft" :duration "100ms"
+        (box :spacing 16 :space-evenly false
+          (box
+            (button :class "icon" :onclick "systemctl poweroff" "power_settings_new" )
+            (button :class "icon" :onclick "systemctl reboot" "restart_alt" )
+          )
+          (label :tooltip {general.today} :text {general.time})
+          (eventbox :onclick "foot --title=system-monitor btm &"
+            (box :space-evenly false
+              (label :class "icon start" :text "memory")
+              (label :text "${round(EWW_CPU.avg, 0)}% · ${EWW_TEMPS.AMDGPU_EDGE}°C")
+            )
+          )
+          (eventbox :onclick "foot --title=system-monitor btm &"
+            (box :tooltip "Ram: ${round(EWW_RAM.total_mem / 1000000000, 1)}GB" :space-evenly false
+              (label :class "icon start" :text "straighten")
+              (label :text "${round(EWW_RAM.used_mem / 1000000000, 1)} GB")
+            )
+          )
+          (eventbox
+            :onscroll "if [ '{}' == 'up' ]; then ./general.sh volume-up; else ./general.sh volume-down; fi"
+            :onclick "./general.sh switch-audio-sink"
+            (box :tooltip {general.audio_sink} :space-evenly false
+              (label :class "icon start" :text "volume_up")
+              (label :text "${general.volume}%")
+            )
+          )
+          (eventbox :onclick "./bluetooth.sh toggle &"
+            (box :tooltip {bluetooth.connected_device} :space-evenly false
+              (label :class "icon" :visible {!bluetooth.enabled} :text "bluetooth_disabled")
+              (label :class "icon" :visible {bluetooth.enabled} :text {strlength(bluetooth.connected_device) > 0 ? "bluetooth_connected" : "bluetooth"})
+              (label :text "${bluetooth.battery}%" :visible {strlength(bluetooth.connected_device) > 0})
+            )
+          )
+          (media)
+        )
       )
-      (button :class "icon" :visible {!topbar_open} "keyboard_arrow_left")
-      {eww_run_while_fix}
+      (button :class "icon" :visible {!topbar_opened} "keyboard_arrow_left")
+      {prevent_run_while_autostart}
     )
-  )
-)
-
-(defwidget controls []
-  (box :spacing 16 :space-evenly false
-    (box
-      (button :class "icon" :onclick "systemctl poweroff" "power_settings_new" )
-      (button :class "icon" :onclick "systemctl reboot" "restart_alt" )
-    )
-    (label :tooltip {general.today} :text {general.time})
-    (eventbox :onclick "foot --title=system-monitor btm &"
-      (box :valign "center" :space-evenly false
-        (label :class "icon start" :text "memory")
-        (label :text "${round(EWW_CPU.avg, 0)}% · ${EWW_TEMPS.AMDGPU_EDGE}°C")
-      ))
-    (eventbox :onclick "foot --title=system-monitor btm &"
-      (box :space-evenly false :valign "center" :tooltip "Ram: ${round(EWW_RAM.total_mem / 1000000000, 1)}GB"
-        (label :class "icon start" :text "straighten")
-        (label :text "${round(EWW_RAM.used_mem / 1000000000, 1)} GB")
-      )
-    )
-    (eventbox
-      :onscroll "if [ '{}' == 'up' ]; then wpctl set-volume @DEFAULT_SINK@ 10%+; else wpctl set-volume @DEFAULT_SINK@ 10%-; fi"
-      (box :space-evenly false :valign "center"
-        (label :class "icon start" :text "volume_up")
-        (label :text "${general.volume}%")
-      )
-    )
-    (eventbox
-      :tooltip {bluetooth.connected_device}
-      :onclick "./bluetooth.sh toggle &"
-      (box :class "button" :space-evenly false :valign "center"
-        (label :class "icon" :visible {!bluetooth.enabled} :text "bluetooth_disabled")
-        (label :class "icon" :visible {bluetooth.enabled} :text {strlength(bluetooth.connected_device) > 0 ? "bluetooth_connected" : "bluetooth"})
-        (label :text "${bluetooth.battery}%" :visible {strlength(bluetooth.connected_device) > 0})
-      )
-    )
-    (media)
   )
 )
 
@@ -80,9 +78,6 @@
   :monitor 0
   :focusable true
   :geometry (geometry :anchor "center center")
-  (apps))
-
-(defwidget apps []
   (box :class "apps" :orientation "vertical" :space-evenly false
     (box :class "search" :height 44 :space-evenly false
       (label :class "icon start" :text "search")
