@@ -3,7 +3,7 @@ switch_audio_sink() {
     available_sinks=$(pactl list short sinks | cut -f 2)
     for sink in $available_sinks; do
         [ -z "$first_sink" ] && first_sink=$sink
-        if [[ "$sink" == "$current_sink" ]]; then
+        if [ "$sink" == "$current_sink" ]; then
             next=1
             elif [ -n "$next"  ]; then
             new_sink=$sink
@@ -11,7 +11,6 @@ switch_audio_sink() {
         fi
     done
     [ -z "$new_sink" ] && new_sink=$first_sink
-    echo "$new_sink"
     pactl set-default-sink "$new_sink"
 }
 

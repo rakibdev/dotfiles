@@ -13,6 +13,7 @@ metadata=$(eval "$properties string:Metadata")
 track_id=$(echo $metadata | pcregrep -o1 'mpris:trackid" variant object path "(\S+)"')
 title=$(echo $metadata | pcregrep -o1 'xesam:title" variant string "(.*)"')
 title="${title//\"/\\\"}" # escape double quotes
+art_url=$(echo $metadata | pcregrep -o1 'xesam:title" variant string "(.*)"')
 duration=$(echo $metadata | pcregrep -o1 'mpris:length" variant int64 (\d+)')
 status=$(eval "$properties string:PlaybackStatus" | pcregrep -o1 '"(\w+)"$')
 
@@ -30,6 +31,7 @@ if [ "$action" == "progress" ]; then
     eval "$bus $interface.SetPosition objpath:'$track_id' int64:$microseconds >/dev/null"
 fi
 
+# firefox doesn't support position. https://bugzilla.mozilla.org/show_bug.cgi?id=1659199
 # position=$(eval "$properties string:Position" | pcregrep -o1 '\s(\d+)$ ')
 # if [[ $position -gt 1 ]] then
 #     progress=$((($position * 100) / $duration))
