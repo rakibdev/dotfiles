@@ -11,9 +11,9 @@ interface='org.mpris.MediaPlayer2.Player'
 properties="$bus org.freedesktop.DBus.Properties.Get string:$interface"
 metadata=$(eval "$properties string:Metadata")
 track_id=$(echo $metadata | pcregrep -o1 'mpris:trackid" variant object path "(\S+)"')
-title=$(echo $metadata | pcregrep -o1 'xesam:title" variant string "(.*)"')
+title=$(echo $metadata | pcregrep -o1 'xesam:title" variant string "(.*?)"')
 title="${title//\"/\\\"}" # escape double quotes
-art_url=$(echo $metadata | pcregrep -o1 'xesam:title" variant string "(.*)"')
+art_url=$(echo $metadata | pcregrep -o1 'mpris:artUrl" variant string "(.*)"')
 duration=$(echo $metadata | pcregrep -o1 'mpris:length" variant int64 (\d+)')
 status=$(eval "$properties string:PlaybackStatus" | pcregrep -o1 '"(\w+)"$')
 
@@ -37,4 +37,4 @@ fi
 #     progress=$((($position * 100) / $duration))
 # fi
 
-echo '{ "label":"'"$title"'", "status":"'$status'", "progress":'${progress:=0}' }'
+echo '{ "label":"'"$title"'", "art_url":"'$art_url'", "status":"'$status'", "progress":'${progress:=0}' }'
