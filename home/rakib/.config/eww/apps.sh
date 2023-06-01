@@ -49,10 +49,13 @@ load_apps() {
     eww update apps="[$apps]"
 }
 
+if [ "$1" == "open" ]; then
+    eww open apps_window
+    hyprctl dispatch submap window
+    load_apps
+fi
 if [ "$1" == "close" ]; then
     eww close apps_window
     hyprctl dispatch submap reset
-    load_apps
 fi
-
 if [ "$1" == "query" ]; then load_apps $2; fi
