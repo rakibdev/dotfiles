@@ -22,5 +22,6 @@ time=$(date '+%I:%M')
 today=$(date '+%A, %b %d')
 volume=$(wpctl get-volume @DEFAULT_SINK@ | tr -d -c 0-9 | sed 's/^0//')
 audio_sink=$(pactl get-default-sink)
+uptime=$(uptime | awk -F'( |,|:)+' '{print $6"h,",$7"m"}')
 
-echo '{ "time":"'$time'", "today":"'$today'", "volume":"'$volume'", "audio_sink":"'$audio_sink'" }'
+echo '{ "time":"'$time'", "today":"'$today'", "volume":"'$volume'", "audio_sink":"'$audio_sink'", "uptime":"'$uptime'" }'

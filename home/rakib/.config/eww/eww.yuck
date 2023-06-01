@@ -15,7 +15,7 @@
     (box :class "body ${topbar_opened ? "open" : ""}" :space-evenly false
       (revealer :reveal topbar_opened :transition "slideleft" :duration "100ms"
         (box :spacing 16 :space-evenly false
-          (box
+          (box :tooltip "Uptime: ${general.uptime}"
             (button :class "icon" :onclick "systemctl poweroff" "power_settings_new" )
             (button :class "icon" :onclick "systemctl reboot" "restart_alt" )
           )
@@ -57,14 +57,14 @@
 )
 
 (defwidget media []
-  (box :class "media" :visible {strlength(media.label) > 0} :space-evenly false
+  (box :class "media" :space-evenly false
     (eventbox
       :onscroll "if [ '{}' == 'up' ]; then ./media.sh next; else ./media.sh previous; fi"
       (button :class "icon" :onclick "./media.sh play-pause" {media.status == "Playing" ? "music_note" : "play_arrow"})
     )
     (overlay :class "progress"
       (eventbox :onhoverlost "eww update poll_media=true"
-        (scale :min 0 :max 100 :value {media.progress?:0} :onchange "eww update poll_media=false && ./media.sh progress {}" :timeout "500ms")
+        (scale :style "background-image: url('${media.art_url}')" :min 0 :max 100 :value {media.progress?:0} :onchange "eww update poll_media=false && ./media.sh progress {}" :timeout "500ms")
       )
       (label
         :limit-width 16
