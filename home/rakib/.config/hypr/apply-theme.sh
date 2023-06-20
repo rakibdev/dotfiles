@@ -6,8 +6,6 @@ cursor_size="$(grep 'gtk-cursor-theme-size' "$config" | sed 's/.*\s*=\s*//')"
 font_name="$(grep 'gtk-font-name' "$config" | sed 's/.*\s*=\s*//')"
 gnome_schema="org.gnome.desktop.interface"
 
-echo $cursor_size
-
 # force reload
 gsettings set "$gnome_schema" gtk-theme ""
 gsettings set "$gnome_schema" icon-theme ""
