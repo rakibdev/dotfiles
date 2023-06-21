@@ -18,4 +18,4 @@ fi
 
 if bluetoothctl show | grep -q "Powered: yes"; then enabled=true; fi
 
-echo '{ "enabled": "'${enabled:-false}'", "mac_address":"'$mac_address'", "connected_device":"'$connected_device'", "battery":'${battery:=0}' }'
+echo '{ "enabled": "'${enabled:-"false"}'", "mac_address":"'$mac_address'", "connected_device":"'$connected_device'", "battery":'${battery:=0}' }'
