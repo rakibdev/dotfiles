@@ -1,5 +1,6 @@
 declare -A flags=(
     [/opt/visual-studio-code-insiders/code-insiders]="--ozone-platform=wayland --use-gl=desktop"
+    [thunar]="~/Downloads"
 )
 
 declare -A icons=(
@@ -47,6 +48,7 @@ load_apps() {
     
     apps=$(echo $apps | sed -e 's/}{/},{/g')
     eww update apps="[$apps]"
+    echo $apps
 }
 
 if [ "$1" == "open" ]; then
@@ -59,3 +61,6 @@ if [ "$1" == "close" ]; then
     hyprctl dispatch submap reset
 fi
 if [ "$1" == "query" ]; then load_apps $2; fi
+
+
+# todo: display custom scripts like youtube-backup.js
