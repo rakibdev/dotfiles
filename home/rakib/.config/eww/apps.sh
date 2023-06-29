@@ -1,13 +1,17 @@
 declare -A flags=(
-    [/opt/visual-studio-code-insiders/code-insiders]="--ozone-platform=wayland --use-gl=desktop"
     [thunar]="~/Downloads"
+    [/opt/visual-studio-code-insiders/code-insiders]="--ozone-platform=wayland --no-sandbox"
+    
+    # Enable Settings > "Use system title bar and borders" when using Wayland
+    # Ungoogled Chromium flags
+    [/usr/bin/chromium]="--ozone-platform-hint=wayland --custom-ntp=chrome://new-tab-page --bookmark-bar-ntp=never --show-avatar-button=never --remove-tabsearch-button --remove-grab-handle --hide-tab-close-buttons --disable-sharing-hub"
 )
 
 declare -A icons=(
-    [visual-studio-code-insiders]="./icons/visual-studio-code.png"
-    [firefox-developer-edition]="./icons/firefox.png"
     [foot]="./icons/terminal.png"
     [org.xfce.thunar]="./icons/files.png"
+    [visual-studio-code-insiders]="./icons/visual-studio-code.png"
+    [chromium]="./icons/chromium.png"
 )
 
 validate_icon() {
@@ -48,7 +52,6 @@ load_apps() {
     
     apps=$(echo $apps | sed -e 's/}{/},{/g')
     eww update apps="[$apps]"
-    echo $apps
 }
 
 if [ "$1" == "open" ]; then
