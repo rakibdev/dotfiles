@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name        Material 3
-// @version     1.0
+// @name        Material 3 Dark Theme
+// @version     1.1
 // @match *://*/*
 // @run-at document-start
 // ==/UserScript==
@@ -114,18 +114,30 @@ if (location.href.includes('libreddit.kavin.rocks')) {
 if (location.href.includes('stackoverflow.com')) {
   css += `
   body.unified-theme {
-    --theme-background-color: var(--background);
-    --theme-content-background-color: var(--background);
-    --highlight-bg: var(--surface); /* code highlight */
+    --theme-background-color: var(--background) !important;
+    --theme-content-background-color: var(--background) !important;
+    --highlight-bg: var(--surface) !important; /* code highlight */
   }
 
   #question-header .question-hyperlink {
-    color: var(--primary);
+    color: var(--primary) !important;
   }
   `
   document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('theme-dark')
   })
+}
+
+if (location.href.includes('app.raindrop.io')) {
+  css += `
+  :root {
+    --background-color: var(--background);
+    --accent-color: var(--primary);
+  }
+  [data-theme=night] {
+    --sidebar-background-color: var(--background);
+  }
+  `
 }
 
 const style = document.createElement('style')
