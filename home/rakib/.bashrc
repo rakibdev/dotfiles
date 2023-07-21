@@ -7,7 +7,8 @@ reset="\[\e[0m\]"
 PS1="$blue\u $green\w$reset "
 
 alias ls='ls --color=auto'
-alias dotfiles="GIT_DIR=$HOME/Downloads/dotfiles.git/ GIT_WORK_TREE=/ code-insiders /"
+alias poolkit=/usr/lib/xfce-polkit/xfce-polkit
+alias dotfiles="GIT_DIR=$HOME/Downloads/dotfiles.git/ GIT_WORK_TREE=/ git"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
