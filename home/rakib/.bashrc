@@ -13,7 +13,3 @@ alias dotfiles="GIT_DIR=$HOME/Downloads/dotfiles.git/ GIT_WORK_TREE=/ git"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH=$BUN_INSTALL/bin:$PATH
-
-# node
-export NODE_BIN="$HOME/Downloads/node-pointer-compression/bin"
-export PATH=$NODE_BIN:$PATH
