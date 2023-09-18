@@ -1,3 +1,3 @@
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-[ "$(tty)" = "/dev/tty1" ] && exec Hyprland
+[ "$(tty)" = "/dev/tty1" ] && Hyprland
