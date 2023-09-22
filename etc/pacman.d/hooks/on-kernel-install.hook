@@ -1,0 +1,11 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = amd-ucode
+Target = linux*
+
+[Action]
+Description = Generating EFI boot entries...
+When = PostTransaction
+Exec = /etc/pacman.d/hooks/on-kernel-install

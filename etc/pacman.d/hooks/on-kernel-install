@@ -1,0 +1,40 @@
+#!/bin/bash
+
+red='\033[31m'
+colorOff='\033[0m'
+cancel() {
+        echo -e "$red$1$colorOff"
+        exit 1
+}
+
+efiDisk="/dev/sda1"
+osDisk="/dev/sda2"
+efiLabel=$(echo $efiDisk | grep -o '[a-z\/]*')
+efiPart=$(echo $efiDisk | grep -o '[0-9]$')
+osUuid=$(blkid -s UUID -o value $osDisk)
+label="Arch Linux"
+
+mount $efiDisk /efi
+
+cd /boot
+load_kernels() {
+        initramfs=$(find . -name "*linux*.img" -type f -printf "%P\n")
+        vmlinuz=$(find . -name "vmlinuz*" -type f -printf "%P\n")
+}
+load_kernels
+if [ -z "$initramfs" ] || [ -z "$vmlinuz" ]; then
+        source /usr/lib/booster/regenerate_images
+        load_kernels
+fi
+
+ucode=$(find . -name "*-ucode.img" -type f -printf "%P\n")
+if [ -z "$ucode" ]; then cancel "ucode missing"; fi
+
+cp -f $ucode /efi
+mv -f $initramfs /efi
+mv -f $vmlinuz /efi
+
+efibootmgr | pcregrep -o1 "(\d)\* $label" | while read -r bootnum; do
+    efibootmgr -b "$bootnum" -B > /dev/null
+done
+efibootmgr --create --disk $efiLabel --part $efiPart --label "$label" --loader /$vmlinuz --unicode "root=UUID=$osUuid rw initrd=\\$ucode initrd=\\$initramfs"
