@@ -155,7 +155,6 @@ const googleSearchResultRedirect = () => {
   redditLinks.forEach(link => {
     link.href = link.href.replace('www.reddit.com', 'sh.reddit.com')
   })
-  debugger
 
   // disable link tracking redirection
   // https://github.com/raffaeleflorio/anti_rwt/blob/master/anti_rwt.js
