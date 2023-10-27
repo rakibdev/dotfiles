@@ -20,6 +20,10 @@ const applyCss = theme => {
     border: 2px solid transparent;
     background-clip: padding-box;
   }
+
+  body {
+    font-family: Google Sans;
+  }
   `
 
   if (location.href.includes('google.com')) {
