@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name        Custom
+// @description Material You & More.
 // @match       https://*/*
 // @grant       GM_xmlhttpRequest
 // @grant       GM_getValue
@@ -174,16 +175,25 @@ const applyCss = theme => {
 
   if (location.href.includes('discord.com/channels')) {
     css += `
-    :root {
-      --primary-600: ${theme.primary_surface} !important; /* content */
-      --primary-630: ${theme.primary_surface} !important; /* sidebar, discord loader */
-      --primary-660: ${theme.primary_surface} !important; /* sidebar bottom bar */
-      --primary-700: ${theme.primary_surface} !important; /* navigation rail */
-      --channeltextarea-background: ${theme.primary_surface_2}; /* message field */
-      --background-modifier-selected: ${theme.primary_surface_2} !important; /* list selected */
-      --green-360: ${theme.primary_40} !important; /* icon */
-      --green-430: ${theme.primary_40} !important; /* button */
-      --brand-experiment: ${theme.primary_40} !important; /* unread message alert */
+    .theme-dark {
+      --background-primary: ${theme.primary_surface} !important; /* chat */
+      --background-secondary: ${theme.primary_surface} !important; /* drawers */
+      --background-secondary-alt: ${theme.primary_surface} !important; /* account menu */
+      --background-tertiary: ${theme.primary_surface} !important; /* search input */
+      --channeltextarea-background: ${theme.primary_surface_2} !important; /* chat input */
+    }
+    `
+  }
+
+  if (location.href.includes('facebook.com')) {
+    css += `
+    .__fb-dark-mode {
+      --web-wash: ${theme.primary_surface}; /* body */
+      --nav-bar-background: ${theme.primary_surface}; /* top bar */
+      --card-background: ${theme.primary_surface}; /* account menu */
+      --messenger-card-background: ${theme.primary_surface}; /* messanger body */
+      --surface-background: ${theme.primary_surface_2}; /* posts */
+      --comment-background: ${theme.primary_surface_3}; /* comment, search input */
     }
     `
   }
