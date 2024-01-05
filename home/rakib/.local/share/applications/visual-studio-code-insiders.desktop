@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Code Insiders
+Icon=visual-studio-code-insiders
+Exec=code-insiders --no-sandbox --unity-launch --ozone-platform=wayland

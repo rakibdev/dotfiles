@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Thunar
+Icon=org.xfce.thunar
+Exec=bash -c "thunar ~/Downloads"

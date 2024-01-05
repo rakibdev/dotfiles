@@ -8,6 +8,9 @@
 // @run-at      document-start
 // ==/UserScript==
 
+const style = document.createElement('style')
+document.head.appendChild(style)
+
 const applyCss = theme => {
   let css = `
   ::-webkit-scrollbar {
@@ -130,6 +133,23 @@ const applyCss = theme => {
       --color-btn-primary-text: ${theme.primary_10};
       --color-primer-border-active: ${theme.primary_40}; /* tab bottom indicator */
     }
+
+    .search-results-page {
+      background-color: ${theme.primary_surface} !important;
+    }
+    [data-testid="results-list"] > div > :is(div:first-child, a:last-child) {
+      background-color: ${theme.primary_surface_2};
+      border: 0;
+    }
+
+    /* code block */
+    .snippet-clipboard-content {
+      background-color: ${theme.primary_surface_2} !important;
+    }
+    .markdown-body pre {
+      background-color: ${theme.primary_surface_2} !important;
+      border-radius: 20px !important;
+    }
     `
   }
 
@@ -173,7 +193,7 @@ const applyCss = theme => {
     `
   }
 
-  if (location.href.includes('discord.com/channels')) {
+  if (location.href.includes('discord.com')) {
     css += `
     .theme-dark {
       --background-primary: ${theme.primary_surface} !important; /* chat */
@@ -198,14 +218,12 @@ const applyCss = theme => {
     `
   }
 
-  const style = document.createElement('style')
   style.textContent = css
-  document.head.appendChild(style)
 }
 
-const getTheme = () => JSON.parse(GM_getValue('theme'))
+const getTheme = () => JSON.parse(GM_getValue('theme') || '{}')
 const cachedTheme = getTheme()
-if (cachedTheme) applyCss(cachedTheme)
+if (cachedTheme['primary_40']) applyCss(cachedTheme)
 
 const themeFile = 'file:///home/rakib/.cache/system-ui/theme.json'
 GM_xmlhttpRequest({
@@ -213,7 +231,8 @@ GM_xmlhttpRequest({
   url: themeFile,
   onload: response => {
     GM_setValue('theme', response.responseText)
-    if (!cachedTheme) applyCss(getTheme())
+    const theme = getTheme()
+    if (theme['primary_40'] != cachedTheme['primary_40']) applyCss(theme)
   },
   onerror() {
     console.error(`Failed to read ${themeFile}`)
