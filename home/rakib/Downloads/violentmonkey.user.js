@@ -221,21 +221,23 @@ const applyCss = theme => {
   style.textContent = css
 }
 
-const getTheme = () => JSON.parse(GM_getValue('theme') || '{}')
-const cachedTheme = getTheme()
+const cachedTheme = JSON.parse(GM_getValue('theme') || '{}')
 if (cachedTheme['primary_40']) applyCss(cachedTheme)
 
-const themeFile = 'file:///home/rakib/.cache/system-ui/theme.json'
+const appDataFile = 'file:///home/rakib/.config/system-ui/app-data.json'
 GM_xmlhttpRequest({
   method: 'GET',
-  url: themeFile,
+  url: appDataFile,
   onload: response => {
-    GM_setValue('theme', response.responseText)
-    const theme = getTheme()
-    if (theme['primary_40'] != cachedTheme['primary_40']) applyCss(theme)
+    const data = JSON.parse(response.responseText)
+    const theme = data['theme']
+    if (theme['primary_40'] != cachedTheme['primary_40']) {
+      GM_setValue('theme', JSON.stringify(data['theme']))
+      applyCss(theme)
+    }
   },
   onerror() {
-    console.error(`Failed to read ${themeFile}`)
+    console.error(`Failed to read ${appDataFile}`)
   }
 })
 
