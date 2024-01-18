@@ -5,17 +5,18 @@
   "workbench.colorTheme": "Material Code",
   "workbench.iconTheme": "eq-material-theme-icons-light",
   "workbench.startupEditor": "none",
-  "workbench.activityBar.visible": false,
-  "workbench.layoutControl.enabled": false,
+  "workbench.activityBar.location": "hidden",
   "workbench.list.mouseWheelScrollSensitivity": 6,
-  "workbench.settings.editor": "json",
+  "workbench.localHistory.maxFileEntries": 10,
+  "workbench.commandPalette.history": 10,
+  "workbench.colorCustomizations": {},
 
   "editor.fontFamily": "SF Mono",
   "editor.fontSize": 16,
   "editor.tabSize": 2,
   "editor.lineNumbers": "off",
   "editor.renderWhitespace": "none",
-  "editor.hover.enabled": false,
+  "editor.semanticHighlighting.enabled": true,
   "editor.minimap.enabled": false,
   "editor.guides.bracketPairs": true,
   "editor.bracketPairColorization.enabled": true,
@@ -25,13 +26,17 @@
   "editor.copyWithSyntaxHighlighting": false,
   "editor.accessibilitySupport": "off",
   "editor.formatOnSave": true,
+  "editor.scrollbar.horizontal": "hidden",
   "breadcrumbs.enabled": false,
   "problems.decorations.enabled": false,
+  "editor.find.addExtraSpaceOnTop": false,
 
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.rightClickBehavior": "copyPaste",
   "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.shellIntegration.history": 10,
+  "terminal.integrated.stickyScroll.enabled": false,
 
   "update.mode": "manual",
   "update.showReleaseNotes": false,
@@ -39,8 +44,10 @@
   "security.workspace.trust.untrustedFiles": "open",
   "telemetry.telemetryLevel": "off",
   "extensions.ignoreRecommendations": true,
+  "extensions.autoCheckUpdates": false,
+  "workbench.enableExperiments": false,
 
-  // to use keymap using wtype. e.g. close tab (ctrl+w) with mouse side button.
+  // fix for wtype. wtype is used for closing tab with mouse side button.
   // https://github.com/Microsoft/vscode/issues/23991
   "keyboard.dispatch": "keyCode",
 
@@ -50,7 +57,13 @@
     "**/node_modules": true
   },
 
+  "git.untrackedChanges": "separate",
   "git.confirmSync": false,
+  "git.inputValidationSubjectLength": 120,
+
+  "javascript.suggest.autoImports": false,
+  "vue.server.runtime": "bun",
+  "npm.packageManager": "bun",
 
   "prettier.semi": false,
   "prettier.printWidth": 120,
@@ -63,11 +76,8 @@
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "[html]": {
-    "editor.defaultFormatter": "vscode.html-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -76,15 +86,13 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
-  "javascript.suggest.autoImports": false,
-  "typescript.surveys.enabled": false,
+  "codeium.enableCodeLens": false,
 
-  "githd.editor.disabled": true,
-  "githd.logView.displayExpressStatus": false
+  "clangd.path": "/home/rakib/.config/Code - Insiders/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/16.0.2/clangd_16.0.2/bin/clangd"
 }
