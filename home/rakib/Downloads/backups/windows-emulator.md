@@ -37,7 +37,7 @@ To launch already installed diskfile just remove "-cdrom" argument.
 
 ### File sharing
 
-[Mount qcow2 file using qemu-nbd](https://wiki.archlinux.org/title/QEMU#Mounting_a_partition_from_a_qcow2_image)
+[Mount qcow2 diskfile using qemu-nbd.](https://wiki.archlinux.org/title/QEMU#Mounting_a_partition_from_a_qcow2_image)
 
 ## Troubleshooting
 
