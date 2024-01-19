@@ -35,16 +35,9 @@ Now install Windows normally.
 
 To launch already installed diskfile just remove "-cdrom" argument.
 
-### File sharing: Host > Guest
+### File sharing
 
-- Get host IP address `ip addr show`. E.g. **192.162.0.103**
-- Start host server:
-
-```
-bun -e 'const server = Bun.serve({ port: 3000, fetch() { return new Response(Bun.file("~/Downloads/app.exe")); } }); console.log(server.url.href);'
-```
-
-- In guest browser type `192.162.0.103:3000` to download shared file.
+[Mount qcow2 file using qemu-nbd](https://wiki.archlinux.org/title/QEMU#Mounting_a_partition_from_a_qcow2_image)
 
 ## Troubleshooting
 
