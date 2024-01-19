@@ -2,12 +2,13 @@
 
 ### Step 1: Run
 
-- Download Windows 11 ISO. I'm using "tiny11.iso" because it's lightweight & already has TPM, Secure Boot requirements bypassed in regedit.
+- Download Windows 11 ISO. I'm using "tiny11.iso" because it's lightweight (10GB after installed, actual Windows 20GB) & already has TPM, Secure Boot requirements bypassed in regedit.
 - `sudo pacman -S qemu-base`
 - `qemu-img create -f qcow2 windows-11.qcow2 20G` creates a 20GB diskfile. Initially should be about 180KB, because qcow2 format allocates space when needed.
 - Run QEMU for first time
-  - -enable-kvm: Increases performance. Make sure to enable virtualization (also known as SVM for AMD) in BIOS.
-  - -m: Memory 3GB
+  - **-enable-kvm**: For performance. Make sure to enable virtualization (also known as SVM for AMD) in BIOS.
+  - **-m**: RAM.
+  - **-usb -device usb-tablet**: Fixes guest cursor pointer misaligned with host cursor.
 
 ```
 qemu-system-x86_64 \
@@ -16,7 +17,8 @@ qemu-system-x86_64 \
   -cpu host \
   -smp cpus=2,cores=2,threads=1 \
   -cdrom 'tiny11.iso' \
-  -hda 'windows-11.qcow2'
+  -hda 'windows-11.qcow2' \
+  -usb -device usb-tablet
 ```
 
 Output:
@@ -24,14 +26,25 @@ Output:
 
 ### Step 2: View
 
-- `sudo pacman -S remmina libvncserver`
-- `remmina -c vnc://:5900`
+- `sudo pacman -S gtk-vnc`
+- `gvncviewer ::1:5900`
 
 Now install Windows normally.
 
 ### Step 3: Reuse
 
-Just remove "-cdrom" argument to launch already installed diskfile.
+To launch already installed diskfile just remove "-cdrom" argument.
+
+### File sharing: Host > Guest
+
+- Get host IP address `ip addr show`. E.g. **192.162.0.103**
+- Start host server:
+
+```
+bun -e 'const server = Bun.serve({ port: 3000, fetch() { return new Response(Bun.file("~/Downloads/app.exe")); } }); console.log(server.url.href);'
+```
+
+- In guest browser type `192.162.0.103:3000` to download shared file.
 
 ## Troubleshooting
 
