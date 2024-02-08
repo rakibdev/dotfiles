@@ -11,6 +11,14 @@
 const style = document.createElement('style')
 document.head.appendChild(style)
 
+const rgbFromHex = hex => {
+  hex = hex.replace('#', '')
+  const r = parseInt(hex.substring(0, 2), 16)
+  const g = parseInt(hex.substring(2, 4), 16)
+  const b = parseInt(hex.substring(4, 6), 16)
+  return r + ',' + g + ',' + b
+}
+
 const applyCss = theme => {
   let css = `
   ::-webkit-scrollbar {
@@ -30,7 +38,7 @@ const applyCss = theme => {
   }
   `
 
-  if (location.href.includes('google.com')) {
+  if (location.href.includes('google.com/search')) {
     css += `
     body,
     .sfbg, /* topbar */
@@ -54,9 +62,37 @@ const applyCss = theme => {
     #sfooter {
       display: none;
     }`
-  }
+  } else if (location.href.includes('gemini.google.com/app')) {
+    css += `
+    :root .dark-theme {
+      --bard-color-main-container-background: ${theme.primary_surface} !important;
+      --bard-color-response-container-background: ${theme.primary_surface_2} !important;
+      --bard-color-surface-container: ${theme.primary_surface_2} !important;
+      --bard-color-surface: ${theme.primary_surface_2} !important;
+      --bard-color-surface-container-high: ${theme.primary_surface_2} !important; /* menu */
+      --bard-color-surface-container-highest: ${theme.primary_surface_3} !important; /* card hover background */
+      --bard-color-main-container-background-rgb: ${rgbFromHex(theme.primary_surface)} !important;
+      --bard-color-response-container-background-rgb: ${rgbFromHex(theme.primary_surface_2)} !important;
+      
+      /* foreground */
+      --bard-color-on-primary: ${theme.neutral_20} !important;
+      --bard-color-on-surface: ${theme.neutral_20} !important;
 
-  if (location.href.includes('youtube.com')) {
+      --bard-color-input-area-buttons-selected-background: ${theme.primary_80} !important; /* selected draft */
+      --bard-color-primary: ${theme.primary_40} !important; /* selected chip */
+      --bard-color-surface-container-low: ${theme.primary_surface_3} !important; /* unselected draft */
+      --bard-color-draft-chip-background: ${theme.primary_surface_4} !important; /* unselected chip */
+      
+      --bard-color-link-button: ${theme.primary_40} !important;
+      --mat-menu-container-color: ${theme.primary_surface_2} !important;
+    }
+
+    /* topbar border */
+    .chat-history:before {
+      content: none !important;
+    }
+    `
+  } else if (location.href.includes('youtube.com')) {
     css += `
     html[dark],
     [dark] {
@@ -76,9 +112,7 @@ const applyCss = theme => {
     #cinematics canvas {
       display: none;
     }`
-  }
-
-  if (location.href.includes('music.youtube.com')) {
+  } else if (location.href.includes('music.youtube.com')) {
     css += `
     html {
       --ytmusic-general-background-c: ${theme.primary_surface} !important; /* navigation rail, appbar */
@@ -110,9 +144,7 @@ const applyCss = theme => {
       --ytmusic-play-button-size: 100px !important;
     }
     `
-  }
-
-  if (location.href.includes('github.com')) {
+  } else if (location.href.includes('github.com')) {
     css += `
     html, body {
       height: 100%;
@@ -151,9 +183,7 @@ const applyCss = theme => {
       border-radius: 20px !important;
     }
     `
-  }
-
-  if (location.href.includes('stackoverflow.com')) {
+  } else if (location.href.includes('stackoverflow.com')) {
     css += `
     body.unified-theme {
       --theme-background-color: ${theme.primary_surface} !important;
@@ -168,9 +198,7 @@ const applyCss = theme => {
     document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.add('theme-dark')
     })
-  }
-
-  if (location.href.includes('sh.reddit.com')) {
+  } else if (location.href.includes('sh.reddit.com')) {
     css += `
     .theme-beta {
       --color-neutral-background: ${theme.primary_surface} !important; /* body */
@@ -179,9 +207,7 @@ const applyCss = theme => {
       --color-neutral-background-strong: ${theme.primary_surface_2} !important; /* menu */
     }
     `
-  }
-
-  if (location.href.includes('app.raindrop.io')) {
+  } else if (location.href.includes('app.raindrop.io')) {
     css += `
     :root {
       --background-color: ${theme.primary_surface};
@@ -191,9 +217,7 @@ const applyCss = theme => {
       --sidebar-background-color: ${theme.primary_surface};
     }
     `
-  }
-
-  if (location.href.includes('discord.com')) {
+  } else if (location.href.includes('discord.com')) {
     css += `
     .theme-dark {
       --background-primary: ${theme.primary_surface} !important; /* chat */
@@ -203,9 +227,7 @@ const applyCss = theme => {
       --channeltextarea-background: ${theme.primary_surface_2} !important; /* chat input */
     }
     `
-  }
-
-  if (location.href.includes('facebook.com')) {
+  } else if (location.href.includes('facebook.com')) {
     css += `
     .__fb-dark-mode {
       --web-wash: ${theme.primary_surface}; /* body */

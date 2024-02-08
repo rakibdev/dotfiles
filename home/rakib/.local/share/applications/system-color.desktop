@@ -1,5 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=System Color
-Icon=kcoloredit
-Exec=foot --hold bash -c ~/.local/share/applications/system-color.sh
