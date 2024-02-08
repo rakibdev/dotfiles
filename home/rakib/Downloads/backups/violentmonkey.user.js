@@ -73,7 +73,7 @@ const applyCss = theme => {
       --bard-color-surface-container-highest: ${theme.primary_surface_3} !important; /* card hover background */
       --bard-color-main-container-background-rgb: ${rgbFromHex(theme.primary_surface)} !important;
       --bard-color-response-container-background-rgb: ${rgbFromHex(theme.primary_surface_2)} !important;
-      
+
       /* foreground */
       --bard-color-on-primary: ${theme.neutral_20} !important;
       --bard-color-on-surface: ${theme.neutral_20} !important;
@@ -82,7 +82,7 @@ const applyCss = theme => {
       --bard-color-primary: ${theme.primary_40} !important; /* selected chip */
       --bard-color-surface-container-low: ${theme.primary_surface_3} !important; /* unselected draft */
       --bard-color-draft-chip-background: ${theme.primary_surface_4} !important; /* unselected chip */
-      
+
       --bard-color-link-button: ${theme.primary_40} !important;
       --mat-menu-container-color: ${theme.primary_surface_2} !important;
     }
@@ -92,7 +92,7 @@ const applyCss = theme => {
       content: none !important;
     }
     `
-  } else if (location.href.includes('youtube.com')) {
+  } else if (location.href.includes('www.youtube.com')) {
     css += `
     html[dark],
     [dark] {

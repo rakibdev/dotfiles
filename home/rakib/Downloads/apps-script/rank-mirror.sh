@@ -1,0 +1,1 @@
+https://wiki.archlinux.org/title/mirrors#List_by_speed
