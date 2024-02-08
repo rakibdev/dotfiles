@@ -1,0 +1,7 @@
+dialog.background {
+  background-color: @primary_surface_2;
+}
+
+dialog entry {
+  background-color: @primary_surface_3;
+}

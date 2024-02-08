@@ -1,0 +1,9 @@
+/* new tab */
+window.background.chromium {
+  background-color: @primary_surface;
+}
+
+/* tabstrip */
+window.background.chromium menubar {
+  background-color: @primary_surface_0;
+}

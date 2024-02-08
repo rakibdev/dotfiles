@@ -1,0 +1,34 @@
+@import url('colors.css');
+@import url('button.css');
+@import url('menu.css');
+@import url('entry.css');
+@import url('dialog.css');
+@import url('chromium.css');
+
+.background {
+  color: @neutral_20;
+  background-color: @primary_surface;
+}
+
+:disabled {
+  opacity: 0.5;
+}
+
+scrollbar slider {
+  min-width: 4px;
+  border-radius: 24px;
+  background-color: @primary_surface_4;
+}
+
+scrollbar button {
+  padding: 0;
+}
+
+tooltip.background {
+  background-color: @primary_surface_3;
+  border-radius: 24px;
+}
+
+tooltip label {
+  margin: 0 4px;
+}

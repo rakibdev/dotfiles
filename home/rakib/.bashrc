@@ -17,7 +17,7 @@ rm /tmp/.bash_history
 
 alias ls='ls --color=auto'
 alias poolkit=/usr/lib/xfce-polkit/xfce-polkit
-alias dotfiles="GIT_DIR=$HOME/Downloads/dotfiles.git/ GIT_WORK_TREE=/ code-insiders /"
+alias dots="GIT_DIR=$HOME/Downloads/dotfiles.git/ GIT_WORK_TREE=/ git"
 
 
 # bun

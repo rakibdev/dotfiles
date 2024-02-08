@@ -1,0 +1,36 @@
+button {
+  padding: 8px 16px;
+  border-radius: 24px;
+
+  /* ripple */
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+button.image-button {
+  padding: 8px;
+}
+
+button:not(.flat) {
+  background-color: @primary_surface_3;
+}
+
+button:checked {
+  background-color: @primary_40;
+  color: @primary_surface;
+}
+
+button:hover:not(:checked) {
+  background-color: @primary_surface_4;
+}
+
+@keyframes ripple {
+  to {
+    background-size: 1000% 1000%;
+  }
+}
+button:active {
+  animation: ripple 150ms cubic-bezier(0, 0, 0.2, 1) forwards;
+  background-image: radial-gradient(circle, alpha(@primary_40, 0.19) 10%, transparent 0%);
+  background-size: 0% 0%;
+}

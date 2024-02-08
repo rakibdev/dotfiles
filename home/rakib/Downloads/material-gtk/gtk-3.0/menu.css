@@ -1,0 +1,15 @@
+menu {
+  border-radius: 24px;
+  background-color: @primary_surface_2;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+menuitem {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 16px;
+}
+
+menuitem:hover {
+  background-color: @primary_surface_3;
+}
