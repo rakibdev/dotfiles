@@ -1,5 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=System Theme
-Icon=kcoloredit
-Exec=foot --hold bash -c ~/Downloads/apps-script/system-theme/app.sh

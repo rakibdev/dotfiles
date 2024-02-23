@@ -17,3 +17,5 @@ www.youtube.com##ytd-reel-shelf-renderer:has-text(/Shorts/)
 ! remove like, dislike, download button
 www.youtube.com##.ytd-download-button-renderer
 www.youtube.com##.ytd-segmented-like-dislike-button-renderer
+
+www.linkedin.com##li:has-text(Promoted)

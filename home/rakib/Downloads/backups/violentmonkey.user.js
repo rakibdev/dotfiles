@@ -84,12 +84,24 @@ const applyCss = theme => {
       --bard-color-draft-chip-background: ${theme.primary_surface_4} !important; /* unselected chip */
 
       --bard-color-link-button: ${theme.primary_40} !important;
+      --bard-color-new-conversation-button: ${theme.primary_surface_3} !important;
+      --bard-color-sidenav-upgrade-button: ${theme.primary_surface_3} !important;
       --mat-menu-container-color: ${theme.primary_surface_2} !important;
+
+      /* code block */
+      --bard-color-code-block-background: ${theme.primary_surface} !important;
+      --bard-color-neutral-95: ${theme.primary_surface} !important;
+      --bard-color-neutral-90: ${theme.primary_surface} !important;
     }
 
     /* topbar border */
     .chat-history:before {
       content: none !important;
+    }
+
+    /* new chat */
+    .mdc-dialog__surface {
+      background-color: ${theme.primary_surface_2} !important;
     }
     `
   } else if (location.href.includes('www.youtube.com')) {
