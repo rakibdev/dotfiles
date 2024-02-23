@@ -62,7 +62,7 @@ const applyCss = theme => {
     #sfooter {
       display: none;
     }`
-  } else if (location.href.includes('gemini.google.com/app')) {
+  } else if (location.href.includes('gemini.google.com')) {
     css += `
     :root .dark-theme {
       --bard-color-main-container-background: ${theme.primary_surface} !important;
@@ -89,9 +89,9 @@ const applyCss = theme => {
       --mat-menu-container-color: ${theme.primary_surface_2} !important;
 
       /* code block */
-      --bard-color-code-block-background: ${theme.primary_surface} !important;
-      --bard-color-neutral-95: ${theme.primary_surface} !important;
-      --bard-color-neutral-90: ${theme.primary_surface} !important;
+      code-block {
+        --bard-color-surface-container: ${theme.primary_surface};
+      }
     }
 
     /* topbar border */

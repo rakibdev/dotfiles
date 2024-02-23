@@ -1,6 +1,3 @@
-! block fonts, speed up loading
-*$font,third-party
-
 unix.stackexchange.com,stackoverflow.com###question
 unix.stackexchange.com,stackoverflow.com##.left-sidebar
 unix.stackexchange.com,stackoverflow.com##.show-votes
