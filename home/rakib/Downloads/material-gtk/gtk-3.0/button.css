@@ -11,6 +11,10 @@ button.image-button {
   padding: 8px;
 }
 
+button:not(.image-button) image:dir(ltr) {
+  margin-right: 8px;
+}
+
 button:not(.flat) {
   background-color: @primary_surface_3;
 }

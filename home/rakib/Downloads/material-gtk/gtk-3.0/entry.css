@@ -4,3 +4,12 @@ entry {
   border-radius: 24px;
   background-color: @primary_surface_2;
 }
+
+dialog entry {
+  background-color: @primary_surface_3;
+}
+
+/* thunar address bar folder icon */
+entry image.left {
+  margin-right: 8px;
+}

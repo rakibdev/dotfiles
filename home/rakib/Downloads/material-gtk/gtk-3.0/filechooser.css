@@ -1,0 +1,13 @@
+placessidebar row {
+  min-height: 40px;
+  padding: 4px 16px;
+}
+
+placessidebar row .sidebar-icon:dir(ltr) {
+  margin-right: 4px;
+}
+
+dialog headerbar {
+  background-color: @primary_surface_2;
+  padding: 8px;
+}

@@ -3,6 +3,7 @@
 @import url('menu.css');
 @import url('entry.css');
 @import url('dialog.css');
+@import url('filechooser.css');
 @import url('chromium.css');
 
 .background {
@@ -31,4 +32,20 @@ tooltip.background {
 
 tooltip label {
   margin: 0 4px;
+}
+
+.view:selected {
+  background-color: @primary_surface_3;
+}
+
+.view:not(:selected):hover {
+  background-color: @primary_surface_2;
+}
+
+scale trough {
+  border-radius: 24px;
+}
+
+scale highlight {
+  border-radius: 24px;
 }
