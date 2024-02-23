@@ -61,6 +61,8 @@
   "git.confirmSync": false,
   "git.inputValidationSubjectLength": 120,
 
+  "debug.onTaskErrors": "abort",
+
   "javascript.suggest.autoImports": false,
   "vue.server.runtime": "bun",
   "npm.packageManager": "bun",
@@ -94,5 +96,6 @@
 
   "codeium.enableCodeLens": false,
 
-  "clangd.path": "/home/rakib/.config/Code - Insiders/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/16.0.2/clangd_16.0.2/bin/clangd"
+  "clangd.path": "/home/rakib/.config/Code - Insiders/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/16.0.2/clangd_16.0.2/bin/clangd",
+  "clangd.arguments": ["--header-insertion=never"]
 }
