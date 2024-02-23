@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Record
+Icon=media-record
+Exec=foot --hold bash -c ~/Downloads/apps-script/capture.sh video
+
+[Desktop Action record-selection]
+Name=Record Selection
+Exec=foot --hold bash -c ~/Downloads/apps-script/capture.sh video --selection

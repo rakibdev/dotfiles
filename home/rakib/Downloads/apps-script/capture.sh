@@ -1,4 +1,3 @@
-# Not using relative path because it's used in "foot -e" and "hyprland exec" with different working directory.
 source ~/Downloads/apps-script/utils.sh
 
 usage() {

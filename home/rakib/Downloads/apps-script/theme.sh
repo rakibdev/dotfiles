@@ -1,16 +1,17 @@
-source utils.sh
+source ~/Downloads/apps-script/utils.sh
+
+info "Type color (e.g. #000000):"
+read color
+
+if [ -z "$color" ]; then
+  error "No color provided."
+  exit 1;
+fi
 
 hasError() {
   local code=$?
   [ $code -ne 0 ]
 }
-
-color=$1
-if [ -z "$color" ]; then
-  error "No color provided."
-  info "Usage: $0 #000000"
-  exit 1;
-fi
 
 output=$(system-ui theme build $color)
 if hasError; then
