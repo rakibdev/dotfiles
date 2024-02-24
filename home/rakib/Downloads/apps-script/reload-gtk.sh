@@ -19,9 +19,6 @@ done < "$config"
 
 # force reload
 gsettings set "$schema" gtk-theme ""
-gsettings set "$schema" icon-theme ""
-gsettings set "$schema" cursor-theme ""
-sleep 1
 
 gsettings set "$schema" gtk-theme "$gtkTheme"
 gsettings set "$schema" icon-theme "$iconTheme"
