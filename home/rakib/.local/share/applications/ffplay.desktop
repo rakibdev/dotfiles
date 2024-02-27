@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+NoDisplay=true
+Name=ffplay
+Icon=media-playback-start
+Exec=ffplay -loop 0 -loglevel quiet %f
+Comment=Command-line player, because Chromium not playing H.265 videos.
