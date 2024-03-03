@@ -1,5 +1,5 @@
-dir=~/Downloads/apps-script
-source $dir/utils.sh
+appsScript=~/Downloads/apps-script
+source $appsScript/utils.sh
 
 read -p "Color (Hex): " color
 
@@ -10,13 +10,13 @@ fi
 
 output=$(system-ui theme $color)
 if [ $? -ne 0 ]; then
-  if [ -n "$output" ]; then error "$output"; fi
+  if [ -n "$output" ]; then echo "$output"; fi
   exit 1
 fi
 
-system-ui patch $dir/theme/templates/foot.ini  ~/.config/foot/foot.ini
-system-ui patch $dir/theme/templates/hyprland.conf  ~/.config/hypr/hyprland.conf
-system-ui patch $dir/theme/templates/colors.css  ~/.local/share/themes/material-gtk/gtk-3.0/colors.css
+system-ui patch $appsScript/theme/templates/foot.ini  ~/.config/foot/foot.ini
+system-ui patch $appsScript/theme/templates/hyprland.conf  ~/.config/hypr/hyprland.conf
+system-ui patch $appsScript/theme/templates/colors.css  ~/.local/share/themes/material-gtk/gtk-3.0/colors.css
 
 output=$(hyprctl reload)
 if [ "$output" == "ok" ]
@@ -24,7 +24,7 @@ then info "Hyprland reloaded."
 else error "Hyprland reload failed: $output";
 fi
 
-$dir/reload-gtk.sh
+$appsScript/theme/reload-gtk.sh
 if [ $? -eq 0 ]
 then info "GTK reloaded."
 else error "GTK reload failed."
