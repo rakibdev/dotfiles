@@ -1,10 +1,11 @@
-source ~/Downloads/apps-script/utils.sh
+dir=~/Downloads/apps-script
+source $dir/utils.sh
 
 usage() {
   info "Usage:"
   echo "  $0 {type} {options}"
   info "Type:"
-  echo -e "  screenshot $grey(default)$reset"
+  echo -e "  screenshot $grey(default)$colorOff"
   echo "  video"
   info "Options:"
   echo "  --selection"
@@ -62,7 +63,7 @@ record() {
   
   local seconds=0
   while $recording; do
-    printf "\r${red}Recording screen %02d:%02d$reset" $((seconds/60)) $((seconds%60))
+    printf "\r${red}Recording screen %02d:%02d$colorOff" $((seconds/60)) $((seconds%60))
     sleep 1
     ((seconds++))
   done

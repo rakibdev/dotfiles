@@ -1,13 +1,10 @@
-# Use absolute path when sourcing e.g. "source ~/path/to/utils.sh".
-# Because these scripts executed in "foot -e" and "hyprland exec" with different working directory.
-
 blue="\033[1;34m"
 red="\033[1;31m"
-grey="\033[1;90m"
-reset="\033[0m"
+grey="\033[0;90m"
+colorOff="\033[0m"
 info() {
-  echo -e "${blue}$1${reset}";
+  echo -e "${blue}info:${colorOff} $1";
 }
 error() {
-  echo -e "${red}$1${reset}";
+  echo -e "${red}error:${colorOff} $1";
 }

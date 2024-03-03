@@ -2,4 +2,4 @@
 Type=Application
 Name=Theme
 Icon=kcoloredit
-Exec=foot --hold bash -c ~/Downloads/apps-script/theme.sh
+Exec=foot --hold bash -c ~/Downloads/apps-script/theme/theme.sh
