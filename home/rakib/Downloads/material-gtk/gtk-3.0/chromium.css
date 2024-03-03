@@ -3,19 +3,14 @@ window.background.chromium {
   background-color: @primary_surface;
 }
 
-/* tabstrip ======== */
+/* tabstrip
+==================== */
 window.background.chromium menubar {
-  /* background-color: @primary_surface_0; */
-}
-/* bottom border color */
-window.background.chromium > button {
-  border: 1px solid @primary_surface;
-}
-/* inactive foreground */
-window.background.chromium menubar {
+  /* background-color: @primary_surface; */
+
   color: @neutral_40;
 }
-
-window.background.chromium > button:disabled {
-  color: rgb(255, 3, 3);
+window.background.chromium > button {
+  /* fixes bottom border bleed */
+  border: 1px solid @primary_surface;
 }

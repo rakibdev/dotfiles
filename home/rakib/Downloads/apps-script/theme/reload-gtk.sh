@@ -21,7 +21,6 @@ done < "$config"
 gsettings set "$schema" gtk-theme ""
 gsettings set "$schema" icon-theme ""
 gsettings set "$schema" cursor-theme ""
-gsettings set "$schema" cursor-size ""
 gsettings set "$schema" font-name ""
 
 gsettings set "$schema" gtk-theme "$gtkTheme"
