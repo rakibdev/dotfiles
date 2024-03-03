@@ -3,11 +3,11 @@
 
 red="\033[1;31m"
 blue="\033[1;34m"
-blueGray="\033[0;94m"
+lightBlue="\033[0;94m"
 colorOff="\033[0m"
 
 PS1="\$(if [ \$? == 0 ]; then echo -e '$blue●'; else echo -e '$red●'; fi) "
-PS1+="$blueGray\w $colorOff "
+PS1+="$lightBlue\w $colorOff "
 
 # clean duplicate history. https://unix.stackexchange.com/a/419779
 HISTFILESIZE=20
