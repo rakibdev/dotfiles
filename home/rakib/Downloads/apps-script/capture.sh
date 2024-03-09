@@ -55,7 +55,7 @@ record() {
     selectArea
     command+=" -g \"$area\""
   fi
-  if $audio; then command+=" --audio"; fi
+  if $audio; then command+=' --audio="$(pactl get-default-sink).monitor"'; fi
   command+=" &>/dev/null & disown"
   eval $command
 
@@ -79,7 +79,7 @@ screenshot() {
     grim $file
   fi
   wl-copy < $file
-  notify-send "Screenshot" "Copied to clipboard." --hint string:image-path:file://$file
+  # notify-send "Screenshot" "Copied to clipboard." --hint string:image-path:file://$file
 }
 
 if $video
