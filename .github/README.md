@@ -9,23 +9,22 @@ Modern method. I don't use GRUB.
 
 ### Automatic login
 
-Entering password everytime I boot personal computer is troublesome.
-
-- Config [/etc/systemd/system/getty@tty1.service.d/autologin.conf](/etc/systemd/system/getty@tty1.service.d/autologin.conf)
+Entering password everytime I boot personal computer is troublesome.<br>
+[/etc/systemd/system/getty@tty1.service.d/autologin.conf](/etc/systemd/system/getty@tty1.service.d/autologin.conf)
 
 ### zram
 
 It's a part of ram. Faster than SSD swap file.
 
 - Install [zram-generator](https://github.com/systemd/zram-generator)
-- Config [/etc/systemd/zram-generator.conf](/etc/systemd/zram-generator.conf)
+- [/etc/systemd/zram-generator.conf](/etc/systemd/zram-generator.conf)
 - Disable zswap adding `zswap.enabled=0` kernel parameter. As I boot with UEFI directly, so added here [/etc/pacman.d/hooks/on-kernel-install](/etc/pacman.d/hooks/on-kernel-install#L42)
 
 ### Systemd logs in ram
 
-Reduce unnecessary SSD write.
+Reduces unnecessary SSD write.
 
-- Config [/etc/systemd/journald.conf.d/journald.conf](/etc/systemd/journald.conf.d/journald.conf)
+- [/etc/systemd/journald.conf.d/journald.conf](/etc/systemd/journald.conf.d/journald.conf)
 
 - Clear existing logs:
 
@@ -35,19 +34,17 @@ Reduce unnecessary SSD write.
 
 ### Blacklisting unused kernel modules
 
-- Config [/etc/modprobe.d/blacklists.conf](/etc/modprobe.d/blacklists.conf)
+[/etc/modprobe.d/blacklists.conf](/etc/modprobe.d/blacklists.conf)
 
 ### PipeWire surround sound
 
-- Config [/home/rakib/.config/pipewire](/home/rakib/.config/pipewire)
+[/home/rakib/.config/pipewire](/home/rakib/.config/pipewire)
 
-<br>
-
-## Apps Script
+### Apps Script
 
 [/home/rakib/Downloads/apps-script](home/rakib/Downloads/apps-script)
 
-### Use absolute path in shell scripts.
+#### Use absolute path in shell scripts.
 
 ❌ `source ./utils.sh`<br>
 ✔️ `source ~/Downloads/apps-script/utils.sh`
@@ -58,8 +55,7 @@ If someway executed using:
 - foot -e
 - hyprland.conf exec
 
-Because those have different working directory.
-
+Because these have different working directory.
 <br>
 <br>
 
