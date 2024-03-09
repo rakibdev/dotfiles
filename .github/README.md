@@ -40,6 +40,11 @@ Reduces unnecessary SSD write.
 
 [/home/rakib/.config/pipewire](/home/rakib/.config/pipewire)
 
+### BlueZ Airpods battery missing
+
+Add `--experimental` flag.<br>
+[/etc/systemd/system/bluetooth.service.d/bluetooth.conf](/etc/systemd/system/bluetooth.service.d/bluetooth.conf)
+
 ### Apps Script
 
 [/home/rakib/Downloads/apps-script](home/rakib/Downloads/apps-script)
