@@ -27,7 +27,6 @@ const applyCss = theme => {
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: ${theme.primary_surface_4};
     border-radius: 30px;
     border: 2px solid transparent;
     background-clip: padding-box;
