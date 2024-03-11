@@ -249,6 +249,39 @@ const applyCss = theme => {
       --comment-background: ${theme.primary_surface_3}; /* comment, search input */
     }
     `
+  } else if (location.href.includes('hitomi.la')) {
+    css += `
+    /* larger thumbnails */
+    .thumbnail-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .thumbnail-container,
+    .thumbnail-container img {
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    .thumbnail-container .badge {
+      height: 24px;
+      min-width: 24px;
+      border-radius: 24px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .simplePagerNav {
+      display: flex;
+    }
+
+    .simplePagerNav li {
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+    }
+    `
   }
 
   style.textContent = css

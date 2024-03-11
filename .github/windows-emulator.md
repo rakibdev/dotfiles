@@ -1,4 +1,4 @@
-## Run Windows in Arch Linux using QEMU
+## Run Windows In Arch Linux Using QEMU
 
 ### Step 1: Run
 
@@ -49,4 +49,4 @@ type setupact.log
 ```
 
 Read "setupact.log" and search for "Error". In my case I already have TPM, Secure Boot bypassed, but still complained.
-Because Windows requires 2 core, and I didn't add "-smp cpus=2".
+Because Windows requires CPU 2 core, and I didn't add "-smp cpus=2".

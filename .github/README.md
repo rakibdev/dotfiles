@@ -1,139 +1,99 @@
-# Linux Guide
+> [More notes in .github folder.](/.github)
 
-### Boot with UEFI directly
+## Apps Script
 
-Modern method. I don't use GRUB.
-
-- Install [efibootmgr](https://github.com/rhboot/efibootmgr)
-- This script generates boot entry using efibootmgr [/etc/pacman.d/hooks/on-kernel-install](/etc/pacman.d/hooks/on-kernel-install) whenever pacman updates Linux [/etc/pacman.d/hooks/on-kernel-install.hook](/etc/pacman.d/hooks/on-kernel-install.hook)
-
-### Automatic login
-
-Entering password everytime I boot personal computer is troublesome.<br>
-[/etc/systemd/system/getty@tty1.service.d/autologin.conf](/etc/systemd/system/getty@tty1.service.d/autologin.conf)
-
-### zram
-
-It's a part of ram. Faster than SSD swap file.
-
-- Install [zram-generator](https://github.com/systemd/zram-generator)
-- [/etc/systemd/zram-generator.conf](/etc/systemd/zram-generator.conf)
-- Disable zswap adding `zswap.enabled=0` kernel parameter. As I boot with UEFI directly, so added here [/etc/pacman.d/hooks/on-kernel-install](/etc/pacman.d/hooks/on-kernel-install#L42)
-
-### Systemd logs in ram
-
-Reduces unnecessary SSD write.
-
-- [/etc/systemd/journald.conf.d/journald.conf](/etc/systemd/journald.conf.d/journald.conf)
-
-- Clear existing logs:
-
-  ```
-  sudo rm -r /var/log/journal/*
-  ```
-
-### Blacklisting unused kernel modules
-
-[/etc/modprobe.d/blacklists.conf](/etc/modprobe.d/blacklists.conf)
-
-### PipeWire surround sound
-
-[/home/rakib/.config/pipewire](/home/rakib/.config/pipewire)
-
-### BlueZ Airpods battery missing
-
-Add `--experimental` flag.<br>
-[/etc/systemd/system/bluetooth.service.d/bluetooth.conf](/etc/systemd/system/bluetooth.service.d/bluetooth.conf)
-
-### Apps Script
-
+Scripts for repetitive tasks.<br>
 [/home/rakib/Downloads/apps-script](home/rakib/Downloads/apps-script)
 
-#### Use absolute path in shell scripts.
-
-❌ `source ./utils.sh`<br>
-✔️ `source ~/Downloads/apps-script/utils.sh`
-
-If someway executed using:
+Use absolute path in scripts because these excuted with different working directory in:
 
 - .desktop exec
 - foot -e
 - hyprland.conf exec
 
-Because these have different working directory.
-<br>
-<br>
+❌ source ./utils.sh<br>
+✔️ source ~/Downloads/apps-script/utils.sh
 
-# Android Guide
+## Boot With UEFI Directly
 
-### Prepare GSI
+Modern way. I don't use GRUB.
 
-- [Download TrebleDroid GSI.](https://github.com/TrebleDroid/treble_experimentations/releases)
-- Extract ` 
-xz -d system-td-arm32_binder64-ab-vanilla.img.xz`
-- Remove "phh-su". Otherwise Magisk shows error "Unsupported Magisk Version".
-  ```
-  git clone --depth 1 https://github.com/AndyCGYan/sas-creator.git
-  cd sas-creator
-  sudo bash securize.sh ../system-td-arm32_binder64-ab-vanilla.img
-  mv s-secure.img ../system.img
-  ```
+- Install [efibootmgr](https://github.com/rhboot/efibootmgr).
+- Install [Booster](https://github.com/anatol/booster). A boot image generator. Faster, lighter than dracut.
+- When updating Linux kernel pacman triggers [/etc/pacman.d/hooks/on-kernel-install.hook](/etc/pacman.d/hooks/on-kernel-install.hook) and [/etc/pacman.d/hooks/on-kernel-install](/etc/pacman.d/hooks/on-kernel-install). What it does:
+  - Moves Booster image and copy [microcode](https://wiki.archlinux.org/title/microcode) to EFI partition.
+  - Uses efibootmgr to sync UEFI boot entries and link these files.
 
-### Flashing GSI
+## Automatic Login On Boot
 
-- [Requirements.](https://source.android.com/docs/core/tests/vts/gsi#flashing-gsis)
-- [Download SDK Platform Tools zip (adb, fastboot).](https://developer.android.com/tools/releases/platform-tools)
-- Enable USB debugging and connect PC.
-  ```
-  ./adb reboot fastboot
-  sudo -s
-  ./fastboot erase system (Optional. Resets system.)
-  ./fastboot flash system system.img
-  ./fastboot reboot
-  ```
-- Wait for device to turn on.
-- `./adb kill-server` and disconnect PC.
+Lazy to type password everytime.<br>
+[/etc/systemd/system/getty@tty1.service.d/autologin.conf](/etc/systemd/system/getty@tty1.service.d/autologin.conf)
 
-### Entering Walton bootloader
+## Zram
 
-When screen is turning off immediately hold "Power + Volume Down".
+It's a part of ram. Compresses ram to have more ram. Faster than SSD swap file.
 
-### Enable System UI Tuner
+- Install [zram-generator](https://github.com/systemd/zram-generator)
+- [/etc/systemd/zram-generator.conf](/etc/systemd/zram-generator.conf)
+- Disable zswap by adding `zswap.enabled=0` kernel parameter. As I manage the kernel using script [/etc/pacman.d/hooks/on-kernel-install](/etc/pacman.d/hooks/on-kernel-install#L42) so added flag there.
 
-`pm enable com.android.systemui/.tuner.TunerActivity` (With "su")
+## Systemd Logs In Ram
 
-Available in Settings > System > System UI Tuner
+Reduces unnecessary SSD write.
 
-### Headphone jack detection on GSI
+- [/etc/systemd/journald.conf.d/journald.conf](/etc/systemd/journald.conf.d/journald.conf)
 
-`setprop persist.sys.overlay.devinputjack true`
+- Delete existing logs:
 
-### Bluetooth not turning on Android 14 GSI
+```
+sudo rm -r /var/log/journal/*
+```
 
-`setprop persist.sys.bt.unsupported.commands 182` (With "su")
+## Blacklisting Unused Kernel Modules
 
-### Material You vibrant colors
+[/etc/modprobe.d/blacklists.conf](/etc/modprobe.d/blacklists.conf)
 
-`settings put secure theme_customization_overlay_packages '{"android.theme.customization.theme_style":"VIBRANT"}'`
+## PipeWire Virtual Surround Sound
 
-### Apps
+[/home/rakib/.config/pipewire](/home/rakib/.config/pipewire)
 
-- [Aurora Store Nightly](https://auroraoss.com/AuroraStore/Nightly)
-- Via Browser
-- [MiXplorer](https://mixplorer.com/beta) & MixTheme Creator.
-- [Dantotsu](https://github.com/rebelonion/Dantotsu/releases)
-- [YouTube and Music (Telegram)](https://t.me/rvx_lite) & [MicroG by WSTxda.](https://github.com/WSTxda/MicroG-RE/releases)
-- [Mauth](https://github.com/X1nto/Mauth/releases)
-- [librecamera](https://github.com/iakmds/librecamera/releases)
-- [Picsart Mod (Telegram)](https://t.me/PicsArtMods)
-- Filmora Video Editor Mod
-- YMusic Mod.
-  Used for downloading music with thumbnail. Not to confuse with YouTube Music.
-  Alternatives like Seal is slow.
-- Gboard
-- Google Clock
-- Magisk & modules:
-  - [custom-system](/home/rakib/Downloads/android/custom-system)
-  - [HideNavBar](https://github.com/Magisk-Modules-Alt-Repo/HideNavBar)
-  - [GoogleProductSansFont](https://github.com/D4rK7355608/GoogleProductSansFont)
-  - [systemui-bootloop](https://github.com/Magisk-Modules-Alt-Repo/systemui-bootloop)
+- sink-virtual-surround-7.1-hesuvi.conf taken from [PipeWire GitLab](https://gitlab.freedesktop.org/pipewire/pipewire/-/blob/master/src/daemon/filter-chain/sink-virtual-surround-7.1-hesuvi.conf).
+- atmos.wav extracted from [HeSuVi_2.0.0.1.exe](https://sourceforge.net/projects/hesuvi/files).
+
+Don't forget to activate the sink using wpctl. \* indicates which currently active.
+
+```
+~ wpctl status
+Audio
+ ├─ Devices:
+ │      44. Raven/Raven2/Fenghuang HDMI/DP Audio Controller [alsa]
+ │      45. Family 17h/19h HD Audio Controller  [alsa]
+ │      99. HOCO ES64                           [bluez5]
+ │
+ ├─ Sinks:
+ │      34. Virtual Surround Sink               [vol: 1.00]
+ │      63. Family 17h/19h HD Audio Controller Digital Stereo (IEC958) [vol: 1.00]
+ │   * 100. HOCO ES64                           [vol: 0.25]
+
+~ wpctl set-default 34
+```
+
+## BlueZ Battery Missing
+
+Add `--experimental` flag [/etc/systemd/system/bluetooth.service.d/bluetooth.conf](/etc/systemd/system/bluetooth.service.d/bluetooth.conf)
+
+## Remove Pacman Multilib
+
+During Wine installation I added "multilib” in [/etc/pacman.conf](etc/pacman.conf) which resulted in duplicate 32-bit version of each package. I don't use Wine now.
+
+## Cleanup Unused Packages
+
+List packages installed someway by you.
+
+```
+pacman -Qqi | grep -E "Name|Description|Required By"
+```
+
+Identify what you don't need reading package details.
+
+todo: Link "pacman -Rns $(pacman -Qdtq)" apps script.

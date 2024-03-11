@@ -1,8 +1,8 @@
 switch_window() {
     local workspace=$(hyprctl activeworkspace)
-    local windows_count=$(echo "$workspace" | pcregrep -o1 "windows: (\d+)")
+    local windowsCount=$(echo "$workspace" | pcregrep -o1 "windows: (\d+)")
     local fullscreen=$(echo "$workspace" | pcregrep -o1 "hasfullscreen: (\d+)")
-    if [ $windows_count -gt 2 ]; then
+    if [ $windowsCount -gt 2 ] || [ $fullscreen -eq 0 ]; then
         hyprctl dispatch fullscreen 1
     else
         hyprctl dispatch focusurgentorlast ""
