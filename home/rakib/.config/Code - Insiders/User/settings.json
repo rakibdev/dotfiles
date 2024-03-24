@@ -47,7 +47,7 @@
   "extensions.autoCheckUpdates": false,
   "workbench.enableExperiments": false,
 
-  // fix for wtype. wtype is used for closing tab with mouse side button.
+  // Fix for wtype. wtype is used for closing tab with mouse side button.
   // https://github.com/Microsoft/vscode/issues/23991
   "keyboard.dispatch": "keyCode",
 
@@ -97,5 +97,7 @@
   "codeium.enableCodeLens": false,
 
   "clangd.path": "/home/rakib/.config/Code - Insiders/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/16.0.2/clangd_16.0.2/bin/clangd",
-  "clangd.arguments": ["--header-insertion=never"]
+  "clangd.arguments": ["--header-insertion=never"],
+  // clangd
+  "editor.inlayHints.enabled": "off"
 }

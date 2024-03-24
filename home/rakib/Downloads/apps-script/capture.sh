@@ -2,15 +2,13 @@ dir=~/Downloads/apps-script
 source $dir/utils.sh
 
 usage() {
-  info "Usage:"
-  echo "  $0 {type} {options}"
-  info "Type:"
-  echo -e "  screenshot $grey(default)$colorOff"
-  echo "  video"
-  info "Options:"
-  echo "  --selection"
-  echo "  --audio"
-  echo "  --help"
+  echo -e "$blue{type}"
+  echo -e " screenshot $grey(default)$blue"
+  echo " video"
+  echo ""
+  echo -e "$pink--selection"
+  echo "--audio"
+  echo -e "--help$colorOff"
 }
 if [[ "$1" == "--help" ]]; then
   usage

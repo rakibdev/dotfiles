@@ -53,29 +53,37 @@ sudo rm -r /var/log/journal/*
 
 [/etc/modprobe.d/blacklists.conf](/etc/modprobe.d/blacklists.conf)
 
-## PipeWire Virtual Surround Sound
+## PipeWire
 
-[/home/rakib/.config/pipewire](/home/rakib/.config/pipewire)
+### Virtual Surround Sound
 
-- sink-virtual-surround-7.1-hesuvi.conf taken from [PipeWire GitLab](https://gitlab.freedesktop.org/pipewire/pipewire/-/blob/master/src/daemon/filter-chain/sink-virtual-surround-7.1-hesuvi.conf).
-- atmos.wav extracted from [HeSuVi_2.0.0.1.exe](https://sourceforge.net/projects/hesuvi/files).
+[/home/rakib/.config/pipewire/pipewire.conf.d/virtual-surround-sound.conf](/home/rakib/.config/pipewire/pipewire.conf.d/virtual-surround-sound.conf) from [PipeWire GitLab.](https://gitlab.freedesktop.org/pipewire/pipewire/-/blob/master/src/daemon/filter-chain/sink-virtual-surround-7.1-hesuvi.conf)
+[/home/rakib/.config/pipewire/pipewire.conf.d/atmos.wav](/home/rakib/.config/pipewire/pipewire.conf.d/atmos.wav) extracted from [HeSuVi_2.0.0.1.exe.](https://sourceforge.net/projects/hesuvi/files)
 
-Don't forget to activate the sink using wpctl. \* indicates which currently active.
+### Mic Noise Cancelation
+
+[/home/rakib/.config/pipewire/pipewire.conf.d/mic-noise-cancelation.conf](/home/rakib/.config/pipewire/pipewire.conf.d/mic-noise-cancelation.conf) from [PipeWire GitLab.](https://gitlab.freedesktop.org/pipewire/pipewire/-/blob/master/src/daemon/filter-chain/source-rnnoise.conf)
+
+- Install [noise-suppression-for-voice.](https://github.com/werman/noise-suppression-for-voice)
+
+Don't forget to activate sinks/sources using **wpctl**. The \* indicates currently active.
 
 ```
 ~ wpctl status
 Audio
  ├─ Devices:
- │      44. Raven/Raven2/Fenghuang HDMI/DP Audio Controller [alsa]
- │      45. Family 17h/19h HD Audio Controller  [alsa]
- │      99. HOCO ES64                           [bluez5]
+ │      48. Family 17h/19h HD Audio Controller  [alsa]
  │
  ├─ Sinks:
- │      34. Virtual Surround Sink               [vol: 1.00]
- │      63. Family 17h/19h HD Audio Controller Digital Stereo (IEC958) [vol: 1.00]
- │   * 100. HOCO ES64                           [vol: 0.25]
+ │  *   37. Virtual Surround Sound              [vol: 1.00]
+ │      68. Family 17h/19h HD Audio Controller Digital Stereo (IEC958) [vol: 1.00]
+ │
+ ├─ Sources:
+ │  *   36. Mic Noise Cancelation               [vol: 1.00]
+ │      69. Family 17h/19h HD Audio Controller Analog Stereo [vol: 0.60]
 
-~ wpctl set-default 34
+~ wpctl set-default 37
+~ wpctl set-default 36
 ```
 
 ## BlueZ Battery Missing
