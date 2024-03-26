@@ -47,10 +47,6 @@
   "extensions.autoCheckUpdates": false,
   "workbench.enableExperiments": false,
 
-  // Fix for wtype. wtype is used for closing tab with mouse side button.
-  // https://github.com/Microsoft/vscode/issues/23991
-  "keyboard.dispatch": "keyCode",
-
   "files.enableTrash": false,
   "files.exclude": {
     "**/build": true,

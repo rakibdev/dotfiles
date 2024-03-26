@@ -1,5 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=YouTube Playlist Export
-Icon=youtube
-Exec=foot --hold bash -c "cd ~/Downloads/apps-script/youtube-playlist-export && ~/.bun/bin/bun app.js"

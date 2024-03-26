@@ -1,6 +1,6 @@
-## Run Windows In Arch Linux Using QEMU
+## Run Windows in Arch Linux using QEMU
 
-### Step 1: Run
+### 1. Run
 
 - Download Windows 11 ISO. I'm using "tiny11.iso" because it's lightweight (10GB after installed, actual Windows 20GB) & already has TPM, Secure Boot requirements bypassed in regedit.
 - `sudo pacman -S qemu-base`
@@ -11,7 +11,7 @@
   - **-usb -device usb-tablet**: Fixes guest cursor pointer misaligned with host cursor.
 
 ```
-qemu-system-x86_64 \
+~ qemu-system-x86_64 \
   -enable-kvm \
   -m 3G \
   -cpu host \
@@ -19,19 +19,18 @@ qemu-system-x86_64 \
   -cdrom 'tiny11.iso' \
   -hda 'windows-11.qcow2' \
   -usb -device usb-tablet
+
+VNC server running on ::1:5900
 ```
 
-Output:
-`VNC server running on ::1:5900`
-
-### Step 2: View
+### 2. View
 
 - `sudo pacman -S gtk-vnc`
 - `gvncviewer ::1:5900`
 
-Now install Windows normally.
+Go through normal Windows setup.
 
-### Step 3: Reuse
+### 3. Reuse
 
 To launch already installed diskfile just remove "-cdrom" argument.
 

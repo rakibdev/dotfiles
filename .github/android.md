@@ -1,4 +1,4 @@
-## Android GSI Upgrade
+## Android GSI
 
 - [Download latest TrebleDroid GSI.](https://github.com/TrebleDroid/treble_experimentations/releases)
 - Extract.
@@ -72,7 +72,7 @@ setprop persist.sys.bt.unsupported.commands 182
 settings put secure theme_customization_overlay_packages '{"android.theme.customization.theme_style":"VIBRANT"}'
 ```
 
-## Apps I Use
+## Favorite apps
 
 - [Cromite](https://github.com/uazo/cromite)
 - [MiXplorer](https://mixplorer.com/beta) & MixTheme Creator.
