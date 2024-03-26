@@ -66,25 +66,26 @@ In my case phone couldn't encode 4K resolution. Had to set lower resolution e.g.
 
 ### What it does
 
-- Creates backup.json.
-- Recovers unavailable video details from the file when running next time.
-- Cleanup playlist so I don't have to manually find and remove unavailable videos.
+- Creates backup.json containing playlist videos.
+- Recovers details from the file when running next time.
+- Auto cleanup unavailable videos from playlist.
 
-### 1. Getting authorization & x-goog-authuser headers
+### 1. Getting authorization, x-goog-authuser, cookie (not document.cookie)
 
-This allows account sign-in to cleanup playlist on behalf of user.
+Allows sign-in and perform cleanup on behalf of user.
 
 1. Open DevTools network tab.
 2. Reload YouTube.
-3. Filter "Fetch/XHR" and look for "/account_menu" URL.
+3. Filter "Fetch/XHR" and "/youtubei/v1" URL.
 4. Values are under "Request Headers".
 
-### 2. Add config.toml
+### 2. Create config.toml
 
 ```
-countryCode="BD" // To identify blocked.
+countryCode="US" # To identify region blocked.
 authorization="SAPISIDHASH ..."
 x-goog-authuser=0
+cookie=""
 
 [[playlists]]
 name="music"
@@ -101,9 +102,7 @@ id="..."
 bun app.js
 ```
 
-<br>
-
-todo: "pacman -Rns $(pacman -Qdtq)" apps script.
+Make sure playlists are set either public or unlisted and whenever you encounter error try updating config specially cookie.
 
 <br>
 
