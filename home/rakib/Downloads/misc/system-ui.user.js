@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        System UI
-// @description Material You For Web & More.
+// @description Material 3 for web & various improvements.
 // @match       https://*/*
 // @grant       GM_xmlhttpRequest
 // @grant       GM_getValue
@@ -318,7 +318,12 @@ GM_xmlhttpRequest({
   }
 })
 
-const googleSearchResultRedirect = () => {
+const googleSearchRedirect = () => {
+  const redditLinks = document.querySelectorAll('a[href*="reddit.com"]')
+  redditLinks.forEach(link => {
+    link.href = link.href.replace('www.reddit.com', 'redlib.catsarch.com')
+  })
+
   // disable link tracking redirection
   // https://github.com/raffaeleflorio/anti_rwt/blob/master/anti_rwt.js
   Object.defineProperty(window, 'rwt', {
@@ -331,6 +336,6 @@ const googleSearchResultRedirect = () => {
 
 if (location.href.includes('google.com/search')) {
   document.addEventListener('DOMContentLoaded', () => {
-    googleSearchResultRedirect()
+    googleSearchRedirect()
   })
 }
