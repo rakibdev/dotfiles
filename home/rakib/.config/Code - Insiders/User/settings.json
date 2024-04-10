@@ -94,6 +94,9 @@
 
   "clangd.path": "/home/rakib/.config/Code - Insiders/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/16.0.2/clangd_16.0.2/bin/clangd",
   "clangd.arguments": ["--header-insertion=never"],
-  // clangd
-  "editor.inlayHints.enabled": "off"
+  // clangd only
+  "editor.inlayHints.enabled": "off",
+  "debug.javascript.defaultRuntimeExecutable": {
+    "pwa-node": "node"
+  }
 }
