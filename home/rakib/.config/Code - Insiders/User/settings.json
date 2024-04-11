@@ -61,7 +61,6 @@
 
   "javascript.suggest.autoImports": false,
   "vue.server.runtime": "bun",
-  "npm.packageManager": "bun",
 
   "prettier.semi": false,
   "prettier.printWidth": 120,
@@ -92,11 +91,8 @@
 
   "codeium.enableCodeLens": false,
 
-  "clangd.path": "/home/rakib/.config/Code - Insiders/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/16.0.2/clangd_16.0.2/bin/clangd",
-  "clangd.arguments": ["--header-insertion=never"],
-  // clangd only
+  // clangd specific.
   "editor.inlayHints.enabled": "off",
-  "debug.javascript.defaultRuntimeExecutable": {
-    "pwa-node": "node"
-  }
+  "clangd.path": "/usr/bin/clangd", // Requires "clang" package.
+  "clangd.arguments": ["--header-insertion=never"]
 }

@@ -45,12 +45,22 @@ Not wasting money when I can use my phone with higher quality camera. And I didn
 ### Dependencies
 
 - scrcpy (Stream camera)
-- v4l2loopback-dkms (Virtual webcam device)
+- v4l2loopback (Virtual webcam device)
+
+### Build v4l2loopback from source
+
+I didn't use "v4l2loopback-dkms" because it depends on Clang, LLVM. I have GCC installed, so building from source.
+
+- Run `v4l2loopback.sh install`. Then `modinfo v4l2loopback` to verify and reboot.
+
+> [!IMPORTANT]
+> Rebuild when updating kernel.
+
+- To uninstall, search and delete "v4l2loopback.ko.zst" in "/lib/modules" or "/usr/lib/modules".
 
 ### Resources
 
-- Scrcpy [GitHub](https://github.com/Genymobile/scrcpy), [camera.md](https://github.com/Genymobile/scrcpy/blob/master/doc/camera.md) and [v4l2.md](https://github.com/Genymobile/scrcpy/blob/master/doc/v4l2.md).
-- ArchWiki [v4l2loopback](https://wiki.archlinux.org/title/V4l2loopback).
+- Scrcpy GitHub [camera.md](https://github.com/Genymobile/scrcpy/blob/master/doc/camera.md) and [v4l2.md](https://github.com/Genymobile/scrcpy/blob/master/doc/v4l2.md).
 
 ### Troubleshooting
 
