@@ -27,7 +27,7 @@ No inconvenient USB!
 
 <!-- prettier-ignore -->
 > [!TIP]
-> Enable wireless debugging quick settings shortcut. Developer options > Quick settings developer tiles.
+> Enable wireless debugging quick settings shortcut: Developer options > Quick settings developer tiles.
 
 ### Dependencies
 
@@ -49,14 +49,14 @@ Not wasting money when I can use my phone with higher quality camera. And I didn
 
 ### Build v4l2loopback from source
 
-I didn't use "v4l2loopback-dkms" because it depends on Clang, LLVM. I have GCC installed, so building from source.
+I didn't use **v4l2loopback-dkms** because it depends on Clang, LLVM. I have GCC installed, so building from source.
 
 - Run `v4l2loopback.sh install`. Then `modinfo v4l2loopback` to verify and reboot.
 
 > [!IMPORTANT]
 > Rebuild when updating kernel.
 
-- To uninstall, search and delete "v4l2loopback.ko.zst" in "/lib/modules" or "/usr/lib/modules".
+- To uninstall, search and delete **v4l2loopback.ko.zst** in **/lib/modules** or **/usr/lib/modules**.
 
 ### Resources
 
