@@ -2,7 +2,7 @@ dir=~/Downloads/apps-script
 source $dir/utils.sh
 
 usage() {
-	echo -e "${blue}install$colorOff"
+  echo -e "${blue}install$colorOff"
 }
 if [ $# -eq 0 ] || [ "$1" == "--help" ]; then
   usage
