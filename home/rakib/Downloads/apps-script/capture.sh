@@ -31,9 +31,16 @@ while [[ $# -gt 0 ]]; do
 done
 
 selectArea() {
-  local appData=~/.config/system-ui/app-data.json
-  local color=$(grep -oP '(?<="primary_40":")[^"]+' $appData)
-  area=$(slurp -b "${color}40" -w 0)
+  local command="slurp -w 0"
+
+  local systemTheme=$(cat ~/.config/system-ui/app-data.json 2> /dev/null | tr '\n' ' ')
+  if [ -n "$systemTheme" ]; then
+    local color=$(bun -e "console.log(JSON.parse('$systemTheme').theme.primary_40)")
+    command+=" -b \"${color}40\""
+  fi
+
+  area=$(eval $command)
+  [ $? -ne 0 ] && exit 1 # Selection cancelled.
 }
 
 recording=true
