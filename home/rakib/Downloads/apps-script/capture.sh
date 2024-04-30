@@ -40,7 +40,7 @@ selectArea() {
   fi
 
   area=$(eval $command)
-  [ $? -ne 0 ] && exit 1 # Selection cancelled.
+  if [ $? -ne 0 ]; then exit 1; fi # Selection cancelled.
 }
 
 recording=true
