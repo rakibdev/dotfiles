@@ -60,7 +60,11 @@ record() {
     selectArea
     command+=" -g \"$area\""
   fi
-  if $audio; then command+=' --audio="$(pactl get-default-sink).monitor"'; fi
+  if $audio; then
+    source=$(pactl get-default-source)
+    command+=" --audio=\"$source.monitor\""
+  fi
+  echo $command
   command+=" &>/dev/null & disown"
   eval $command
 
