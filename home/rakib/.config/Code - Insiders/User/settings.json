@@ -13,7 +13,6 @@
   "editor.lineNumbers": "off",
   "editor.renderWhitespace": "none",
   "editor.semanticHighlighting.enabled": true,
-  "editor.minimap.enabled": false,
   "editor.guides.bracketPairs": true,
   "editor.bracketPairColorization.enabled": true,
   "editor.suggestFontSize": 14,
@@ -26,6 +25,7 @@
   "breadcrumbs.enabled": false,
   "problems.decorations.enabled": false,
   "editor.find.addExtraSpaceOnTop": false,
+  "editor.minimap.enabled": false,
 
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.copyOnSelection": true,
@@ -53,6 +53,7 @@
   "git.inputValidationSubjectLength": 120,
 
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.experimental.updateImportsOnPaste": true,
   "vue.server.runtime": "bun",
   "codeium.enableCodeLens": false,
 
@@ -63,6 +64,10 @@
   "clangd.path": "/usr/bin/clangd", // "pacman -S clang".
   "clangd.arguments": ["--header-insertion=never"],
 
-  "editor.defaultFormatter": "biomejs.biome",
-  "biome.lspBin": "/usr/bin/biome", // "pacman -S biome-bin".
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.arrowParens": "avoid",
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "none",
+  "prettier.printWidth": 120,
+  "prettier.semi": false
 }
