@@ -55,6 +55,8 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "javascript.experimental.updateImportsOnPaste": true,
+  "typescript.preferences.useAliasesForRenames": false,
+  "javascript.preferences.useAliasesForRenames": false,
   "vue.server.runtime": "bun",
   "codeium.enableCodeLens": false,
 
