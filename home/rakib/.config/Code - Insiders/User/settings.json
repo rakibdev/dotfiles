@@ -57,15 +57,18 @@
   "javascript.experimental.updateImportsOnPaste": true,
   "typescript.preferences.useAliasesForRenames": false,
   "javascript.preferences.useAliasesForRenames": false,
-  "vue.server.runtime": "bun",
-  "codeium.enableCodeLens": false,
-
   "debug.onTaskErrors": "abort",
+
+  "codeium.enableCodeLens": false,
+  "codeium.enableCommandSideHintEducation": false,
 
   // clangd related.
   "editor.inlayHints.enabled": "off",
   "clangd.path": "/usr/bin/clangd", // "pacman -S clang".
   "clangd.arguments": ["--header-insertion=never"],
+  "[cpp]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
 
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.arrowParens": "avoid",
