@@ -1,0 +1,1 @@
+pacman -Qti | grep -E 'Name|Installed Size|Required By'
