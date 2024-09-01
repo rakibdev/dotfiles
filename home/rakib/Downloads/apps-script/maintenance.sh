@@ -42,9 +42,6 @@ clean() {
 
   info "Pacman cache."
   yes | sudo pacman -Scc
-
-  info "Broken symlinks."
-  sudo find / -xtype l -delete -print 2>/dev/null
 }
 [ "$1" == "--clean" ] && { clean; exit 0; }
 
@@ -57,6 +54,6 @@ mergePacnew() {
 [ "$1" == "--merge-pacnew" ] && { mergePacnew; exit 0; }
 
 if [ "$1" == "--manual-packages" ]; then
-  pacman -Qti | grep -E 'Name|Installed Size'
+  pacman -Qti | grep -E 'Name|Installed Size|Required By'
   exit 0
 fi
