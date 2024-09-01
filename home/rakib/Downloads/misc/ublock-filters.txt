@@ -6,13 +6,11 @@ unix.stackexchange.com,stackoverflow.com##.js-top-bar
 unix.stackexchange.com,stackoverflow.com##.js-add-answer-component
 unix.stackexchange.com,stackoverflow.com##.js-footer
 
-! remove unwanted search results
+! Unwanted search results.
 www.youtube.com##ytd-horizontal-card-list-renderer.ytd-item-section-renderer:has-text(/People also search for/)
 www.youtube.com##ytd-shelf-renderer:has-text(/People also watched|From related searches|For you|Previously watched/)
 www.youtube.com##ytd-reel-shelf-renderer:has-text(/Shorts/)
 
-! remove like, dislike, download button
+! Like, dislike, download button.
 www.youtube.com##.ytd-download-button-renderer
 www.youtube.com##.ytd-segmented-like-dislike-button-renderer
-
-www.linkedin.com##li:has-text(Promoted)
