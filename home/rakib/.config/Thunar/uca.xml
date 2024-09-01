@@ -2,9 +2,9 @@
 <actions>
 	<action>
 		<icon>utilities-terminal</icon>
+		<name>Open terminal</name>
 		<unique-id>1725197785250717-2</unique-id>
 		<command>foot</command>
-		<description>Open Terminal</description>
 		<directories/>
 	</action>
 	<action>
