@@ -1,5 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Chromium
-Icon=chromium
-Exec=chromium --ozone-platform-hint=wayland --custom-ntp=chrome://new-tab-page --bookmark-bar-ntp=never --show-avatar-button=never --remove-tabsearch-button --remove-grab-handle --hide-tab-close-buttons --disable-sharing-hub --disable-features=WaylandFractionalScaleV1
