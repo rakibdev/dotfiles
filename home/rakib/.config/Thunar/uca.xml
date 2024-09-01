@@ -4,8 +4,13 @@
 		<icon>utilities-terminal</icon>
 		<name>Open terminal</name>
 		<unique-id>1725197785250717-2</unique-id>
-		<command>foot</command>
+		<command>wl-copy %n; foot</command>
 		<directories/>
+		<other-files/>
+		<text-files/>
+		<image-files/>
+		<video-files/>
+		<audio-files/>
 	</action>
 	<action>
 		<icon>video-x-generic</icon>
