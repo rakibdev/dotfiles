@@ -1,1 +1,1 @@
-pacman -Qti | grep -E 'Name|Installed Size|Required By'
+pacman -Qti | awk '/^Name/{name=$3} /^Installed Size/{print name, $4, $5}'
