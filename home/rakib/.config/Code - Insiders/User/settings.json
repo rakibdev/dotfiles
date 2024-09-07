@@ -58,6 +58,7 @@
   "typescript.preferences.useAliasesForRenames": false,
   "javascript.preferences.useAliasesForRenames": false,
   "debug.onTaskErrors": "abort",
+  "debug.console.acceptSuggestionOnEnter": "on",
 
   "codeium.enableCodeLens": false,
   "codeium.enableCommandSideHintEducation": false,
