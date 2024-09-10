@@ -1,5 +1,6 @@
 {
   "workbench.colorTheme": "Material Code",
+  "workbench.iconTheme": "catppuccin-latte",
   "window.menuBarVisibility": "hidden",
   "window.dialogStyle": "custom",
   "workbench.startupEditor": "none",
