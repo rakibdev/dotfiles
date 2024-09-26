@@ -1,6 +1,6 @@
 [flags]
 group_processes = true
-mem_as_value = true
+process_memory_as_value = true
 hide_table_gap = true
 
 [[row]]
