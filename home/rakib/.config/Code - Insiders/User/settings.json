@@ -27,7 +27,9 @@
   "problems.decorations.enabled": false,
   "editor.find.addExtraSpaceOnTop": false,
   "editor.minimap.enabled": false,
-
+  "editor.codeActionsOnSave": {
+    "source.removeUnusedImports": "always"
+  },
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.rightClickBehavior": "copyPaste",
@@ -65,7 +67,6 @@
   "codeium.enableCommandSideHintEducation": false,
 
   // clangd related.
-  "editor.inlayHints.enabled": "off",
   "clangd.path": "/usr/bin/clangd", // "pacman -S clang".
   "clangd.arguments": ["--header-insertion=never"],
   "[cpp]": {
