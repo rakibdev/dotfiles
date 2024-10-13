@@ -28,7 +28,8 @@
   "editor.find.addExtraSpaceOnTop": false,
   "editor.minimap.enabled": false,
   "editor.codeActionsOnSave": {
-    "source.removeUnusedImports": "always"
+    "source.removeUnusedImports": "always",
+    "source.organizeImports": "always"
   },
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.copyOnSelection": true,
