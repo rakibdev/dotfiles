@@ -111,3 +111,8 @@ pacman -Qqi | grep -E "Name|Description|Required By"
 ```
 
 Identify what you don't need reading package details.
+
+## aria2 Download Manager
+
+Use aria2 as download manager instead of default Google Chrome download manager.<br>
+Useful for downloading files faster e.g. GitHub releases from browser.
