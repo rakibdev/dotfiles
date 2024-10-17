@@ -30,6 +30,9 @@ sudo -s
 ./fastboot reboot
 ```
 
+> [!NOTE]
+> If you see system partition doesn't exist when flashing then make sure you're in fastboot mode, not in recovery or bootloader.
+
 - Wait for device to turn on.
 
 ```
@@ -42,7 +45,8 @@ sudo -s
 
 ### Entering Walton bootloader
 
-When screen is turning off immediately hold "Power + Volume Down".
+After reboot splash when screen is turned off immediately press and hold "Volume Up + Power".
+https://www.youtube.com/watch?v=DurlIVSALdY
 
 ### Enable System UI Tuner
 
