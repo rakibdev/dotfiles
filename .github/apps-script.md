@@ -72,40 +72,6 @@ In my case phone couldn't encode 4K resolution. Had to set lower resolution e.g.
 
 <br>
 
-## YouTube Playlist Backup
-
-### What it does
-
-- Creates backup.json containing playlist videos.
-- Recovers details from the file when running next time.
-- Auto cleanup unavailable videos from playlist.
-
-### 1. Getting authorization, x-goog-authuser, cookie (not document.cookie)
-
-Allows sign-in and perform cleanup on behalf of user.
-
-1. Open DevTools network tab.
-2. Reload YouTube.
-3. Filter "Fetch/XHR" and "/youtubei/v1" URL.
-4. Values are under "Request Headers".
-
-### 2. Create config.toml
-
-```
-countryCode="US" # To identify region blocked.
-authorization="SAPISIDHASH ..."
-x-goog-authuser=0
-cookie=""
-
-[[playlists]]
-name="music"
-id="..."
-
-[[playlists]]
-name="later"
-id="..."
-```
-
 ### 3. Run
 
 ```
