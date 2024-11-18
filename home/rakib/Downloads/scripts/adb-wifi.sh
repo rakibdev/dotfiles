@@ -1,4 +1,4 @@
-dir=~/Downloads/apps-script
+dir=~/Downloads/scripts
 source $dir/utils.sh
 
 usage() {
@@ -46,7 +46,7 @@ pair() {
 	name="debug"
 	password="1234"
 	data="WIFI:T:ADB;S:$name;P:$password;;"
-	xdg-open https://api.qrserver.com/v1/create-qr-code/?data=$data &> /dev/null
+	xdg-open https://quickchart.io/qr?text=$data &> /dev/null
 
 	info "Waiting for scanning to complete..."
 	waitPairingUri

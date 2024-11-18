@@ -19,9 +19,11 @@ tac "$HISTFILE" | awk '!x[$0]++' > /tmp/.bash_history  &&
                 tac /tmp/.bash_history > "$HISTFILE"
 rm /tmp/.bash_history
 
+eval "$(zoxide init bash)"
+
 alias ls='ls --color=auto'
 alias poolkit=/usr/lib/xfce-polkit/xfce-polkit
 alias dots="GIT_DIR=$HOME/Downloads/dotfiles.git/ GIT_WORK_TREE=/ git"
-alias yarn=bun
+# alias yarn=bun
 
 export PATH="~/.bun/bin:$PATH"

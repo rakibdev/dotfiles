@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "workspaces": [
+    "theme"
+  ]
+}

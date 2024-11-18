@@ -1,5 +1,7 @@
 ## Android GSI
 
+https://github.com/DerTeufel/lineage_device_lenovo_x606fa/commit/4f81a6a4895fdc1870c1136bd715bc09b459eaa1
+
 - [Download latest TrebleDroid GSI.](https://github.com/TrebleDroid/treble_experimentations/releases)
 - Extract.
 

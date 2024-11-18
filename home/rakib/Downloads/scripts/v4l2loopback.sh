@@ -1,4 +1,4 @@
-dir=~/Downloads/apps-script
+dir=~/Downloads/scripts
 source $dir/utils.sh
 
 usage() {

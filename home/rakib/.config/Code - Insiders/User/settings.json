@@ -79,5 +79,13 @@
   "prettier.singleQuote": true,
   "prettier.trailingComma": "none",
   "prettier.printWidth": 120,
-  "prettier.semi": false
+  "prettier.semi": false,
+
+  "material-code.inject": [
+    "${extensionDir}/build/inject.css",
+    "${extensionDir}/build/inject.js",
+    "https://raw.githubusercontent.com/yoavbls/pretty-ts-errors/18647c1a58fbbef86e3bdbeecfccac11bbe5c9c8/docs/pretty-ts-errors-hack.css"
+  ],
+  "editor.inlineSuggest.suppressSuggestions": true,
+  "material-code.primaryColor": "#e0e0e0"
 }

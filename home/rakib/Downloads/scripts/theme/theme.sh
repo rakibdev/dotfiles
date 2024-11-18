@@ -17,7 +17,8 @@ fi
 system-ui patch $dir/theme/templates/foot.ini  ~/.config/foot/foot.ini
 system-ui patch $dir/theme/templates/hyprland.conf  ~/.config/hypr/hyprland.conf
 system-ui patch $dir/theme/templates/colors.css  ~/.local/share/themes/material-gtk/gtk-3.0/colors.css
-bun vscode.js
+
+bun vscode.ts
 
 output=$(hyprctl reload)
 if [ "$output" == "ok" ]

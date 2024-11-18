@@ -17,3 +17,6 @@ if [ -n "$orphanPackages" ]; then
   echo "$orphanPackages"
   sudo pacman -Rns --noconfirm $orphanPackages
 fi
+
+echo "Cleaning journal logs..."
+sudo rm -r /var/log/journal/*

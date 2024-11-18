@@ -1,0 +1,7 @@
+{
+  "name": "theme",
+  "dependencies": {
+    "material-code": "https://github.com/rakibdev/material-code/releases/download/3.0.2/npm.tgz",
+    "material-colors": "https://github.com/rakibdev/material-colors/releases/download/1.0.0/npm.tgz"
+  }
+}
