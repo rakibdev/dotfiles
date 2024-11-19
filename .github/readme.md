@@ -117,6 +117,8 @@ Identify what you don't need reading package details.
 Use aria2 as download manager instead of default Google Chrome download manager.<br>
 Useful for downloading files faster e.g. GitHub releases from browser.
 
-## Packages
+## Shell Packages
 
 - [zoxide](https://github.com/ajeetdsouza/zoxide)
+- [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)
+- [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
