@@ -4,7 +4,7 @@ PROMPT='$([ $? -eq 0 ] && echo "%F{blue}●" || echo "%F{red}●") %F{cyan}%~${r
 # Ctrl + arrow
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
-### Ctrl + backspace
+# Ctrl + backspace
 bindkey '^H' backward-kill-word
 
 HISTFILE=~/.cache/.zsh_history
