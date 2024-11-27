@@ -14,17 +14,13 @@ setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 
-eval "$(zoxide init zsh)"
+setopt CORRECT_ALL
+
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-source <(fzf --zsh)
-
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-# Binding substring search with arrows.
-# To identify key codes, run `cat -v` in your terminal, press arrow keys.
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+eval "$(zoxide init zsh)"
+eval "$(fzf --zsh)"
+# source /usr/share/zsh/plugins/fzf-tab-source/fzf-tab.plugin.zsh
 
 alias dots="GIT_DIR=$HOME/Downloads/dotfiles.git/ GIT_WORK_TREE=/ git"
 alias poolkit=/usr/lib/xfce-polkit/xfce-polkit

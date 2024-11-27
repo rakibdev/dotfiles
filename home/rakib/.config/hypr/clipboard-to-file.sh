@@ -1,1 +1,0 @@
-wl-paste --type image/png > /tmp/copy.png

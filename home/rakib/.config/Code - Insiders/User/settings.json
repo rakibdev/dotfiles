@@ -12,6 +12,7 @@
   "editor.fontSize": 16,
   "editor.tabSize": 2,
   "editor.lineNumbers": "off",
+  "editor.minimap.enabled": false,
   "editor.renderWhitespace": "none",
   "editor.semanticHighlighting.enabled": true,
   "editor.guides.bracketPairs": true,
@@ -26,7 +27,6 @@
   "breadcrumbs.enabled": false,
   "problems.decorations.enabled": false,
   "editor.find.addExtraSpaceOnTop": false,
-  "editor.minimap.enabled": false,
   "editor.codeActionsOnSave": {
     "source.removeUnusedImports": "always",
     "source.organizeImports": "always"
