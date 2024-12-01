@@ -7,7 +7,7 @@ sudo mv $temp $dir/mirrorlist
 echo "Saved $dir/mirrorlist"
 
 echo "Updating cachyos mirrors..."
-rate-mirrors --save=$temp cachyos  /dev/null 2>&1
+rate-mirrors --save=$temp cachyos > /dev/null 2>&1
 sudo mv $temp $dir/cachyos-mirrorlist
 echo "Saved $dir/cachyos-mirrorlist"
 
