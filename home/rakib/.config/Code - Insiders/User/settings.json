@@ -1,13 +1,15 @@
 {
   "workbench.colorTheme": "Material Code",
   "workbench.iconTheme": "catppuccin-latte",
-  "window.menuBarVisibility": "hidden",
-  "window.dialogStyle": "custom",
   "workbench.startupEditor": "none",
   "workbench.activityBar.location": "hidden",
   "workbench.list.mouseWheelScrollSensitivity": 6,
   "workbench.localHistory.maxFileEntries": 10,
   "workbench.commandPalette.history": 10,
+  "window.menuBarVisibility": "hidden",
+  "window.customTitleBarVisibility": "never",
+  "window.titleBarStyle": "native",
+  "window.dialogStyle": "custom",
   "editor.fontFamily": "SF Mono",
   "editor.fontSize": 16,
   "editor.tabSize": 2,
@@ -24,13 +26,13 @@
   "editor.accessibilitySupport": "off",
   "editor.formatOnSave": true,
   "editor.scrollbar.horizontal": "hidden",
-  "breadcrumbs.enabled": false,
   "problems.decorations.enabled": false,
   "editor.find.addExtraSpaceOnTop": false,
   "editor.codeActionsOnSave": {
     "source.removeUnusedImports": "always",
     "source.organizeImports": "always"
   },
+  "editor.pasteAs.preferences": ["text.updateImports"],
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.rightClickBehavior": "copyPaste",
@@ -52,6 +54,7 @@
     "**/node_modules": true
   },
 
+  "git.pruneOnFetch": true,
   "git.untrackedChanges": "separate",
   "git.confirmSync": false,
   "git.inputValidationSubjectLength": 120,
