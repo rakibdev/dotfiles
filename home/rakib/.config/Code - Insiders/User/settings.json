@@ -6,6 +6,7 @@
   "workbench.list.mouseWheelScrollSensitivity": 6,
   "workbench.localHistory.maxFileEntries": 10,
   "workbench.commandPalette.history": 10,
+  "window.zoomLevel": 1.1,
   "window.menuBarVisibility": "hidden",
   "window.customTitleBarVisibility": "never",
   "window.titleBarStyle": "native",
