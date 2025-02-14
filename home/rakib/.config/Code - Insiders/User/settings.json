@@ -6,7 +6,6 @@
   "workbench.list.mouseWheelScrollSensitivity": 6,
   "workbench.localHistory.maxFileEntries": 10,
   "workbench.commandPalette.history": 10,
-  "window.zoomLevel": 1.1,
   "window.menuBarVisibility": "hidden",
   "window.customTitleBarVisibility": "never",
   "window.titleBarStyle": "native",
@@ -27,6 +26,7 @@
   "editor.accessibilitySupport": "off",
   "editor.formatOnSave": true,
   "editor.scrollbar.horizontal": "hidden",
+  "breadcrumbs.enabled": false,
   "problems.decorations.enabled": false,
   "editor.find.addExtraSpaceOnTop": false,
   "editor.codeActionsOnSave": {
@@ -91,5 +91,6 @@
     "https://raw.githubusercontent.com/yoavbls/pretty-ts-errors/18647c1a58fbbef86e3bdbeecfccac11bbe5c9c8/docs/pretty-ts-errors-hack.css"
   ],
   "editor.inlineSuggest.suppressSuggestions": true,
-  "material-code.primaryColor": "#e0e0e0"
+  "material-code.primaryColor": "#e0e0e0",
+  "git.blame.editorDecoration.enabled": true
 }

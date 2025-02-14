@@ -2,11 +2,20 @@ filesize() {
   du -sh "$1" | awk '{print $1}'
 }
 
-cache=~/.cache
-if [ -d $cache ]; then
-  echo "Cleaning $cache ($(filesize $cache))..."
-  sudo rm -r $cache
-fi
+clean() {
+  local path="$1"
+  if [ -e "$path" ]; then
+    echo "Cleaning $path ($(filesize $path))..."
+    sudo rm -r "$path"
+  fi
+}
+
+clean ~/.cache/*
+clean /tmp/*
+clean /var/log/journal/*
+clean /usr/share/locale
+clean /usr/share/man
+clean /usr/share/gtk-doc
 
 echo "Cleaning pacman cache..."
 yes | sudo pacman -Scc
@@ -17,6 +26,3 @@ if [ -n "$orphanPackages" ]; then
   echo "$orphanPackages"
   sudo pacman -Rns --noconfirm $orphanPackages
 fi
-
-echo "Cleaning journal logs..."
-sudo rm -r /var/log/journal/*
