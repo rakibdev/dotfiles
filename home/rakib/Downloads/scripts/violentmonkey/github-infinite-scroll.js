@@ -1,19 +1,20 @@
 // ==UserScript==
 // @name         GitHub Search Infinite Scroll
+// @description  For code and repository search.
 // @version      1.0
 // @author       rakib13332@gmail.com
 // @match        https://github.com/search?q=*
 // @run-at       document-end
 // ==/UserScript==
 
-let hasMore = true
-let observer
-
 let listContainer
 let listSelector = `[data-testid="results-list"]`
-
+let observer
+let hasMore = true
 let loading = false
+
 const indicatorStyle = 'text-align: center; padding: 16px;'
+
 const loadingIndicator = document.createElement('div')
 loadingIndicator.textContent = 'Loading...'
 loadingIndicator.style.cssText = indicatorStyle
