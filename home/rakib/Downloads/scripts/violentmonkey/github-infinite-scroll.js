@@ -2,7 +2,7 @@
 // @name         GitHub Search Infinite Scroll
 // @description  For code and repository search.
 // @version      1.0
-// @author       rakib13332@gmail.com
+// @author       github.com/rakibdev
 // @match        https://github.com/search?q=*
 // @run-at       document-end
 // ==/UserScript==
