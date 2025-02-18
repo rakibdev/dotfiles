@@ -10,6 +10,7 @@
   "window.customTitleBarVisibility": "never",
   "window.titleBarStyle": "native",
   "window.dialogStyle": "custom",
+  "window.zoomLevel": 1.1,
   "editor.fontFamily": "SF Mono",
   "editor.fontSize": 16,
   "editor.tabSize": 2,
