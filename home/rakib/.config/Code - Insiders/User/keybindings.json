@@ -9,8 +9,7 @@
   },
   {
     "key": "ctrl+w",
-    "command": "-workbench.action.closeGroup",
-    "when": "activeEditorGroupEmpty && multipleEditorGroups"
+    "command": "-workbench.action.closeGroup"
   },
   {
     "key": "alt+left",
@@ -21,5 +20,6 @@
     "key": "alt+right",
     "command": "workbench.action.navigateForward",
     "when": "canNavigateForward"
-  }
+  },
+  { "key": "ins", "command": "-editor.action.toggleOvertypeInsertMode" }
 ]
