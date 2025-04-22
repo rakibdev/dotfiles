@@ -69,9 +69,6 @@
   "debug.onTaskErrors": "abort",
   "debug.console.acceptSuggestionOnEnter": "on",
 
-  "codeium.enableCodeLens": false,
-  "codeium.enableCommandSideHintEducation": false,
-
   // clangd related.
   "clangd.path": "/usr/bin/clangd", // "pacman -S clang".
   "clangd.arguments": ["--header-insertion=never"],

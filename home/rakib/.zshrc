@@ -15,17 +15,23 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 
 setopt CORRECT_ALL
+setopt AUTO_CD
 
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-eval "$(zoxide init zsh)"
+autoload -U compinit; compinit
+local pluginsDir='/usr/share/zsh/plugins'
+source $pluginsDir/fzf-tab-git/fzf-tab.plugin.zsh
+source $pluginsDir/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $pluginsDir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 eval "$(fzf --zsh)"
-# source /usr/share/zsh/plugins/fzf-tab-source/fzf-tab.plugin.zsh
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git --exclude node_modules --exclude dist --exclude build --exclude .cache --exclude cache --max-depth 4'
+export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 
+alias -s {jpg,jpeg,png,gif,webp,md,json,js,ts}=xdg-open
 alias dots="GIT_DIR=$HOME/Downloads/dotfiles.git/ GIT_WORK_TREE=/ git"
 alias poolkit=/usr/lib/xfce-polkit/xfce-polkit
 alias ls='ls --color=auto'
-alias cd=z
 alias yarn=bun
+alias npm=bun
 
-export PATH="$HOME/.bun/bin:$PATH"
+export PATH="$HOME/.bun/bin:$HOME/.local/bin:$PATH"
