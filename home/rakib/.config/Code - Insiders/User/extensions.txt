@@ -1,0 +1,13 @@
+bradlc.vscode-tailwindcss
+catppuccin.catppuccin-vsc-icons
+esbenp.prettier-vscode
+llvm-vs-code-extensions.vscode-clangd
+ms-vscode-remote.remote-ssh
+ms-vscode-remote.remote-ssh-edit
+ms-vscode.remote-explorer
+nuxt.mdc
+oven.bun-vscode
+rakib13332.material-code
+vadimcn.vscode-lldb
+vue.volar
+yoavbls.pretty-ts-errors
