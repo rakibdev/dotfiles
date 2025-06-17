@@ -1,11 +1,3 @@
-unix.stackexchange.com,stackoverflow.com###question
-unix.stackexchange.com,stackoverflow.com##.left-sidebar
-unix.stackexchange.com,stackoverflow.com##.show-votes
-unix.stackexchange.com,stackoverflow.com##.js-dismissable-hero
-unix.stackexchange.com,stackoverflow.com##.js-top-bar
-unix.stackexchange.com,stackoverflow.com##.js-add-answer-component
-unix.stackexchange.com,stackoverflow.com##.js-footer
-
 ! Unwanted search results.
 www.youtube.com##ytd-horizontal-card-list-renderer.ytd-item-section-renderer:has-text(/People also search for/)
 www.youtube.com##ytd-shelf-renderer:has-text(/People also watched|From related searches|For you|Previously watched/)
