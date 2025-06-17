@@ -51,7 +51,7 @@ const requestInternalAPI = async (endpoint, body) => {
 }
 
 const requestPublicAPI = async endpoint => {
-  const apiKey = 'AIzaSyAMNUOJEU4KxYMx-Uj7bnMgNVM7QxU-0z8'
+  const apiKey = 'AIzaSyBJ99X7pu22FZgPciPuiB0hDFxgccWwZLM'
   return fetch(`https://www.googleapis.com/youtube/v3${endpoint}&key=${apiKey}`, {}).then(response => response.json())
 }
 

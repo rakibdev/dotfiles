@@ -98,3 +98,36 @@ settings put secure theme_customization_overlay_packages '{"android.theme.custom
   - [HideNavBar](https://github.com/Magisk-Modules-Alt-Repo/HideNavBar)
   - [GoogleProductSansFont](https://github.com/D4rK7355608/GoogleProductSansFont)
   - [systemui-bootloop](https://github.com/Magisk-Modules-Alt-Repo/systemui-bootloop)
+
+## Initial Setup
+
+- Screen lock: none
+- Screen timeout: 1 minute
+- Use location: false
+- Touch sounds: false
+- Use battery manager: false
+
+- Notifications
+
+  - Enhanced notifications: false
+  - Wireless emergency alerts: false
+
+- Gesture navigation
+
+  - Increase left/right sensitivity
+
+- Developer options
+
+  - Window animation scale: 0.5
+  - Transition animation scale: 0.5
+  - Animator duration scale: 0.5
+  - Disable adb authorization timeout: true
+  - Quick settings developer tiles
+    - Wireless debugging: true
+
+- Quick tiles:
+  ```
+  Internet         | Flashlight
+  Wireless Debugging | Bluetooth
+  Battery Saver    | Screen Recording
+  ```

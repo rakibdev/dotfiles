@@ -1,7 +1,5 @@
 {
-  "workbench.colorTheme": "Material Code",
   "workbench.iconTheme": "catppuccin-latte",
-  "workbench.startupEditor": "none",
   "workbench.activityBar.location": "hidden",
   "workbench.list.mouseWheelScrollSensitivity": 6,
   "workbench.localHistory.maxFileEntries": 10,
@@ -10,7 +8,7 @@
   "window.customTitleBarVisibility": "never",
   "window.titleBarStyle": "native",
   "window.dialogStyle": "custom",
-  "window.zoomLevel": 1.1,
+  "window.zoomLevel": 1.4,
   "editor.fontFamily": "SF Mono",
   "editor.fontSize": 16,
   "editor.tabSize": 2,
@@ -31,8 +29,8 @@
   "problems.decorations.enabled": false,
   "editor.find.addExtraSpaceOnTop": false,
   "editor.codeActionsOnSave": {
-    "source.removeUnusedImports": "always",
-    "source.organizeImports": "always"
+    // "source.removeUnusedImports": "always"
+    // Avoid `source.organizeImports` it makes `.vue` file saving slow.
   },
   "editor.pasteAs.preferences": ["text.updateImports"],
   "terminal.integrated.cursorStyle": "line",
@@ -45,7 +43,6 @@
   "update.showReleaseNotes": false,
   "security.workspace.trust.enabled": false,
   "security.workspace.trust.untrustedFiles": "open",
-  "telemetry.telemetryLevel": "off",
   "extensions.ignoreRecommendations": true,
   "workbench.enableExperiments": false,
   "update.mode": "none",
@@ -61,19 +58,25 @@
   "git.confirmSync": false,
   "git.inputValidationSubjectLength": 120,
 
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "javascript.experimental.updateImportsOnPaste": true,
   "typescript.preferences.useAliasesForRenames": false,
-  "javascript.preferences.useAliasesForRenames": false,
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnPaste.enabled": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+
+  "json.schemaDownload.enable": true,
+
   "debug.onTaskErrors": "abort",
   "debug.console.acceptSuggestionOnEnter": "on",
 
   // clangd related.
   "clangd.path": "/usr/bin/clangd", // "pacman -S clang".
-  "clangd.arguments": ["--header-insertion=never"],
+  "clangd.arguments": ["--header-insertion=iwyu"],
   "[cpp]": {
     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -83,12 +86,17 @@
   "prettier.printWidth": 120,
   "prettier.semi": false,
 
+  "editor.inlineSuggest.suppressSuggestions": true,
+  "material-code.primaryColor": "#e0e0e0",
+  "git.blame.editorDecoration.enabled": true,
+  "update.releaseTrack": "prerelease",
   "material-code.inject": [
     "${extensionDir}/build/inject.css",
     "${extensionDir}/build/inject.js",
-    "https://raw.githubusercontent.com/yoavbls/pretty-ts-errors/18647c1a58fbbef86e3bdbeecfccac11bbe5c9c8/docs/pretty-ts-errors-hack.css"
+    "div[tabindex=\"0\"] .hover-row .marker.hover-contents { display: none; }"
   ],
-  "editor.inlineSuggest.suppressSuggestions": true,
-  "material-code.primaryColor": "#e0e0e0",
-  "git.blame.editorDecoration.enabled": true
+  "remote.SSH.remotePlatform": {
+    "digialocean_keycrypt": "linux"
+  },
+  "workbench.colorTheme": "Bikkuri (Dark Moss & Lively)"
 }
