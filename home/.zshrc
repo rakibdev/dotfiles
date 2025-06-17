@@ -28,7 +28,6 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git --exclude node_m
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 
 alias -s {jpg,jpeg,png,gif,webp,md,json,js,ts}=xdg-open
-alias dots="GIT_DIR=$HOME/Downloads/dotfiles.git/ GIT_WORK_TREE=/ git"
 alias poolkit=/usr/lib/xfce-polkit/xfce-polkit
 alias ls='ls --color=auto'
 alias yarn=bun
