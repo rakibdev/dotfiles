@@ -1,0 +1,46 @@
+pkgname=google-sans-fonts
+pkgver=1.1
+pkgrel=1
+pkgdesc="Google Sans font family"
+arch=('any')
+license=('custom')
+makedepends=('curl' 'grep')
+
+prepare() {
+    cd "$srcdir"
+    
+    css_url="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&display=swap"
+    curl -s "$css_url" > google-sans.css
+    
+    mapfile -t font_urls < <(grep -o 'https://[^)]*\.ttf' google-sans.css)
+    
+    if [ ${#font_urls[@]} -eq 0 ]; then
+        echo "Error: No font URLs found!"
+        exit 1
+    fi
+    
+    echo "Found ${#font_urls[@]} font files to download"
+    
+    font_names=(
+        "GoogleSans-Light.ttf"
+        "GoogleSans-Regular.ttf" 
+        "GoogleSans-Medium.ttf"
+        "GoogleSans-Bold.ttf"
+    )
+    
+    for i in "${!font_urls[@]}"; do
+        if [ $i -lt ${#font_names[@]} ]; then
+            echo "Downloading ${font_names[$i]}..."
+            curl -L -o "${font_names[$i]}" "${font_urls[$i]}"
+        fi
+    done
+}
+
+package() {
+    cd "$srcdir"
+    
+    install -d "$pkgdir/usr/share/fonts/$pkgname"
+    for font in *.ttf; do
+        [ -f "$font" ] && install -Dm644 "$font" "$pkgdir/usr/share/fonts/$pkgname/"
+    done
+}

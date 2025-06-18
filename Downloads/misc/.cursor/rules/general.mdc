@@ -1,0 +1,26 @@
+---
+description: 
+globs: **/*.*
+alwaysApply: false
+---
+- Don't summarize changes
+- Don't dry run or type check or build code
+- Don't explain unless specifically requested
+- Preserve original comments, but don't add more
+- Output all edits in a single message instead of multiple-step instructions for the same file
+- Keep code simple, performant
+- Use concise function/variable names but don't abbreviate (e.g. Use "event" over "e")
+- camelCase for functions/variables, PascalCase for types/classes
+- Avoid `handle` prefix on handlers, use `on` because it's short (e.g. onClick, onSubmit)
+- Use verb phrases for actions (e.g. save, verify)
+- Use == for equality checks, not ===
+- Use `Boolean(variable)` over `!!variable`
+- Prefer single-line ifs `if (condition) return`
+- Follow this `.prettierrc`:
+  ```
+  semi: false
+  singleQuote: true
+  trailingComma: none
+  arrowParens: avoid
+  ```
+- Use bun.js instead of node. (e.g. `bun add`)

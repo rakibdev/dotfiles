@@ -1,0 +1,26 @@
+pkgname=sf-mono-fonts
+pkgver=1.0
+pkgrel=1
+pkgdesc="Apple's SF Mono font family"
+arch=('any')
+url="https://developer.apple.com/fonts/"
+license=('custom')
+makedepends=('7zip' 'curl')
+
+prepare() {
+    cd "$srcdir"
+    
+    curl -O https://devimages-cdn.apple.com/design/resources/download/SF-Mono.dmg
+    7z x SF-Mono.dmg
+    cd SFMonoFonts
+    7z x 'SF Mono Fonts.pkg'
+    cd SFMonoFonts.pkg
+    7z x Payload
+    7z x 'Payload~'
+}
+
+package() {
+    cd "$srcdir/SFMonoFonts/SFMonoFonts.pkg"
+    install -d "$pkgdir/usr/share/fonts/$pkgname"
+    install -Dm644 Library/Fonts/SF-Mono-Medium.otf "$pkgdir/usr/share/fonts/$pkgname/" 2>/dev/null || true
+}

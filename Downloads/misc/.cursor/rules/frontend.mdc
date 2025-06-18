@@ -1,0 +1,8 @@
+---
+description: 
+globs: **/*.vue,**/*.tsx
+alwaysApply: false
+---
+- Use `catch(error: any)` and `toast.error(error.message)` instead of console.error and avoid fallback `error.message || "message"`.
+- Keep toast messages concise (e.g. Use "Saved" over "Photo saved successfully")
+- 

@@ -1,0 +1,8 @@
+---
+description: 
+globs: **/*.ts,**/*.tsx,**/*.vue
+alwaysApply: false
+---
+- Use modern ES14+ syntax (e.g. arrow const functions, async/await, try/catch, logical OR assignment ||=)
+- Use `type`, not `interface`
+- Avoid writing types (e.g. explicit return types). Let user do this.

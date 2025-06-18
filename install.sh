@@ -1,2 +1,3 @@
-stow --simulate --target="$HOME" home
-stow --simulate --target=/etc etc
+stow --restow --target="$HOME/Downloads" Downloads
+stow --restow --target="$HOME" home
+stow --restow --target=/etc etc

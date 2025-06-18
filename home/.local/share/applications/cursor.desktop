@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Cursor
 Comment=The AI Code Editor.
-Exec=/home/rakib/Downloads/cursor-ai/squashfs-root/usr/bin/cursor %F
+Exec=/home/rakib/Downloads/cursor-ai/squashfs-root/usr/bin/cursor %F --ozone-platform-hint=wayland
 Icon=visual-studio-code-insiders
 Type=Application

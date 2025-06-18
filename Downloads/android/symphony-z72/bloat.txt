@@ -1,0 +1,90 @@
+adb shell pm uninstall --user 0 org.chromium.webview_shell
+adb shell pm uninstall --user 0 com.android.quicksearchbox
+adb shell pm uninstall --user 0 com.google.android.googlequicksearchbox
+adb shell pm uninstall --user 0 com.android.mms.service
+adb shell pm uninstall --user 0 org.protonaosp.wallpapers
+adb shell pm uninstall --user 0 com.android.gallery3d
+adb shell pm uninstall --user 0 com.android.messaging
+adb shell pm uninstall --user 0 com.android.emergency
+adb shell pm uninstall --user 0 com.vzw.apnlib
+adb shell pm uninstall --user 0 com.android.calendar
+adb shell pm uninstall --user 0 com.google.android.calendar
+adb shell pm uninstall --user 0 com.android.calculator2
+adb shell pm uninstall --user 0 com.google.android.calculator
+adb shell pm uninstall --user 0 com.android.deskclock
+adb shell pm uninstall --user 0 com.android.managedprovisioning
+adb shell pm uninstall --user 0 com.android.providers.userdictionary
+adb shell pm uninstall --user 0 com.android.sdm.plugins.usccdm
+adb shell pm uninstall --user 0 org.protonaosp.deviceconfig
+adb shell pm uninstall --user 0 com.android.pacprocessor
+adb shell pm uninstall --user 0 com.android.musicfx
+adb shell pm uninstall --user 0 com.android.htmlviewer
+adb shell pm uninstall --user 0 com.google.android.flipendo
+adb shell pm uninstall --user 0 com.mediatek.emcamera
+adb shell pm uninstall --user 0 com.android.dynsystem
+adb shell pm uninstall --user 0 com.android.providers.downloads.ui
+adb shell pm uninstall --user 0 com.android.backupconfirm
+adb shell pm uninstall --user 0 com.android.captiveportallogin
+adb shell pm uninstall --user 0 com.android.bips.overlay.pixel
+adb shell pm uninstall --user 0 com.verizon.obdm
+adb shell pm uninstall --user 0 com.verizon.obdm_permissions
+adb shell pm uninstall --user 0 com.verizon.services
+adb shell pm uninstall --user 0 com.verizon.mips.services
+adb shell pm uninstall --user 0 com.google.android.apps.cameralite
+adb shell pm uninstall --user 0 com.android.stk
+adb shell pm uninstall --user 0 com.mediatek.sensorhub.ui
+adb shell pm uninstall --user 0 com.android.printspooler
+adb shell pm uninstall --user 0 com.android.printservice.recommendation
+adb shell pm uninstall --user 0 com.google.android.printservice.recommendation
+adb shell pm uninstall --user 0 com.google.android.apps.tips
+adb shell pm uninstall --user 0 com.google.android.apps.wearables.maestro.companion
+adb shell pm uninstall --user 0 com.google.ar.core
+adb shell pm uninstall --user 0 com.google.android.apps.work.clouddpc
+adb shell pm uninstall --user 0 com.android.bips
+adb shell pm uninstall --user 0 com.google.android.apps.pixelmigrate
+adb shell pm uninstall --user 0 com.google.android.apps.diagonisticstool
+adb shell pm uninstall --user 0 com.google.android.apps.wellbeing
+adb shell pm uninstall --user 0 com.google.android.projection.gearhead
+adb shell pm uninstall --user 0 com.android.providers.blockednumber
+adb shell pm uninstall --user 0 com.android.bookmarkprovider
+adb shell pm uninstall --user 0 com.android.providers.calendar
+adb shell pm uninstall --user 0 com.android.wallpaper.livepicker
+adb shell pm uninstall --user 0 com.google.android.tag
+adb shell pm uninstall --user 0 com.android.traceur
+
+adb shell pm uninstall --user 0 com.google.android.youtube
+adb shell pm uninstall --user 0 com.google.android.marvin.talkback
+adb shell pm uninstall -k --user 0 com.android.wallpaper.livepicker
+adb shell pm uninstall -k --user 0 com.android.chrome
+adb shell pm uninstall -k --user 0 com.exampl.notificationanim
+adb shell pm uninstall -k --user 0 com.google.android.googlequicksearchbox
+adb shell pm uninstall -k --user 0 com.google.android.apps.youtube.music
+adb shell pm uninstall -k --user 0 com.google.android.keep
+adb shell pm uninstall -k --user 0 com.google.android.gm
+adb shell pm uninstall -k --user 0 com.google.android.apps.maps
+adb shell pm uninstall -k --user 0 com.google.android.apps.docs
+adb shell pm uninstall -k --user 0 com.google.android.play.games
+adb shell pm uninstall -k --user 0 com.google.android.apps.tachyon
+adb shell pm uninstall -k --user 0 com.google.android.deskclock
+adb shell pm uninstall -k --user 0 com.unisoc.phone
+adb shell pm uninstall -k --user 0 com.unisoc.tui
+adb shell pm uninstall -k --user 0 com.unisoc.silent.reboot
+adb shell pm uninstall -k --user 0 com.sprocomm.mpfusys
+adb shell pm uninstall -k --user 0 com.sprd.linkturbo
+adb shell pm uninstall -k --user 0 com.sprd.uasetting
+adb shell pm uninstall -k --user 0 com.lava.app.gamezone
+adb shell pm uninstall -k --user 0 com.pri.smartfloatball
+adb shell pm uninstall -k --user 0 com.sslwireless.mela_embedded
+adb shell pm uninstall -k --user 0 com.android.printspooler
+adb shell pm uninstall -k --user 0 com.android.bluetoothmidiservice
+adb shell pm uninstall --user 0 com.android.fmradio
+adb shell pm uninstall --user 0 com.google.android.apps.photos
+adb shell pm uninstall --user 0 com.android.softwareupdate
+adb shell pm uninstall --user 0 com.android.soundrecorder
+adb shell pm uninstall --user 0 com.google.android.apps.adm
+adb shell pm uninstall --user 0 com.android.dualapp
+adb shell pm uninstall --user 0 com.google.android.apps.googleassistant
+adb shell pm uninstall --user 0 com.google.android.apps.nbu.files
+adb shell pm uninstall --user 0 com.google.android.apps.messaging
+adb shell pm uninstall --user 0 com.google.android.apps.safetyhub
+adb shell pm uninstall --user 0 com.android.camera2
