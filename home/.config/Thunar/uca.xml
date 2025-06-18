@@ -4,13 +4,9 @@
 		<icon>utilities-terminal</icon>
 		<name>Open terminal</name>
 		<unique-id>1725197785250717-2</unique-id>
-		<command>wl-copy %n; foot</command>
+		<command>foot -D %f</command>
 		<directories/>
-		<other-files/>
-		<text-files/>
-		<image-files/>
-		<video-files/>
-		<audio-files/>
+		<patterns>*</patterns>
 	</action>
 	<action>
 		<icon>video-x-generic</icon>
@@ -22,10 +18,9 @@
 	</action>
 	<action>
 		<icon>application-x-zip</icon>
-		<name>Unzip</name>
-		<unique-id>1706133223030976-1</unique-id>
-		<command>unzip %n -d $(basename %n .zip)</command>
-		<patterns>*.zip</patterns>
+		<name>Extract</name>
+		<command>7z x -y -o$(basename %f | cut -d. -f1)/ %f</command>
+		<patterns>*.rar;*.zip;*.7z;*.gz;*.tar,;*.xz</patterns>
 		<other-files />
 	</action>
 </actions>
