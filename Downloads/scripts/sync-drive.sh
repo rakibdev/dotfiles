@@ -1,0 +1,1 @@
+rclone sync ~/Downloads/google-drive/ "Google Drive:" --progress --drive-skip-gdocs
