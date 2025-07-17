@@ -1,7 +1,5 @@
 ## Android GSI
 
-https://github.com/DerTeufel/lineage_device_lenovo_x606fa/commit/4f81a6a4895fdc1870c1136bd715bc09b459eaa1
-
 - [Download latest TrebleDroid GSI.](https://github.com/TrebleDroid/treble_experimentations/releases)
 - Extract.
 
@@ -47,7 +45,7 @@ sudo -s
 
 ### Entering Walton bootloader
 
-After reboot splash when screen is turned off immediately press and hold "Volume Up + Power".
+After reboot when splash is turned off immediately press and hold "Volume Up + Power".
 https://www.youtube.com/watch?v=DurlIVSALdY
 
 ### Enable System UI Tuner
@@ -77,6 +75,13 @@ setprop persist.sys.bt.unsupported.commands 182
 ```
 settings put secure theme_customization_overlay_packages '{"android.theme.customization.theme_style":"VIBRANT"}'
 ```
+
+### Spam in logs
+
+If you see this:
+`AidlConversion: legacy2aidl_audio_channel_mask_t_AudioChannelLayout: no AudioChannelLayout found for legacy input / voice audio_channel_mask_t`
+
+Fix: https://github.com/DerTeufel/lineage_device_lenovo_x606fa/commit/4f81a6a4895fdc1870c1136bd715bc09b459eaa1
 
 ## Favorite apps
 
