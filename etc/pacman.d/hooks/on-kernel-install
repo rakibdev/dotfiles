@@ -38,5 +38,5 @@ efibootmgr | pcregrep -o1 "(\d)\* $label" | while read -r bootnum; do
     efibootmgr -b "$bootnum" -B > /dev/null
 done
 
-# zswap disabled because using zram only.
-efibootmgr --create --disk $efiLabel --part $efiPart --label "$label" --loader /$vmlinuz --unicode "root=UUID=$osUuid rw zswap.enabled=0 initrd=\\$ucode initrd=\\$initramfs"
+# Add `zswap.enabled=0` if use zram only.
+efibootmgr --create --disk $efiLabel --part $efiPart --label "$label" --loader /$vmlinuz --unicode "root=UUID=$osUuid rw initrd=\\$ucode initrd=\\$initramfs"

@@ -50,6 +50,7 @@
   "files.enableTrash": false,
   "files.exclude": {
     "**/build": true,
+    "**/dist": true,
     "**/node_modules": true
   },
 
@@ -69,6 +70,10 @@
   "debug.onTaskErrors": "abort",
   "debug.console.acceptSuggestionOnEnter": "on",
 
+  // Fixes `Error: Invalid debug adapter`
+  // https://github.com/oven-sh/bun/issues/9239#issuecomment-2205558525
+  "bun.runtime": "/usr/bin/bun",
+
   // clangd related.
   "clangd.path": "/usr/bin/clangd", // "pacman -S clang".
   "clangd.arguments": ["--header-insertion=iwyu"],
@@ -87,7 +92,6 @@
   "prettier.semi": false,
 
   "editor.inlineSuggest.suppressSuggestions": true,
-  "material-code.primaryColor": "#e0e0e0",
   "git.blame.editorDecoration.enabled": true,
   "update.releaseTrack": "prerelease",
   "material-code.inject": [
@@ -98,5 +102,6 @@
   "remote.SSH.remotePlatform": {
     "digialocean_keycrypt": "linux"
   },
-  "workbench.colorTheme": "Bikkuri (Dark Moss & Lively)"
+  "workbench.colorTheme": "Material Code",
+
 }
