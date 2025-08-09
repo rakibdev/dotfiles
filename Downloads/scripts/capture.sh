@@ -49,7 +49,7 @@ stopRecording() {
   recording=false
   echo ""
   if killall --signal SIGINT wf-recorder &> /dev/null; then
-    info "Screen record saved: $recordFile"
+    notify-send "Screen Recording" "Recording saved to $recordFile" --hint string:image-path:file://$recordFile
   else
     error "No screen record running."
   fi
@@ -88,7 +88,7 @@ screenshot() {
     grim $file
   fi
   wl-copy < $file
-  # notify-send "Screenshot" "Copied to clipboard." --hint string:image-path:file://$file
+  notify-send "Screenshot" "Copied to clipboard." --hint string:image-path:file://$file
 }
 
 if $video
