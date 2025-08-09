@@ -11,8 +11,8 @@
     "default_title": "New Tab"
   },
   "icons": {
-    "16": "play.svg",
-    "48": "play.svg",
-    "128": "play.svg"
+    "16": "images/play.svg",
+    "48": "images/play.svg",
+    "128": "images/play.svg"
   }
 }
