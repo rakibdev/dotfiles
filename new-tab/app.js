@@ -1,6 +1,6 @@
 class NewTabDB {
   constructor() {
-    this.dbName = 'NewTabDB'
+    this.dbName = 'NewTab'
     this.dbVersion = 1
     this.db = null
   }
@@ -183,10 +183,10 @@ class FocusTimer {
 
   updatePlayIcon() {
     if (this.isRunning) {
-      this.playIcon.src = 'restart.svg'
+      this.playIcon.src = 'images/restart.svg'
       this.playIcon.alt = 'Reset'
     } else {
-      this.playIcon.src = 'play.svg'
+      this.playIcon.src = 'images/play.svg'
       this.playIcon.alt = 'Play'
     }
   }
@@ -198,10 +198,10 @@ class FocusTimer {
 
   sendSystemNotification(title, body) {
     if ('Notification' in window) {
-      if (Notification.permission === 'granted') new Notification(title, { body, icon: 'play.svg' })
+      if (Notification.permission === 'granted') new Notification(title, { body, icon: 'images/play.svg' })
       else if (Notification.permission === 'default') {
         Notification.requestPermission().then(permission => {
-          if (permission === 'granted') new Notification(title, { body, icon: 'play.svg' })
+          if (permission === 'granted') new Notification(title, { body, icon: 'images/play.svg' })
         })
       }
     }
@@ -241,7 +241,7 @@ class FocusTimer {
     if ('showDirectoryPicker' in window) {
       const options = {
         id: 'wallpapers',
-        mode: 'read',
+        mode: 'readwrite',
         startIn: this.currentDirHandle || 'downloads'
       }
 
@@ -270,7 +270,7 @@ class FocusTimer {
       img.crossOrigin = 'anonymous'
       img.onload = () => {
         const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })
         canvas.width = img.width
         canvas.height = img.height
 

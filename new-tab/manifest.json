@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "New Tab",
+  "version": "1.0.0",
+  "description": "A minimalist new tab page with focus timer and wallpaper selection",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": ["notifications"],
+  "action": {
+    "default_title": "New Tab"
+  },
+  "icons": {
+    "16": "play.svg",
+    "48": "play.svg",
+    "128": "play.svg"
+  }
+}
