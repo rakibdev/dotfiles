@@ -1,20 +1,19 @@
 ---
 description: 
-globs: **/*.*
+globs: **/*
 alwaysApply: false
 ---
-- Don't summarize changes
-- Don't dry run or type check or build code
-- Don't explain unless specifically requested
-- Preserve original comments, but don't add more
-- Output all edits in a single message instead of multiple-step instructions for the same file
-- Keep code simple, performant
-- Use concise function/variable names but don't abbreviate (e.g. Use "event" over "e")
+
+- Write simple code with minimal changes
+- Keep messages concise
+- Never run, type-check or build code
+- Preserve original comments, don't add yourself
+- Use concise names for function/variable names but don't abbreviate (e.g. Use "event" not "e")
 - camelCase for functions/variables, PascalCase for types/classes
-- Avoid `handle` prefix on handlers, use `on` because it's short (e.g. onClick, onSubmit)
-- Use verb phrases for actions (e.g. save, verify)
+- Use `on` prefix for handlers, not `handle` (e.g. onClick, onSubmit)
+- Use short verbs for actions (e.g. save, verify)
 - Use == for equality checks, not ===
-- Use `Boolean(variable)` over `!!variable`
+- Use `Boolean(variable)`, not `!!variable`
 - Prefer single-line ifs `if (condition) return`
 - Follow this `.prettierrc`:
   ```
@@ -24,3 +23,9 @@ alwaysApply: false
   arrowParens: avoid
   ```
 - Use bun.js instead of node. (e.g. `bun add`)
+
+# TypeScript
+
+- Use modern ES14+ syntax (e.g. arrow const functions, async/await, try/catch, logical OR assignment ||=)
+- Use `type`, not `interface`
+- Avoid writing types (e.g. explicit return types). Let user do this.

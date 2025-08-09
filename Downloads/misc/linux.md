@@ -117,6 +117,13 @@ Identify what you don't need reading package details.
 Use aria2 as download manager instead of default Google Chrome download manager.<br>
 Useful for downloading files faster e.g. GitHub releases from browser.
 
-
 ## Thunar
+
 - `ffmpegthumbnailer` - Video thumbnail generator.
+
+## Packages
+
+- unzip
+- wf-recorder
+- wl-clipboard
+- wtype

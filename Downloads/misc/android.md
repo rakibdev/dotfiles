@@ -1,13 +1,13 @@
 ## Android GSI
 
 - [Download latest TrebleDroid GSI.](https://github.com/TrebleDroid/treble_experimentations/releases)
-- Extract.
+- Extract:
 
 ```
 xz -d system-td-arm32_binder64-ab-vanilla.img.xz
 ```
 
-- Remove pre-installed "phh-su" app to avoid "Unsupported Magisk Version" error.
+- Remove pre-installed "phh-su" app to avoid "Unsupported Magisk Version" error:
 
 ```
 git clone --depth 1 https://github.com/AndyCGYan/sas-creator.git
