@@ -4,9 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New Tab</title>
+    <link rel="stylesheet" href="app.css" />
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="app.ts"></script>
+    <button class="button glass pick-wallpaper">
+      <img class="icon" src="wallpaper.svg" alt="Change Wallpaper" />
+    </button>
+
+    <div id="app">
+      <div class="time-display">20:00</div>
+      <button class="button glass start-timer">
+        <img class="icon" src="play.svg" alt="Play" />
+      </button>
+    </div>
+
+    <script src="app.js"></script>
   </body>
 </html>
