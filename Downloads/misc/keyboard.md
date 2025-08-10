@@ -8,8 +8,7 @@ If you see `Received invalid protocol version from device`:
 3. Give permission `sudo chmod a+rw /dev/hidraw2`
 4. Once keyboard configured, download layout, revert permission `sudo chmod 600 /dev/hidraw2`
 
-# Keyboard Remapping (rk_r65.layout.json)
+# Keyboard Remapping
 
-- Esc → tilde/grave
-- Page_Down → Esc
-- Caps Lock → Super key
+- Page_Down → Grave/Tilde
+- Caps Lock → Super
