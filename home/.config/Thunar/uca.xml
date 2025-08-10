@@ -24,22 +24,11 @@
 	<video-files/>
 </action>
 <action>
-	<icon>application-x-zip</icon>
-	<name>Unzip</name>
-	<submenu></submenu>
-	<unique-id>1706133223030976-1</unique-id>
-	<command>unzip %n -d $(basename %n .zip)</command>
-	<description></description>
-	<range></range>
-	<patterns>*.zip</patterns>
-	<other-files/>
-</action>
-<action>
 	<icon>7-zip</icon>
 	<name>Extract</name>
 	<submenu></submenu>
 	<unique-id>1750234930186564-1</unique-id>
-	<command>7z x -y %f</command>
+	<command>7z x -y %F</command>
 	<description></description>
 	<range></range>
 	<patterns>*.rar;*.zip;*.7z;*.gz;*.tar,;*.xz</patterns>
