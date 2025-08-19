@@ -1,20 +1,19 @@
 ---
-description: 
-globs: **/*
-alwaysApply: false
+alwaysApply: true
 ---
 
-- Write simple code with minimal changes
-- Keep messages concise
-- Never run, type-check or build code
-- Preserve original comments, don't add yourself
+- Keep changes minimal
+- Never run, build or type-check code
+- Don't add code comments. But preserve existing
 - Use concise names for function/variable names but don't abbreviate (e.g. Use "event" not "e")
 - camelCase for functions/variables, PascalCase for types/classes
 - Use `on` prefix for handlers, not `handle` (e.g. onClick, onSubmit)
 - Use short verbs for actions (e.g. save, verify)
+- Use concise syntax e.g. if (array.length) not (array.length > 0), if (item) not (item != undefined)
 - Use == for equality checks, not ===
+- Prefer single-line ifs
 - Use `Boolean(variable)`, not `!!variable`
-- Prefer single-line ifs `if (condition) return`
+- Use console.error(error.message) with no prefixes.
 - Follow this `.prettierrc`:
   ```
   semi: false
