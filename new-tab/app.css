@@ -48,27 +48,6 @@ body.dark {
   border-radius: 2rem;
 }
 
-.time-display:hover {
-  border-radius: 1.5rem;
-}
-
-.time-display.editing {
-  background: transparent;
-  border: none;
-  outline: none;
-  text-align: center;
-  font-family: inherit;
-  font-size: 5rem;
-  font-weight: 600;
-  color: var(--foreground);
-  cursor: text;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  letter-spacing: 0.1em;
-  padding: 1rem 2rem;
-  border-radius: 1.5rem;
-}
-
 .button {
   border: none;
   border-radius: 50%;
@@ -88,27 +67,6 @@ body.dark {
 
 .glass:hover {
   background: var(--glass-hover);
-}
-
-.button.glass.running {
-  background: var(--glass-active);
-}
-
-.button.glass.running:hover {
-  background: var(--glass-active-hover);
-}
-
-.start-timer {
-  width: 80px;
-  height: 80px;
-}
-
-.start-timer:active {
-  border-radius: 12px;
-}
-
-.start-timer.running {
-  border-radius: 20px;
 }
 
 .pick-wallpaper {
@@ -131,11 +89,6 @@ body.dark {
 
 body.dark .icon {
   filter: brightness(0) saturate(100%) invert(0%);
-}
-
-.start-timer .icon {
-  width: 28px;
-  height: 28px;
 }
 
 .pick-wallpaper .icon {

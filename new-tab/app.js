@@ -56,13 +56,8 @@ class NewTabDB {
   }
 }
 
-class FocusTimer {
+class WallpaperClock {
   constructor() {
-    this.isRunning = false
-    this.timeLeft = 0
-    this.totalTime = 0
-    this.interval = null
-    this.defaultTime = '20:00'
     this.currentDirHandle = null
     this.currentWallpaperUrl = null
     this.surfaceColor = null
@@ -71,149 +66,38 @@ class FocusTimer {
   }
 
   async init() {
-    this.surfaceColor = getComputedStyle(document.body).getPropertyValue('--surface-color').trim()
+    this.surfaceColor = getComputedStyle(document.body).getPropertyValue('--surface').trim()
     this.getElements()
     this.setupEventListeners()
-    this.loadSavedTime()
     await this.database.init()
     await this.loadSavedDirHandle()
     await this.loadRandomWallpaper()
+    this.startClock()
   }
 
   getElements() {
     this.pickWallpaperButton = document.querySelector('.pick-wallpaper')
     this.timeDisplay = document.querySelector('.time-display')
-    this.startTimerButton = document.querySelector('.start-timer')
-    this.playIcon = document.querySelector('.start-timer .icon')
   }
 
   setupEventListeners() {
-    this.timeDisplay.addEventListener('click', () => this.editTime())
-    this.startTimerButton.addEventListener('click', () => this.toggleTimer())
     this.pickWallpaperButton.addEventListener('click', () => this.selectWallpaperFolder())
   }
 
-  editTime() {
-    if (this.isRunning) return
+  startClock() {
+    this.updateTime()
+    setInterval(() => this.updateTime(), 1000)
+  }
 
-    const input = document.createElement('input')
-    input.className = 'time-display editing'
-    input.type = 'text'
-    input.value = this.timeDisplay.textContent || this.defaultTime
-    input.pattern = '[0-9]{1,2}:[0-9]{2}'
-    input.placeholder = 'MM:SS'
-
-    this.timeDisplay.replaceWith(input)
-    input.focus()
-    input.setSelectionRange(input.value.length, input.value.length)
-
-    const finishEdit = () => {
-      const value = input.value.trim()
-      const timeRegex = /^(\d{1,2}):(\d{2})$/
-      const match = value.match(timeRegex)
-
-      if (match) {
-        const minutes = parseInt(match[1])
-        const seconds = parseInt(match[2])
-        if (minutes >= 0 && minutes <= 99 && seconds >= 0 && seconds <= 59) {
-          const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-          this.timeDisplay.textContent = formattedTime
-          this.saveTime(formattedTime)
-        } else this.timeDisplay.textContent = this.defaultTime
-      } else this.timeDisplay.textContent = this.timeDisplay.textContent || this.defaultTime
-
-      input.replaceWith(this.timeDisplay)
+  updateTime() {
+    const now = new Date()
+    const options = {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
     }
-
-    input.addEventListener('blur', finishEdit)
-    input.addEventListener('keydown', event => {
-      if (event.key == 'Enter') finishEdit()
-      else if (event.key == 'Escape') input.replaceWith(this.timeDisplay)
-    })
-  }
-
-  toggleTimer() {
-    if (this.isRunning) this.stopTimer()
-    else this.startTimer()
-  }
-
-  startTimer() {
-    const timeText = this.timeDisplay.textContent || this.defaultTime
-    const [minutes, seconds] = timeText.split(':').map(Number)
-    this.totalTime = minutes * 60 + seconds
-    this.timeLeft = this.totalTime
-
-    if (this.timeLeft <= 0) return
-
-    this.isRunning = true
-    this.startTimerButton.classList.add('running')
-    this.updatePlayIcon()
-
-    this.interval = setInterval(() => {
-      this.timeLeft--
-      this.updateDisplay()
-
-      if (this.timeLeft <= 0) this.onTimerComplete()
-    }, 1000)
-  }
-
-  stopTimer() {
-    this.isRunning = false
-    this.startTimerButton.classList.remove('running')
-
-    if (this.interval) {
-      clearInterval(this.interval)
-      this.interval = null
-    }
-
-    this.updatePlayIcon()
-    this.resetDisplay()
-  }
-
-  updateDisplay() {
-    const minutes = Math.floor(this.timeLeft / 60)
-    const seconds = this.timeLeft % 60
-    this.timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-  }
-
-  resetDisplay() {
-    const savedTime = localStorage.getItem('focusTime') || this.defaultTime
-    this.timeDisplay.textContent = savedTime
-  }
-
-  updatePlayIcon() {
-    if (this.isRunning) {
-      this.playIcon.src = 'images/restart.svg'
-      this.playIcon.alt = 'Reset'
-    } else {
-      this.playIcon.src = 'images/play.svg'
-      this.playIcon.alt = 'Play'
-    }
-  }
-
-  onTimerComplete() {
-    this.stopTimer()
-    this.sendSystemNotification('Focus Timer', 'Your focus session has ended!')
-  }
-
-  sendSystemNotification(title, body) {
-    if ('Notification' in window) {
-      if (Notification.permission === 'granted') new Notification(title, { body, icon: 'images/play.svg' })
-      else if (Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') new Notification(title, { body, icon: 'images/play.svg' })
-        })
-      }
-    }
-  }
-
-  saveTime(time) {
-    localStorage.setItem('focusTime', time)
-  }
-
-  loadSavedTime() {
-    const savedTime = localStorage.getItem('focusTime')
-    if (savedTime) this.timeDisplay.textContent = savedTime
+    const timeString = now.toLocaleTimeString('en-US', options)
+    this.timeDisplay.textContent = timeString.replace(' AM', '').replace(' PM', '')
   }
 
   async loadRandomWallpaper() {
@@ -296,7 +180,7 @@ class FocusTimer {
 
         const avgBrightness = totalBrightness / sampleCount
 
-        let lightBg = avgBrightness >= 0.7
+        let lightBg = avgBrightness >= 0.8
         if (lightBg) document.body.classList.add('dark')
         else document.body.classList.remove('dark')
       }
@@ -373,5 +257,5 @@ class FocusTimer {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  new FocusTimer()
+  new WallpaperClock()
 })
