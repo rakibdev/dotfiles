@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=MongoDB Compass
+Icon=mongodb-compass
+Exec=mongodb-compass --ozone-platform-hint=wayland --password-store="gnome-libsecret" --ignore-additional-command-line-flags
