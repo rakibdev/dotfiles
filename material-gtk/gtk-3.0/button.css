@@ -16,16 +16,16 @@ button:not(.image-button) image:dir(ltr) {
 }
 
 button:not(.flat) {
-  background-color: @primary_surface_3;
+  background-color: @card;
 }
 
 button:checked {
-  background-color: @primary_40;
-  color: @primary_surface;
+  background-color: @primary;
+  color: @primaryForeground;
 }
 
 button:hover:not(:checked) {
-  background-color: @primary_surface_4;
+  background-color: @hover;
 }
 
 @keyframes ripple {
@@ -35,6 +35,6 @@ button:hover:not(:checked) {
 }
 button:active {
   animation: ripple 150ms cubic-bezier(0, 0, 0.2, 1) forwards;
-  background-image: radial-gradient(circle, alpha(@primary_40, 0.19) 10%, transparent 0%);
+  background-image: radial-gradient(circle, alpha(@primary, 0.19) 10%, transparent 0%);
   background-size: 0% 0%;
 }

@@ -8,6 +8,6 @@ placessidebar row .sidebar-icon:dir(ltr) {
 }
 
 dialog headerbar {
-  background-color: @primary_surface_2;
+  background-color: @popover;
   padding: 8px;
 }

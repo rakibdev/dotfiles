@@ -1,12 +1,10 @@
-@define-color neutral_20 #d7dde8;
-@define-color neutral_40 #9fa6b0;
-@define-color neutral_80 #3c434b;
-
-@define-color primary_20 #c4e0ff;
-@define-color primary_40 #67abe8;
-@define-color primary_80 #00456f;
-
-@define-color primary_surface #111820;
-@define-color primary_surface_2 #16232f;
-@define-color primary_surface_3 #1a2e40;
-@define-color primary_surface_4 #25394c;
+@define-color background #12191d;
+@define-color border #2a3136;
+@define-color card #182126;
+@define-color foreground #ced5db;
+@define-color hover #1c272e;
+@define-color popover #192329;
+@define-color primary #85cff9;
+@define-color primaryForeground #003549;
+@define-color secondary #234b60;
+@define-color secondaryForeground #a4cce5;

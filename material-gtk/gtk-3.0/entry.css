@@ -2,11 +2,11 @@ entry {
   min-height: 40px;
   padding: 0 16px;
   border-radius: 24px;
-  background-color: @primary_surface_2;
+  background-color: @popover;
 }
 
 dialog entry {
-  background-color: @primary_surface_3;
+  background-color: @card;
 }
 
 /* thunar address bar folder icon */

@@ -1,6 +1,6 @@
 dialog.background,
 messagedialog.background {
-  background-color: @primary_surface_2;
+  background-color: @popover;
   border-radius: 24px;
 }
 
@@ -13,9 +13,9 @@ messagedialog.background {
 }
 
 dialog menu {
-  background-color: @primary_surface_3;
+  background-color: @card;
 }
 
 dialog menuitem:hover {
-  background-color: @primary_surface_4;
+  background-color: @hover;
 }

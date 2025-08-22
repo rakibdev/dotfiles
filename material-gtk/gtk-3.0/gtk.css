@@ -7,8 +7,8 @@
 @import url('chromium.css');
 
 .background {
-  color: @neutral_20;
-  background-color: @primary_surface;
+  color: @foreground;
+  background-color: @background;
 }
 
 :disabled {
@@ -18,7 +18,7 @@
 scrollbar slider {
   min-width: 4px;
   border-radius: 24px;
-  background-color: @primary_surface_4;
+  background-color: @hover;
 }
 
 scrollbar button {
@@ -26,7 +26,7 @@ scrollbar button {
 }
 
 tooltip.background {
-  background-color: @primary_surface_3;
+  background-color: @card;
   border-radius: 24px;
 }
 
@@ -35,11 +35,11 @@ tooltip label {
 }
 
 .view:selected {
-  background-color: @primary_surface_3;
+  background-color: @card;
 }
 
 .view:not(:selected):hover {
-  background-color: @primary_surface_2;
+  background-color: @popover;
 }
 
 scale trough {

@@ -1,16 +1,16 @@
 /* new tab */
 window.background.chromium {
-  background-color: @primary_surface;
+  background-color: @background;
 }
 
 /* tabstrip
 ==================== */
 window.background.chromium menubar {
-  /* background-color: @primary_surface; */
+  /* background-color: @background; */
 
-  color: @neutral_40;
+  color: @secondary;
 }
 window.background.chromium > button {
   /* fixes bottom border bleed */
-  border: 1px solid @primary_surface;
+  border: 1px solid @background;
 }
