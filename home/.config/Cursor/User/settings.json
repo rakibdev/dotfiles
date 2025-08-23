@@ -103,5 +103,5 @@
     "digialocean_keycrypt": "linux"
   },
   "workbench.colorTheme": "Material Code",
-
+  "cursor.composer.usageSummaryDisplay": "always"
 }
