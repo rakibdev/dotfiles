@@ -1,7 +1,4 @@
-#!/bin/bash
-
-dir=~/Downloads/scripts
-source $dir/utils.sh
+source ./utils.sh
 
 cursorDir=~/Downloads/cursor-ai
 cd "$cursorDir"

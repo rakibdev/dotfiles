@@ -1,5 +1,4 @@
-dir=~/Downloads/scripts
-source $dir/utils.sh
+source ./utils.sh
 
 usage() {
 	echo -e "${blue}connect"

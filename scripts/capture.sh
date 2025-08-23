@@ -1,5 +1,5 @@
-dir=~/Downloads/scripts
-source $dir/utils.sh
+# Used in Hyprland exec. So absolute path.
+source ~/Downloads/dotfiles/scripts/utils.sh
 
 usage() {
   echo -e "$blue{type}"

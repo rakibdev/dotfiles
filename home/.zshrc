@@ -24,7 +24,15 @@ source $pluginsDir/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $pluginsDir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 eval "$(fzf --zsh)"
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git --exclude node_modules --exclude dist --exclude build --exclude .cache --exclude cache --max-depth 4'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden \
+  --exclude .git \
+  --exclude node_modules \
+  --exclude dist \
+  --exclude build \
+  --exclude .cache \
+  --exclude cache \
+  --max-depth 3 \
+  .'
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 
 alias -s {jpg,jpeg,png,gif,webp,md,json,js,ts}=xdg-open
