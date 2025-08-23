@@ -1,8 +1,0 @@
-! Unwanted search results.
-www.youtube.com##ytd-horizontal-card-list-renderer.ytd-item-section-renderer:has-text(/People also search for/)
-www.youtube.com##ytd-shelf-renderer:has-text(/People also watched|From related searches|For you|Previously watched/)
-www.youtube.com##ytd-reel-shelf-renderer:has-text(/Shorts/)
-
-! Like, dislike, download button.
-www.youtube.com##.ytd-download-button-renderer
-www.youtube.com##.ytd-segmented-like-dislike-button-renderer

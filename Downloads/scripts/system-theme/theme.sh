@@ -17,3 +17,8 @@ fi
 if [ $? -ne 0 ]; then
   echo "GTK reload error." >&2
 fi
+
+./reload-foot.sh
+if [ $? -ne 0 ]; then
+  echo "Foot reload error." >&2
+fi

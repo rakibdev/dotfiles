@@ -1,4 +1,3 @@
-<!-- prettier-ignore -->
 > [!IMPORTANT]
 > Notes in [.github](/.github) directory.
 
@@ -57,36 +56,6 @@ sudo rm -r /var/log/journal/*
 ## PipeWire
 
 [/home/rakib/.config/pipewire/pipewire.conf.d](/home/rakib/.config/pipewire/pipewire.conf.d)
-
-### Virtual Surround Sound
-
-**virtual-surround-sound.conf** from [PipeWire GitLab](https://gitlab.freedesktop.org/pipewire/pipewire/-/blob/master/src/daemon/filter-chain/sink-virtual-surround-7.1-hesuvi.conf).<br>
-**atmos.wav** extracted from [HeSuVi_2.0.0.1.exe](https://sourceforge.net/projects/hesuvi/files).
-
-### Mic Noise Cancelation
-
-**mic-noise-cancelation.conf** from [PipeWire GitLab](https://gitlab.freedesktop.org/pipewire/pipewire/-/blob/master/src/daemon/filter-chain/source-rnnoise.conf).<br>
-Dependencies: [noise-suppression-for-voice](https://github.com/werman/noise-suppression-for-voice).
-
-Don't forget to activate sinks/sources using **wpctl**. The \* indicates currently active.
-
-```
-~ wpctl status
-Audio
- ├─ Devices:
- │      48. Family 17h/19h HD Audio Controller  [alsa]
- │
- ├─ Sinks:
- │  *   37. Virtual Surround Sound              [vol: 1.00]
- │      68. Family 17h/19h HD Audio Controller Digital Stereo (IEC958) [vol: 1.00]
- │
- ├─ Sources:
- │  *   36. Mic Noise Cancelation               [vol: 1.00]
- │      69. Family 17h/19h HD Audio Controller Analog Stereo [vol: 0.60]
-
-~ wpctl set-default 37
-~ wpctl set-default 36
-```
 
 <br>
 
