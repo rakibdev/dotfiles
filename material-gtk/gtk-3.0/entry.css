@@ -9,6 +9,14 @@ dialog entry {
   background-color: @card;
 }
 
+entry::placeholder {
+  color: @mutedForeground;
+}
+
+entry:disabled {
+  color: @mutedForeground;
+}
+
 /* thunar address bar folder icon */
 entry image.left {
   margin-right: 8px;

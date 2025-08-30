@@ -8,7 +8,7 @@ window.background.chromium {
 window.background.chromium menubar {
   /* background-color: @background; */
 
-  color: @secondary;
+  color: @mutedForeground;
 }
 window.background.chromium > button {
   /* fixes bottom border bleed */

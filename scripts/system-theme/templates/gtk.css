@@ -1,10 +1,15 @@
-@define-color background {background};
-@define-color border {border};
-@define-color card {card};
 @define-color foreground {foreground};
-@define-color hover {hover};
+@define-color mutedForeground {mutedForeground};
+
+@define-color background {background};
+
+@define-color card {card};
 @define-color popover {popover};
+@define-color hover {hover};
+@define-color border {border};
+
 @define-color primary {primary};
 @define-color primaryForeground {primaryForeground};
+
 @define-color secondary {secondary};
 @define-color secondaryForeground {secondaryForeground};

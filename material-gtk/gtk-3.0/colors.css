@@ -1,10 +1,15 @@
-@define-color background #12191d;
-@define-color border #2a3136;
-@define-color card #182126;
 @define-color foreground #ced5db;
-@define-color hover #1c272e;
+@define-color mutedForeground #7b858c;
+
+@define-color background #12191d;
+
+@define-color card #182126;
 @define-color popover #192329;
+@define-color hover #1c272e;
+@define-color border #2a3136;
+
 @define-color primary #85cff9;
 @define-color primaryForeground #003549;
+
 @define-color secondary #234b60;
 @define-color secondaryForeground #a4cce5;
