@@ -1,11 +1,12 @@
 {
   "workbench.iconTheme": "catppuccin-latte",
-  "workbench.activityBar.location": "hidden",
+  "workbench.colorTheme": "Material Code",
   "workbench.list.mouseWheelScrollSensitivity": 6,
   "workbench.localHistory.maxFileEntries": 10,
   "workbench.commandPalette.history": 10,
   "window.menuBarVisibility": "hidden",
   "window.customTitleBarVisibility": "never",
+  "workbench.activityBar.location": "hidden",
   "window.titleBarStyle": "native",
   "window.dialogStyle": "custom",
   "window.zoomLevel": 1.4,
@@ -25,6 +26,7 @@
   "editor.accessibilitySupport": "off",
   "editor.formatOnSave": true,
   "editor.scrollbar.horizontal": "hidden",
+  // "editor.glyphMargin": true,
   "breadcrumbs.enabled": false,
   "problems.decorations.enabled": false,
   "editor.find.addExtraSpaceOnTop": false,
@@ -40,7 +42,6 @@
   "terminal.integrated.shellIntegration.history": 10,
   "terminal.integrated.stickyScroll.enabled": false,
 
-  "update.showReleaseNotes": false,
   "security.workspace.trust.enabled": false,
   "security.workspace.trust.untrustedFiles": "open",
   "extensions.ignoreRecommendations": true,
@@ -93,15 +94,15 @@
 
   "editor.inlineSuggest.suppressSuggestions": true,
   "git.blame.editorDecoration.enabled": true,
-  "update.releaseTrack": "prerelease",
   "material-code.inject": [
     "${extensionDir}/build/inject.css",
     "${extensionDir}/build/inject.js",
     "div[tabindex=\"0\"] .hover-row .marker.hover-contents { display: none; }"
   ],
   "remote.SSH.remotePlatform": {
-    "digialocean_keycrypt": "linux"
+    "digialocean_keycrypt": "linux",
+    "crossapi": "linux",
+    "keycrypt": "linux"
   },
-  "workbench.colorTheme": "Material Code",
-  "cursor.composer.usageSummaryDisplay": "always"
+  "diffEditor.ignoreTrimWhitespace": true
 }
