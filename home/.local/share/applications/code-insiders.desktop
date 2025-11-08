@@ -1,5 +1,5 @@
 [Desktop Entry]
 Name=Code Insiders
 Exec=env VSCODE_GALLERY_SERVICE_URL=https://marketplace.visualstudio.com/_apis/public/gallery codium-insiders --ozone-platform-hint=wayland  %F
-Icon=codium-insiders
+Icon=vscode-insiders
 Type=Application
