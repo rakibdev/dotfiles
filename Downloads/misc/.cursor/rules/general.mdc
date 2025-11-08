@@ -1,26 +1,17 @@
----
-alwaysApply: true
----
-
-- Keep changes minimal
+- Always search and refactor dependent files
 - Never run, build or type-check code
-- Don't add code comments. But preserve existing
+- Don't add new comments, preserve existing comments.
 - Use concise names for function/variable names but don't abbreviate (e.g. Use "event" not "e")
 - camelCase for functions/variables, PascalCase for types/classes
 - Use `on` prefix for handlers, not `handle` (e.g. onClick, onSubmit)
 - Use short verbs for actions (e.g. save, verify)
 - Use concise syntax e.g. if (array.length) not (array.length > 0), if (item) not (item != undefined)
+- Use `(items.length)` over `(items.length > 0)` 
+- If a variable is short and used only once, put it inline
 - Use == for equality checks, not ===
 - Prefer single-line ifs
 - Use `Boolean(variable)`, not `!!variable`
 - Use console.error(error.message) with no prefixes.
-- Follow this `.prettierrc`:
-  ```
-  semi: false
-  singleQuote: true
-  trailingComma: none
-  arrowParens: avoid
-  ```
 - Use bun.js instead of node. (e.g. `bun add`)
 
 # TypeScript

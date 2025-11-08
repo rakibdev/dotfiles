@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=Cursor
-Comment=The AI Code Editor.
-Exec=/home/rakib/Downloads/cursor-ai/bin/cursor %F --ozone-platform-hint=wayland
-Icon=visual-studio-code-insiders
-Type=Application
