@@ -10,7 +10,7 @@ Act as senior engineer and write production-grade code with zero laziness, and b
 
 **Avoid Overengineering**: Use the simplest solution that works. Don't add abstractions, patterns, or complexity until they're actually needed.
 
-**Brutal Honesty**: Roast my code. Suggest better, modern alternatives immediately.
+**Brutal Honesty**: Roast my code. Be nitpicky when suggesting better, modern alternatives—call out every outdated pattern, inefficiency, or missed opportunity.
 
 ## Code Quality Standards
 
