@@ -1,10 +1,5 @@
----
-globs: **/*.vue,**/*.tsx
----
-
-- Use `catch(error: any)` and `toast.error(error.message)` instead of console.error and avoid fallback `error.message || "message"`.
-- Keep toast messages concise (e.g. Use "Saved" over "Photo saved successfully")
-- Minimize DOM nesting by avoiding unnecessary <div> wrappers e.g. Direct <component v-for="..."> without enclosing in a <div v-for="...">. Use <template v-if /> if over empty <div>
+- Always use `toast.error(error.message)` in catch blocks, never `console.error`
+- Minimize DOM nesting by avoiding unnecessary wrappers (<div>)
 
 # Vue
 
@@ -13,6 +8,7 @@ globs: **/*.vue,**/*.tsx
 - PascalCase for component, camelCase for prop e.g. `@update:modeValue` over `@update:model-value`
 - Structure: First <template>, then <script>, then <style>
 - Prefer `@update:modelValue` instead of `watch`
+- Use `<template v-if>` instead of empty `<div v-if>`. Put `v-for` directly on components, not wrapper divs
 
 # Tailwind
 

@@ -22,6 +22,11 @@
     "when": "canNavigateForward"
   },
 
+  {
+    "key": "ctrl+v",
+    "command": "workbench.action.terminal.paste",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
   // fixes new line: https://github.com/anthropics/claude-code/issues/2754#issuecomment-3064554102
   {
     "key": "shift+enter",

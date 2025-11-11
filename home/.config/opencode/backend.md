@@ -1,6 +1,3 @@
----
-globs: backend/**/*.ts
----
 - Use new v.pipe() for schemas
 - Use v.picklist() or v.array(v.picklist()) for enums
 - Use drizzle-orm `db.select()` instead of findMany()
