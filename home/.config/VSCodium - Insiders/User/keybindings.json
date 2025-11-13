@@ -27,11 +27,19 @@
     "command": "workbench.action.terminal.paste",
     "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
   },
+
   // fixes new line: https://github.com/anthropics/claude-code/issues/2754#issuecomment-3064554102
   {
     "key": "shift+enter",
     "command": "workbench.action.terminal.sendSequence",
     "args": { "text": "\u001B\u000A" },
     "when": "terminalFocus"
+  },
+
+  // send to terminal
+  {
+    "key": "meta+k",
+    "command": "claude-code.insertAtMentioned",
+    "when": "editorTextFocus"
   }
 ]

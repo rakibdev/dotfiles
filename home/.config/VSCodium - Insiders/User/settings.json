@@ -36,6 +36,7 @@
     // Avoid `source.organizeImports` it makes `.vue` file saving slow.
   },
   "editor.pasteAs.preferences": ["text.updateImports"],
+  "diffEditor.ignoreTrimWhitespace": true,
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.rightClickBehavior": "copyPaste",
@@ -105,6 +106,6 @@
     "crossapi": "linux",
     "keycrypt": "linux"
   },
-  "diffEditor.ignoreTrimWhitespace": true,
-  "scm.repositories.selectionMode": "multiple"
+
+  "claudeCode.useTerminal": true
 }
