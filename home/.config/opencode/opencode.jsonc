@@ -1,0 +1,58 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "startup_view": "last_chat",
+  "tui": {
+    "scroll_speed": 20
+  },
+  "permission": {
+    "webfetch": "allow",
+    "bash": {
+      "*": "allow",
+      "rm *": "ask",
+      "sudo *": "ask",
+      "git *": "ask"
+    }
+  },
+  "keybinds": {
+    "input_newline": "alt+enter",
+    "session_new": "ctrl+n",
+    "messages_last": "ctrl+down"
+  },
+  "provider": {
+    "opencode": {
+      "models": {
+        "big-pickle": {
+          "options": {
+            "reasoningEffort": "high",
+            "textVerbosity": "low"
+          }
+        }
+      }
+    }
+  },
+  "small_model": "google/gemini-2.5-flash-lite",
+  "agent": {
+    "build": {
+      "description": "Advanced AI coder with context-aware refactoring",
+      "mode": "primary",
+      "prompt": "{file:./code.md}",
+      "temperature": 0.2
+    },
+    "general": {
+      "disable": true
+    }
+  },
+  "tools": {
+    "list": false,
+    "task": false
+  },
+  "lsp": {
+    "typescript": {
+      "disabled": true
+    }
+    // "vtsls": {
+    //   "command": ["vtsls", "--stdio"],
+    //   "extensions": [".ts", ".tsx"]
+    // }
+  }
+}
