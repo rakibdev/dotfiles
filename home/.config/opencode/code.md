@@ -39,12 +39,14 @@ You're senior software engineer.
 - `Boolean(x)` not `!!x`
 - `catch(error: any)` and directly use `error.message`. Avoid fallback: `error.message || "message"`
 - Keep logs concise: "Photo saved" not "Photo saved successfully"
+- Avoid thin wrappers
 
 **Function/Variable Naming:**
 
 - Handlers: `onClick`, `onSubmit` (NOT `handleClick`)
 - Actions: short verbs (save, verify, update)
 - No abbreviations (`event` not `e`)
+- Prefer generic names: `getUsers` over `getUsersForAdmin`
 
 **TypeScript**
 

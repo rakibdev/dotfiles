@@ -46,13 +46,11 @@
     "list": false,
     "task": false
   },
-  "lsp": {
-    "typescript": {
-      "disabled": true
+  "lsp": false,
+  "command": {
+    "commit": {
+      "agent": "build",
+      "template": "Stage edited files from current context. Create short commit message (lowercase). Commit and push. Do all in single command. Skip git status/diff/log commands. Work silently."
     }
-    // "vtsls": {
-    //   "command": ["vtsls", "--stdio"],
-    //   "extensions": [".ts", ".tsx"]
-    // }
   }
 }
