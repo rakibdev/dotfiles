@@ -8,7 +8,7 @@ close_tab_or_window() {
 }
 
 cycle_recent_windows() {
-    local state_file="/tmp/hypr_column_toggle"
+    local state_file="/tmp/toggle_window"
     
     if [[ -f $state_file ]]; then
         rm $state_file

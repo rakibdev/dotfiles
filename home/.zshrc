@@ -15,7 +15,6 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 
 setopt CORRECT_ALL
-setopt AUTO_CD
 
 autoload -U compinit; compinit
 local pluginsDir='/usr/share/zsh/plugins'
@@ -38,7 +37,7 @@ export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 alias -s {jpg,jpeg,png,gif,webp,md,json,js,ts}=xdg-open
 alias poolkit=/usr/lib/xfce-polkit/xfce-polkit
 alias ls='ls --color=auto'
-alias yarn=bun
+# alias yarn=bun
 alias npm=bun
 
 export PATH="$HOME/.bun/bin:$HOME/.local/bin:$PATH"
