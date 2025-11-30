@@ -1,0 +1,17 @@
+pkgname=double-click-fix
+pkgver=1.0
+pkgrel=1
+pkgdesc="R65 C key double-click fix"
+arch=('x86_64')
+license=('MIT')
+source=('double-click-fix.c' 'double-click-fix.service')
+sha256sums=('SKIP' 'SKIP')
+
+build() {
+    gcc -O2 -o double-click-fix double-click-fix.c
+}
+
+package() {
+    install -Dm755 double-click-fix "$pkgdir/usr/bin/double-click-fix"
+    install -Dm644 double-click-fix.service "$pkgdir/usr/lib/systemd/system/double-click-fix.service"
+}

@@ -1,0 +1,10 @@
+[Unit]
+Description=R65 C key double-click fix
+After=systemd-udevd.service
+
+[Service]
+ExecStart=/usr/bin/double-click-fix /dev/input/by-id/usb-Hangsheng_RK-R65-event-kbd
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
