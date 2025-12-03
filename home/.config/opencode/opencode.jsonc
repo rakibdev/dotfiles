@@ -43,14 +43,14 @@
     }
   },
   "tools": {
-    "list": false,
-    "task": false
+    "codesearch": false,
+    "websearch": false
   },
   "lsp": false,
   "command": {
     "commit": {
       "agent": "build",
-      "template": "Stage edited files from current context. Create short commit message (lowercase). Commit and push. Do all in single command. Skip git status/diff/log commands. Work silently."
+      "template": "Stage edited files from current context. Create short generic commit message (lowercase) - describe what was fixed/added, not implementation details like 'move X to Y'. Commit and push. Do all in single command. Skip git status/diff/log commands. Work silently."
     }
   }
 }
