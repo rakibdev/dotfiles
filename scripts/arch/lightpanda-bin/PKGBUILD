@@ -1,0 +1,15 @@
+pkgname=lightpanda-bin
+pkgver=0.0.1.nightly
+pkgrel=1
+pkgdesc="Headless browser designed for AI and automation - ultra-fast, low memory footprint"
+arch=('x86_64')
+url="https://lightpanda.io"
+license=('AGPL-3.0-only')
+provides=('lightpanda')
+conflicts=('lightpanda')
+source_x86_64=("lightpanda-${pkgver}::https://github.com/lightpanda-io/browser/releases/download/nightly/lightpanda-x86_64-linux")
+sha256sums_x86_64=('SKIP')
+
+package() {
+    install -Dm755 "$srcdir/lightpanda-${pkgver}" "$pkgdir/usr/bin/lightpanda"
+}
