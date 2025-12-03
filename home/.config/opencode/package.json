@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.0.129",
+    "turndown": "^7.2.2"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.3",
+    "@types/turndown": "^5.0.6"
+  }
+}
