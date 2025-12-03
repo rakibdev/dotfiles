@@ -55,8 +55,11 @@ function toMarkdown(html: string) {
   return (
     turndown
       .turndown(html)
+      // [](url) -> empty
       .replace(/\[\s*\]\([^)]*\)/g, "")
+      // [text](url "text") -> [text](url)
       .replace(/\[([^\]]+)\]\(([^)]+)\s+"[^"]*"\)/g, "[$1]($2)")
+      // [.github](...)\n\n[.github](...) -> [.github](...)
       .replace(/\[([^\]]+)\]\([^)]+\)\s*\n+\s*\[\1\]\([^)]+\)/g, (m) => m.match(/\[[^\]]+\]\([^)]+\)/)?.[0] ?? m)
       .replace(/\n{3,}/g, "\n\n")
       .trim()
