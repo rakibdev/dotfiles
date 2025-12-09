@@ -10,7 +10,10 @@
       "*": "allow",
       "rm *": "ask",
       "sudo *": "ask",
-      "git *": "ask"
+      "git *": "ask",
+      "git diff *": "allow",
+      "git status *": "allow",
+      "git show *": "allow"
     }
   },
   "keybinds": {

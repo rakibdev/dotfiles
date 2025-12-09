@@ -96,11 +96,7 @@
 
   "editor.inlineSuggest.suppressSuggestions": true,
   "git.blame.editorDecoration.enabled": true,
-  "material-code.inject": [
-    "${extensionDir}/build/inject.css",
-    "${extensionDir}/build/inject.js",
-    "div[tabindex=\"0\"] .hover-row .marker.hover-contents { display: none; }"
-  ],
+  "material-code.inject": ["div[tabindex=\"0\"] .hover-row .marker.hover-contents { display: none; }"],
   "remote.SSH.remotePlatform": {
     "digialocean_keycrypt": "linux",
     "crossapi": "linux",
