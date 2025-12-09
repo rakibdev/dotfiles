@@ -4,6 +4,11 @@ import { $ } from "bun"
 
 const TIMEOUT = 30_000
 
+const toRawUrl = (url: string) => {
+  const match = url.match(/^(https?):\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/)
+  if (match) return `${match[1]}://raw.githubusercontent.com/${match[2]}/${match[3]}/${match[4]}`
+}
+
 const DESCRIPTION = `Fetches URL content and converts to markdown.
 
 - URL must be fully-formed (http:// or https://)
@@ -20,7 +25,9 @@ export default tool({
       throw new Error("URL must start with http:// or https://")
     }
 
-    const html = await $`lightpanda fetch --dump --strip_mode full --http_timeout ${TIMEOUT} ${args.url}`
+    const url = toRawUrl(args.url) ?? args.url
+
+    const html = await $`lightpanda fetch --dump --strip_mode full --http_timeout ${TIMEOUT} ${url}`
       .text()
       .catch((error: any) => {
         throw new Error(`Lightpanda fetch failed: ${error.message}`)
