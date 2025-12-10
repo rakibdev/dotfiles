@@ -73,6 +73,16 @@
       "enabled": false,
       "type": "local",
       "command": ["bun", "run", "--cwd", "/home/rakib/Downloads/mcp", "playwriter"]
+    },
+    "ssh": {
+      "enabled": false,
+      "type": "local",
+      "command": ["bun", "/home/rakib/Downloads/dotfiles/mcp/ssh.ts"],
+      "environment": {
+        "SSH_HOST": "{env:SSH_HOST}",
+        "SSH_USER": "{env:SSH_USER}",
+        "SSH_PASSWORD": "{env:SSH_PASSWORD}"
+      }
     }
   },
   "command": {
