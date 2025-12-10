@@ -33,16 +33,18 @@
       }
     }
   },
-  "small_model": "google/gemini-2.5-flash-lite",
   "agent": {
     "build": {
       "description": "Advanced AI coder with context-aware refactoring",
-      "mode": "primary",
-      "prompt": "{file:./code.md}",
-      "temperature": 0.2
+      "prompt": "{file:./code.md}"
+      // "temperature": 0.5
     },
     "general": {
       "disable": true
+    },
+    "plan": {
+      "disable": true
+    },
     }
   },
   "tools": {
@@ -50,6 +52,29 @@
     "websearch": false
   },
   "lsp": false,
+  "mcp": {
+    "mongodb": {
+      "enabled": false,
+      "type": "local",
+      "command": ["bun", "--cwd", "/home/rakib/Downloads/mcp", "mongodb", "--read-only"],
+      "environment": {
+        "MCP_MONGODB_URI": "{env:MCP_MONGODB_URI}"
+      }
+    },
+    "figma": {
+      "enabled": false,
+      "type": "local",
+      "command": ["bun", "/home/rakib/Downloads/mcp/node_modules/figma-developer-mcp/dist/bin.js", "--stdio"],
+      "environment": {
+        "FIGMA_API_KEY": "{env:FIGMA_API_KEY}"
+      }
+    },
+    "playwriter": {
+      "enabled": false,
+      "type": "local",
+      "command": ["bun", "run", "--cwd", "/home/rakib/Downloads/mcp", "playwriter"]
+    }
+  },
   "command": {
     "commit": {
       "agent": "build",

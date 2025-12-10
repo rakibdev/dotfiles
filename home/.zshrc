@@ -36,7 +36,6 @@ export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 
 alias -s {jpg,jpeg,png,gif,webp,md,json,js,ts}=xdg-open
 alias poolkit=/usr/lib/xfce-polkit/xfce-polkit
-alias claude='/opt/claude-code/bin/claude --system-prompt-file=/home/rakib/.config/opencode/code.md'
 alias ls='ls --color=auto'
 # alias yarn=bun
 alias npm=bun
