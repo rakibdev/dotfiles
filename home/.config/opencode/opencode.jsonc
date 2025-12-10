@@ -83,6 +83,14 @@
         "SSH_USER": "{env:SSH_USER}",
         "SSH_PASSWORD": "{env:SSH_PASSWORD}"
       }
+    },
+    "github": {
+      "enabled": false,
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_PAT}"
+      }
     }
   },
   "command": {
