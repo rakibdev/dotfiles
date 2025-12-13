@@ -3,7 +3,7 @@ import { createServer, Server, Socket } from "net"
 import { join } from "path"
 import * as vscode from "vscode"
 
-const SOCKET_PATH = "/tmp/opencode-mcp.sock"
+const SOCKET_PATH = "/tmp/vscode-mcp.sock"
 const SEVERITY_MAP = ["error", "warning", "info", "hint"] as const
 
 type Severity = (typeof SEVERITY_MAP)[number]
@@ -141,7 +141,7 @@ export async function activate(context: vscode.ExtensionContext) {
   server = new SocketServer()
   try {
     await server.start()
-    output.appendLine(`Socket: ${SOCKET_PATH}`)
+    output.appendLine(`vscode-mcp: ${SOCKET_PATH}`)
   } catch (e: any) {
     output.appendLine(`Socket failed: ${e.message}`)
   }
