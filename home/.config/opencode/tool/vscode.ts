@@ -1,6 +1,6 @@
 import { tool } from "@opencode-ai/plugin"
 
-const SOCKET_PATH = "/tmp/opencode-mcp.sock"
+const SOCKET_PATH = "/tmp/vscode-mcp.sock"
 const TIMEOUT_MS = 3000
 
 type RpcResponse = {
@@ -106,7 +106,7 @@ Falls back gracefully if VSCode is not running.`,
       })
 
       if (!result?.files?.length) {
-        return "No diagnostics found"
+        return "No errors"
       }
 
       return result.files
@@ -124,7 +124,7 @@ Falls back gracefully if VSCode is not running.`,
         })
         .join("\n\n")
     } catch (error: any) {
-      return "VSCode extension not running. Use lsp_diagnostics or run tsc --noEmit instead."
+      return "VSCode extension not running"
     }
   },
 })
