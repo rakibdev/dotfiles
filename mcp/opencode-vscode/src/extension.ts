@@ -83,11 +83,6 @@ const getDiagnostics = (params: GetDiagnosticsParams): { files: FileDiagnostic[]
   return { files }
 }
 
-const healthCheck = () => ({
-  status: "ok",
-  workspace: vscode.workspace.workspaceFolders?.[0]?.uri.fsPath,
-})
-
 class SocketServer {
   private server: Server | null = null
 
@@ -124,14 +119,10 @@ class SocketServer {
   private handle(req: Request): Response {
     const { id, method, params } = req
     try {
-      switch (method) {
-        case "health":
-          return { id, result: healthCheck() }
-        case "getDiagnostics":
-          return { id, result: getDiagnostics(params as GetDiagnosticsParams) }
-        default:
-          return { id, error: { code: 404, message: `Unknown method: ${method}` } }
+      if (method == "getDiagnostics") {
+        return { id, result: getDiagnostics(params as GetDiagnosticsParams) }
       }
+      return { id, error: { code: 404, message: `Unknown method: ${method}` } }
     } catch (e: any) {
       return { id, error: { code: 500, message: e.message } }
     }
@@ -144,15 +135,15 @@ class SocketServer {
 }
 
 let server: SocketServer | null = null
-const output = vscode.window.createOutputChannel("OpenCode MCP")
+const output = vscode.window.createOutputChannel("OpenCode")
 
 export async function activate(context: vscode.ExtensionContext) {
   server = new SocketServer()
   try {
     await server.start()
-    output.appendLine(`MCP: ${SOCKET_PATH}`)
+    output.appendLine(`Socket: ${SOCKET_PATH}`)
   } catch (e: any) {
-    output.appendLine(`MCP failed: ${e.message}`)
+    output.appendLine(`Socket failed: ${e.message}`)
   }
 
   context.subscriptions.push({ dispose: () => server?.cleanup() })
