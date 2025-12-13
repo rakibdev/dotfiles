@@ -13,3 +13,6 @@
 
 @define-color secondary #234b60;
 @define-color secondaryForeground #a4cce5;
+
+@define-color surface alpha(@hover, 0.8);
+@define-color surface-variant alpha(@foreground, 0.2);
