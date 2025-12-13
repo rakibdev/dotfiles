@@ -1,20 +1,30 @@
-import { tool } from "@opencode-ai/plugin"
+import { tool } from '@opencode-ai/plugin'
 
-const SOCKET_PATH = "/tmp/vscode-mcp.sock"
+const SOCKET_PATH = '/tmp/vscode-mcp.sock'
 const TIMEOUT_MS = 3000
 
 type RpcResponse = {
   id: string
-  result?: { files: { uri: string; diagnostics: { range: { start: { line: number; character: number } }; message: string; severity: string; source?: string }[] }[] }
+  result?: {
+    files: {
+      uri: string
+      diagnostics: {
+        range: { start: { line: number; character: number } }
+        message: string
+        severity: string
+        source?: string
+      }[]
+    }[]
+  }
   error?: { code: number; message: string }
 }
 
 async function rpc<T>(method: string, params?: Record<string, unknown>): Promise<T> {
   const id = crypto.randomUUID()
-  const request = JSON.stringify({ id, method, params }) + "\n"
+  const request = JSON.stringify({ id, method, params }) + '\n'
 
   return new Promise((resolve, reject) => {
-    let buffer = ""
+    let buffer = ''
     let settled = false
     let socketRef: ReturnType<typeof Bun.connect> extends Promise<infer T> ? T : never
 
@@ -22,7 +32,7 @@ async function rpc<T>(method: string, params?: Record<string, unknown>): Promise
       if (settled) return
       settled = true
       socketRef?.end()
-      reject(new Error("VSCode socket timeout"))
+      reject(new Error('VSCode socket timeout'))
     }, TIMEOUT_MS)
 
     Bun.connect({
@@ -34,8 +44,8 @@ async function rpc<T>(method: string, params?: Record<string, unknown>): Promise
         },
         data(socket, data) {
           buffer += data.toString()
-          const lines = buffer.split("\n")
-          buffer = lines.pop() || ""
+          const lines = buffer.split('\n')
+          buffer = lines.pop() || ''
 
           for (const line of lines) {
             if (!line.trim()) continue
@@ -65,16 +75,16 @@ async function rpc<T>(method: string, params?: Record<string, unknown>): Promise
           if (settled) return
           clearTimeout(timeout)
           settled = true
-          reject(new Error("VSCode socket closed"))
+          reject(new Error('VSCode socket closed'))
         },
         connectError(_socket, error) {
           if (settled) return
           clearTimeout(timeout)
           settled = true
           reject(error)
-        },
-      },
-    }).catch((error) => {
+        }
+      }
+    }).catch(error => {
       if (settled) return
       clearTimeout(timeout)
       settled = true
@@ -92,39 +102,39 @@ Falls back gracefully if VSCode is not running.`,
     filePaths: tool.schema
       .array(tool.schema.string())
       .optional()
-      .describe("Filter to specific file paths (relative or absolute)"),
+      .describe('Filter to specific file paths (relative or absolute)'),
     severities: tool.schema
-      .array(tool.schema.enum(["error", "warning", "info", "hint"]))
+      .array(tool.schema.enum(['error', 'warning', 'info', 'hint']))
       .optional()
-      .describe("Filter by severity levels"),
+      .describe('Filter by severity levels')
   },
   async execute(args) {
     try {
-      const result = await rpc<RpcResponse["result"]>("getDiagnostics", {
+      const result = await rpc<RpcResponse['result']>('getDiagnostics', {
         filePaths: args.filePaths,
-        severities: args.severities,
+        severities: args.severities
       })
 
       if (!result?.files?.length) {
-        return "No errors"
+        return 'No errors'
       }
 
       return result.files
-        .map((f) => {
+        .map(f => {
           const diags = f.diagnostics
-            .map((d) => {
+            .map(d => {
               const line = d.range.start.line + 1
               const col = d.range.start.character + 1
               const sev = d.severity.toUpperCase()
-              const source = d.source ? ` (${d.source})` : ""
+              const source = d.source ? ` (${d.source})` : ''
               return `  ${sev} [${line}:${col}]${source} ${d.message}`
             })
-            .join("\n")
+            .join('\n')
           return `${f.uri}:\n${diags}`
         })
-        .join("\n\n")
+        .join('\n\n')
     } catch (error: any) {
-      return "VSCode extension not running"
+      return 'VSCode extension not running'
     }
-  },
+  }
 })
