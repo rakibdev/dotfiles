@@ -34,12 +34,5 @@
     "command": "workbench.action.terminal.sendSequence",
     "args": { "text": "\u001B\u000A" },
     "when": "terminalFocus"
-  },
-
-  // send to terminal
-  {
-    "key": "meta+k",
-    "command": "claude-code.insertAtMentioned",
-    "when": "editorTextFocus"
   }
 ]
