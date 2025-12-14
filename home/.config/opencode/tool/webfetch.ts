@@ -38,7 +38,8 @@ export default tool({
     if (response?.ok) {
       const text = await response.text()
       const contentType = response.headers.get('content-type') ?? ''
-      if (!contentType.includes('text/html')) return text
+      // Some sites omit content-type; only skip toMarkdown when the header explicitly says non-HTML
+      if (contentType && !contentType.includes('text/html')) return text
 
       const markdown = toMarkdown(text)
       if (markdown.length > 100) return markdown
