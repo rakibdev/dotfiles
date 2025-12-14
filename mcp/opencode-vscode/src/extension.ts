@@ -134,6 +134,40 @@ class SocketServer {
   }
 }
 
+const getRelativePath = (uri: vscode.Uri): string | undefined => {
+  const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri)
+  if (workspaceFolder) return vscode.workspace.asRelativePath(uri)
+
+  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+  if (workspaceRoot && uri.fsPath.startsWith(workspaceRoot)) {
+    return uri.fsPath.slice(workspaceRoot.length + 1)
+  }
+
+  if (uri.scheme == "git") {
+    const match = uri.query.match(/path=([^&]+)/)
+    if (match) return decodeURIComponent(match[1])
+  }
+
+  return undefined
+}
+
+const mentionFile = () => {
+  const editor = vscode.window.activeTextEditor
+  if (!editor) return
+
+  const { document, selection } = editor
+  const relativePath = getRelativePath(document.uri)
+  if (!relativePath) return
+
+  const startLine = selection.start.line + 1
+  const endLine = selection.end.line + 1
+  const lineRef = selection.isEmpty ? "" : startLine == endLine ? `#L${startLine}` : `#L${startLine}-${endLine}`
+
+  const terminal = vscode.window.activeTerminal || vscode.window.createTerminal()
+  terminal.sendText(`@${relativePath}${lineRef}`, false)
+  terminal.show()
+}
+
 let server: SocketServer | null = null
 const output = vscode.window.createOutputChannel("OpenCode")
 
@@ -146,7 +180,10 @@ export async function activate(context: vscode.ExtensionContext) {
     output.appendLine(`Socket failed: ${e.message}`)
   }
 
-  context.subscriptions.push({ dispose: () => server?.cleanup() })
+  context.subscriptions.push(
+    { dispose: () => server?.cleanup() },
+    vscode.commands.registerCommand("opencode.mentionFile", mentionFile)
+  )
 }
 
 export function deactivate() {

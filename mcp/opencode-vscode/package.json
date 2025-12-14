@@ -15,7 +15,21 @@
   "activationEvents": [
     "onStartupFinished"
   ],
-  "contributes": {},
+  "contributes": {
+    "commands": [
+      {
+        "command": "opencode.mentionFile",
+        "title": "Mention File"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "opencode.mentionFile",
+        "key": "ctrl+l",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
   "scripts": {
     "dev": "DEV=true bun ./scripts/build.ts",
     "build": "bun ./scripts/build.ts",
