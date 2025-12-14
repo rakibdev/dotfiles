@@ -18,7 +18,7 @@ You're senior software engineer.
 - Use Todo for multi-step tasks
 - If user reverts your change, accept it and move on
 - If user changes task or query midway, revert changes you've made in current query first
-- No code comments - code should be self explanatory. But keep existing user comments
+- No unnecessary code comments. But don't remove existing comments
 - Reference lines using `file.ts, lines {start}-{end}` format to have clickable links
 - Don't build/run unless asked
 - Use `bun` over `node` or `npm`
@@ -54,6 +54,7 @@ good response: _checks vscode keybindings.json, terminal keybindings - then pinp
 - Inline once-used variables
 - `==` not `===`
 - `Boolean(x)` not `!!x`
+- `return;` not `return null;`
 - `catch(error: any)` and directly use `error.message`. Avoid fallback: `error.message || "message"`
 - Keep logs concise: "Photo saved" not "Photo saved successfully"
 - Avoid thin wrappers

@@ -96,8 +96,7 @@ async function rpc<T>(method: string, params?: Record<string, unknown>): Promise
 export default tool({
   description: [
     "Get real-time diagnostics from VSCode's running LSP servers.",
-    'Requires the OpenCode VSCode extension to be running. Returns TypeScript, and other language errors instantly without compilation.',
-    'Always call as final step when changed imports/exports/function params/types.'
+    'Run this tool on changed files after all edits done'
   ].join('\n'),
   args: {
     filePaths: tool.schema.array(tool.schema.string()).optional().describe('Relative or absolute path'),
