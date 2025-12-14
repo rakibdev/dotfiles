@@ -94,19 +94,14 @@ async function rpc<T>(method: string, params?: Record<string, unknown>): Promise
 }
 
 export default tool({
-  description: `Get real-time diagnostics from VSCode's running LSP servers.
-Requires the OpenCode VSCode extension to be running.
-Returns TypeScript, ESLint, and other language errors instantly without compilation.
-Falls back gracefully if VSCode is not running.`,
+  description: [
+    "Get real-time diagnostics from VSCode's running LSP servers.",
+    'Requires the OpenCode VSCode extension to be running. Returns TypeScript, and other language errors instantly without compilation.',
+    'Always call as final step when changed imports/exports/function params/types.'
+  ].join('\n'),
   args: {
-    filePaths: tool.schema
-      .array(tool.schema.string())
-      .optional()
-      .describe('Filter to specific file paths (relative or absolute)'),
-    severities: tool.schema
-      .array(tool.schema.enum(['error', 'warning', 'info', 'hint']))
-      .optional()
-      .describe('Filter by severity levels')
+    filePaths: tool.schema.array(tool.schema.string()).optional().describe('Relative or absolute path'),
+    severities: tool.schema.array(tool.schema.enum(['error', 'warning', 'info', 'hint'])).optional()
   },
   async execute(args) {
     try {
@@ -134,7 +129,7 @@ Falls back gracefully if VSCode is not running.`,
         })
         .join('\n\n')
     } catch (error: any) {
-      return 'VSCode extension not running'
+      return `VSCode extension not running: ${error.message}`
     }
   }
 })
