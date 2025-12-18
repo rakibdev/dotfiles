@@ -1,0 +1,9 @@
+- Use `toast.error(error.message)` in catch blocks. No `console.error` allowed!
+- Minimal DOM nesting. Use `<Fragment>` or `<>` instead of useless `<div>` wrappers
+- Modern React 19+ patterns only (e.g. `use` for promises/context, Server Actions, `useFormStatus`)
+- Boolean props shorthand: `<Component prop />` not `<Component prop={true} />`
+- Component names in PascalCase, props in camelCase
+- Logic first: Define hooks/state at the top, then return JSX. Keep components lean
+- Prefer `onChange` over `useEffect` for syncing state whenever possible
+- Map directly on components/fragments, don't wrap `items.map` in a stray `<div>`
+- Avoid `useCallback`/`useMemo` unless it's actually heavy. React is fast enough, don't be extra

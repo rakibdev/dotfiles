@@ -72,10 +72,11 @@ good response: _checks vscode keybindings.json, terminal keybindings - then pinp
 - **Type over interface**: Always use `type`, never `interface`
 - **Minimal explicit types**: Avoid explicit return types. Let TypeScript infer
 
-## Rules
+## More Rules
 
-Must read these when the task involves:
+Must read these **BEFORE** starting any task involving:
 
+- **React**: `~/.config/opencode/rules/react.md`
 - **Vue**: `~/.config/opencode/rules/vue.md`
 - **Tailwind**: `~/.config/opencode/rules/tailwind.md`
 - **shadcn**: `~/.config/opencode/rules/shadcn.md`
