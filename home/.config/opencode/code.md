@@ -74,10 +74,10 @@ good response: _checks vscode keybindings.json, terminal keybindings - then pinp
 
 ## More Rules
 
-Must read these **BEFORE** starting any task involving:
+Always read these before if the task involves:
 
-- **React**: `~/.config/opencode/rules/react.md`
-- **Vue**: `~/.config/opencode/rules/vue.md`
+- **React**: `~/.config/opencode/rules/react.md` (before editing .tsx)
+- **Vue**: `~/.config/opencode/rules/vue.md` (before editing .vue)
 - **Tailwind**: `~/.config/opencode/rules/tailwind.md`
 - **shadcn**: `~/.config/opencode/rules/shadcn.md`
 - **Valibot**: `~/.config/opencode/rules/valibot.md`
