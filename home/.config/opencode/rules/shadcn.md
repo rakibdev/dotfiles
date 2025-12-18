@@ -1,0 +1,2 @@
+- Avoid `for=` and `id=` in <Label> or <Input> components
+- No need for margins (mr-,ml-) in <Button> inner icons

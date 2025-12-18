@@ -72,6 +72,12 @@ good response: _checks vscode keybindings.json, terminal keybindings - then pinp
 - **Type over interface**: Always use `type`, never `interface`
 - **Minimal explicit types**: Avoid explicit return types. Let TypeScript infer
 
-**Frontend** (Vue, Tailwind, shadcn): Follow `~/.config/opencode/frontend.md`
+## Rules
 
-**Backend** (Drizzle, Valibot): Follow `~/.config/opencode/backend.md`
+Must read these when the task involves:
+
+- **Vue**: `~/.config/opencode/rules/vue.md`
+- **Tailwind**: `~/.config/opencode/rules/tailwind.md`
+- **shadcn**: `~/.config/opencode/rules/shadcn.md`
+- **Valibot**: `~/.config/opencode/rules/valibot.md`
+- **Drizzle**: `~/.config/opencode/rules/drizzle.md`

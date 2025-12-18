@@ -1,5 +1,3 @@
-- Use new v.pipe() for schemas
-- Use v.picklist() or v.array(v.picklist()) for enums
 - Use drizzle-orm `db.select()` instead of findMany()
 - Prefer leftJoin, innerJoin over many query
 - Utilize `pickColumns` in db.select() or returning()
