@@ -1,14 +1,14 @@
 pkgname=double-click-fix
 pkgver=1.0
 pkgrel=1
-pkgdesc="R65 C key double-click fix"
+pkgdesc="R65 keyboard double-click fix"
 arch=('x86_64')
 license=('MIT')
 source=('double-click-fix.c' 'double-click-fix.service')
 sha256sums=('SKIP' 'SKIP')
 
 build() {
-    gcc -O2 -o double-click-fix double-click-fix.c
+    gcc -O3 -o double-click-fix double-click-fix.c
 }
 
 package() {

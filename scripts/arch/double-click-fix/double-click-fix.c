@@ -6,7 +6,9 @@
 #include <unistd.h>
 
 #define THRESHOLD_US 100000
-#define KEY_C 46
+
+static char is_problem_key[KEY_MAX] = {0};
+static const int PROBLEM_KEYS[] = {KEY_BACKSPACE, KEY_R, KEY_N, KEY_C};
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -30,20 +32,23 @@ int main(int argc, char **argv) {
     ioctl(ui, UI_DEV_SETUP, &setup);
     ioctl(ui, UI_DEV_CREATE);
 
-    long last_up = 0;
-    int pressed = 0;
+    static long last_up[KEY_MAX];
+    static char pressed[KEY_MAX];
     struct input_event e;
 
+    for (int i = 0; i < (int)(sizeof(PROBLEM_KEYS) / sizeof(PROBLEM_KEYS[0])); i++)
+        is_problem_key[PROBLEM_KEYS[i]] = 1;
+
     while (read(fd, &e, sizeof(e)) == sizeof(e)) {
-        if (e.type == EV_KEY && e.code == KEY_C) {
+        if (e.type == EV_KEY && is_problem_key[e.code]) {
             long now = e.time.tv_sec * 1000000L + e.time.tv_usec;
             if (e.value == 0) {
-                if (!pressed) continue;
-                last_up = now;
-                pressed = 0;
+                if (!pressed[e.code]) continue;
+                last_up[e.code] = now;
+                pressed[e.code] = 0;
             } else if (e.value == 1) {
-                if (last_up && now - last_up < THRESHOLD_US) continue;
-                pressed = 1;
+                if (last_up[e.code] && now - last_up[e.code] < THRESHOLD_US) continue;
+                pressed[e.code] = 1;
             }
         }
         write(ui, &e, sizeof(e));

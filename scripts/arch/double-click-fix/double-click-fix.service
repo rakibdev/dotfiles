@@ -1,5 +1,5 @@
 [Unit]
-Description=R65 C key double-click fix
+Description=R65 keyboard double-click fix
 After=systemd-udevd.service
 
 [Service]
