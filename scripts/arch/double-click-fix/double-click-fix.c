@@ -49,6 +49,8 @@ int main(int argc, char **argv) {
             } else if (e.value == 1) {
                 if (last_up[e.code] && now - last_up[e.code] < THRESHOLD_US) continue;
                 pressed[e.code] = 1;
+            } else if (e.value == 2) {
+                if (!pressed[e.code]) continue;
             }
         }
         write(ui, &e, sizeof(e));
