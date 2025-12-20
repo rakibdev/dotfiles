@@ -10,31 +10,76 @@
       "*": "allow",
       "rm *": "ask",
       "sudo *": "ask",
+      "bun -e *": "ask",
       "git *": "ask",
       "git diff *": "allow",
       "git status *": "allow",
       "git show *": "allow"
-    }
+    },
+    "external_directory": "allow"
   },
   "keybinds": {
     "input_newline": "alt+enter",
     "session_new": "ctrl+n",
-    "messages_last": "ctrl+down"
+    "messages_last": "ctrl+down",
+    "model_list": "ctrl+/"
   },
+  "lsp": false,
+  "formatter": false,
+  "experimental": {
+    // fix: Each `tool_use` block must have a corresponding `tool_result`
+    // "batch_tool": true
+  },
+  "plugin": ["opencode-antigravity-auth@1.0.6"],
   "provider": {
-    "opencode": {
+    "google": {
       "models": {
-        "big-pickle": {
-          "options": {
-            "reasoningEffort": "high",
-            "textVerbosity": "low"
+        "gemini-3-pro-high": {
+          "name": "Gemini 3 Pro High (Antigravity)",
+          "limit": {
+            "context": 1048576,
+            "output": 65535
+          },
+          "modalities": {
+            "input": ["text", "image", "pdf"],
+            "output": ["text"]
+          }
+        },
+        "gemini-3-flash": {
+          "name": "Gemini 3 Flash (Antigravity)",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          },
+          "modalities": {
+            "input": ["text", "image", "pdf"],
+            "output": ["text"]
+          }
+        },
+        "claude-sonnet-4-5": {
+          "name": "Claude Sonnet 4.5 (Antigravity)",
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          },
+          "modalities": {
+            "input": ["text", "image", "pdf"],
+            "output": ["text"]
+          }
+        },
+        "claude-opus-4-5-thinking": {
+          "name": "Claude Opus 4.5 Thinking (Antigravity)",
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          },
+          "modalities": {
+            "input": ["text", "image", "pdf"],
+            "output": ["text"]
           }
         }
       }
     }
-  },
-  "experimental": {
-    "batch_tool": true
   },
   "agent": {
     "build": {
@@ -48,6 +93,9 @@
     "plan": {
       "disable": true
     },
+    "explore": {
+      "description": "Use this to research codebase, find relevant files, code snippets, and trace logic.",
+      "prompt": "{file:./explore.md}"
     }
   },
   "tools": {
@@ -55,7 +103,6 @@
     "websearch": false,
     "edit": false // using multiedit
   },
-  "lsp": false,
   "mcp": {
     "mongodb": {
       "type": "local",
