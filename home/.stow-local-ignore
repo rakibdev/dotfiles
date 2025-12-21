@@ -1,0 +1,4 @@
+# keep node_modules in dotfiles not in symlinked ~/.config/opencode
+# otherwise tools fail to resolve "opencode-ai/plugin" imports
+.config/opencode/node_modules
+.config/opencode/bun.lock

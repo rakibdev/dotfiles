@@ -1,9 +1,9 @@
 {
-  "name": "opencode-mcp",
-  "displayName": "OpenCode MCP",
-  "description": "MCP server exposing real-time VSCode diagnostics for AI agents",
+  "name": "vscode-ai",
+  "displayName": "VSCode AI",
+  "description": "VSCode extension for AI agents",
   "version": "0.1.0",
-  "publisher": "opencode",
+  "publisher": "rakib",
   "private": true,
   "engines": {
     "vscode": "^1.99.0"
@@ -18,13 +18,13 @@
   "contributes": {
     "commands": [
       {
-        "command": "opencode.mentionFile",
+        "command": "vscode-ai.mentionFile",
         "title": "Mention File"
       }
     ],
     "keybindings": [
       {
-        "command": "opencode.mentionFile",
+        "command": "vscode-ai.mentionFile",
         "key": "ctrl+l",
         "when": "editorTextFocus"
       }
