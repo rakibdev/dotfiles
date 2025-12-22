@@ -5,10 +5,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#define THRESHOLD_US 100000
+#define THRESHOLD_US 50000
 
 static char is_problem_key[KEY_MAX] = {0};
-static const int PROBLEM_KEYS[] = {KEY_BACKSPACE, KEY_R, KEY_N, KEY_C};
+static const int PROBLEM_KEYS[] = {KEY_BACKSPACE, KEY_R, KEY_N, KEY_C, KEY_SPACE, KEY_W};
 
 int main(int argc, char **argv) {
     if (argc < 2) {
