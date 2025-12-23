@@ -12,44 +12,44 @@ description: Tool for fetching Figma design data and downloading images.
 ### Get Node Data
 
 ```bash
-bun .opencode/skill/figma/scripts/get-node.ts "<figmaUrl>" [depth]
-bun .opencode/skill/figma/scripts/get-node.ts "<fileKey>" [nodeId] [depth]
+bun {base dir}/scripts/get-node.ts "<figmaUrl>" [depth]
+bun {base dir}/scripts/get-node.ts "<fileKey>" [nodeId] [depth]
 ```
 
 **Examples**
 
 ```bash
 # Get node from URL (preferred)
-bun .opencode/skill/figma/scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286"
+bun {base dir}/scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286"
 
 # Limit depth for overview
-bun .opencode/skill/figma/scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286" 2
+bun {base dir}/scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286" 2
 
 # Get entire file (no node-id in URL)
-bun .opencode/skill/figma/scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile" 2
+bun {base dir}/scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile" 2
 
 # Raw args (fileKey + nodeId)
-bun .opencode/skill/figma/scripts/get-node.ts "abc123" "825-17286" 3
+bun {base dir}/scripts/get-node.ts "abc123" "825-17286" 3
 ```
 
 ### Download Image
 
 ```bash
-bun .opencode/skill/figma/scripts/download-image.ts "<figmaUrl>" "<outputPath>" [format] [scale]
-bun .opencode/skill/figma/scripts/download-image.ts "<fileKey>" "<nodeId>" "<outputPath>" [format] [scale]
+bun {base dir}/scripts/download-image.ts "<figmaUrl>" "<outputPath>" [format] [scale]
+bun {base dir}/scripts/download-image.ts "<fileKey>" "<nodeId>" "<outputPath>" [format] [scale]
 ```
 
 **Examples**
 
 ```bash
 # Download from URL (preferred)
-bun .opencode/skill/figma/scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286" "./assets/card.png"
+bun {base dir}/scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286" "./assets/card.png"
 
 # Download as SVG
-bun .opencode/skill/figma/scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=100-200" "./assets/icon.svg" svg
+bun {base dir}/scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=100-200" "./assets/icon.svg" svg
 
 # PNG at 3x scale
-bun .opencode/skill/figma/scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=100-200" "./assets/hero.png" png 3
+bun {base dir}/scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=100-200" "./assets/hero.png" png 3
 ```
 
 ## Tips

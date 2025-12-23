@@ -6,14 +6,14 @@ description: Tool for querying or updating MongoDB.
 ## Usage
 
 ```bash
-bun .opencode/skill/mongodb/scripts/query.ts "<query>"
+bun {base dir}/scripts/query.ts "<query>"
 ```
 
 **Examples**
 
 ```bash
-bun .opencode/skill/mongodb/scripts/query.ts "db.collection('users').findOne()"
-bun .opencode/skill/mongodb/scripts/query.ts "db.collection('orders').countDocuments()"
+bun {base dir}/scripts/query.ts "db.collection('users').findOne()"
+bun {base dir}/scripts/query.ts "db.collection('orders').countDocuments()"
 ```
 
 ## Tips
