@@ -14,7 +14,13 @@
       "git *": "ask",
       "git diff *": "allow",
       "git status *": "allow",
-      "git show *": "allow"
+      "git show *": "allow",
+
+      // mongodb skill: allow only read operations
+      "*db.*find*": "allow",
+      "*db.*count*": "allow",
+      "*db.*aggregate*": "allow",
+      "*db.*": "ask"
     },
     "external_directory": "allow"
   },
@@ -104,20 +110,6 @@
     "edit": false // using multiedit
   },
   "mcp": {
-    "mongodb": {
-      "type": "local",
-      "command": ["mongodb", "--read-only"],
-      "environment": {
-        "MCP_MONGODB_URI": "{env:MCP_MONGODB_URI}"
-      }
-    },
-    "figma": {
-      "type": "local",
-      "command": ["figma-developer-mcp", "--stdio"],
-      "environment": {
-        "FIGMA_API_KEY": "{env:FIGMA_API_KEY}"
-      }
-    },
     "playwriter": {
       "type": "local",
       "command": ["playwriter"]
