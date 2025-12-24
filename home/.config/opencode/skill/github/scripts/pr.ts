@@ -81,7 +81,6 @@ if (method == "get") {
     console.log()
   }
 } else if (method == "comment") {
-  // comment <path> <line> <body> OR comment <path> <start_line> <end_line> <body>
   const pr = await request<PR>(base)
   const path = rest[0]
   const isRange = !isNaN(Number(rest[2])) && rest.length > 3
@@ -115,7 +114,6 @@ if (method == "get") {
     console.log(`Comment added: ${path}:L${line}`)
   }
 } else if (method == "reply") {
-  // reply <comment_id> <body>
   const [commentId, ...bodyParts] = rest
   await request(`${base}/comments/${commentId}/replies`, {
     method: "POST",
@@ -123,4 +121,5 @@ if (method == "get") {
     body: JSON.stringify({ body: bodyParts.join(" ") }),
   })
   console.log(`Reply added to comment ${commentId}`)
+}
 
