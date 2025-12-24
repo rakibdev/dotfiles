@@ -23,16 +23,13 @@ type File = {
 }
 
 type Comment = {
-  user: { login: string }
-  body: string
-  path?: string
-}
-
-type Review = {
   id: number
   user: { login: string }
-  state: string
   body: string
+  path: string
+  line?: number
+  start_line?: number
+  in_reply_to_id?: number
 }
 
 if (method == "get") {
@@ -59,29 +56,71 @@ if (method == "get") {
   }
 } else if (method == "comments") {
   const comments = await request<Comment[]>(`${base}/comments`)
+  const threads = new Map<number, Comment[]>()
+  const roots: Comment[] = []
+
   for (const c of comments) {
-    console.log(`@${c.user.login}${c.path ? ` on ${c.path}` : ""}:`)
-    console.log(`  ${c.body.slice(0, 200)}\n`)
+    if (c.in_reply_to_id) {
+      const thread = threads.get(c.in_reply_to_id) || []
+      thread.push(c)
+      threads.set(c.in_reply_to_id, thread)
+    } else {
+      roots.push(c)
+      threads.set(c.id, [])
+    }
   }
-} else if (method == "reviews") {
-  const reviews = await request<Review[]>(`${base}/reviews`)
-  for (const r of reviews) {
-    console.log(`@${r.user.login} [${r.state}]`)
-    if (r.body) console.log(`  ${r.body.slice(0, 200)}`)
+
+  for (const root of roots) {
+    const lineInfo = root.start_line ? `L${root.start_line}-${root.line}` : `L${root.line}`
+    console.log(`[${root.id}] ${root.path}:${lineInfo} @${root.user.login}`)
+    console.log(`  ${root.body.slice(0, 300)}`)
+    const replies = threads.get(root.id) || []
+    for (const reply of replies) {
+      console.log(`  ↳ @${reply.user.login}: ${reply.body.slice(0, 200)}`)
+    }
     console.log()
   }
-} else if (method == "review") {
-  const [event = "COMMENT", ...bodyParts] = rest
-  const body = bodyParts.join(" ") || ""
+} else if (method == "comment") {
+  // comment <path> <line> <body> OR comment <path> <start_line> <end_line> <body>
   const pr = await request<PR>(base)
-  await request(`${base}/reviews`, {
+  const path = rest[0]
+  const isRange = !isNaN(Number(rest[2])) && rest.length > 3
+
+  if (isRange) {
+    const [startLine, endLine, ...bodyParts] = rest.slice(1)
+    await request(`${base}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        commit_id: pr.head.sha,
+        path,
+        body: bodyParts.join(" "),
+        start_line: Number(startLine),
+        line: Number(endLine),
+      }),
+    })
+    console.log(`Comment added: ${path}:L${startLine}-${endLine}`)
+  } else {
+    const [line, ...bodyParts] = rest.slice(1)
+    await request(`${base}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        commit_id: pr.head.sha,
+        path,
+        body: bodyParts.join(" "),
+        line: Number(line),
+      }),
+    })
+    console.log(`Comment added: ${path}:L${line}`)
+  }
+} else if (method == "reply") {
+  // reply <comment_id> <body>
+  const [commentId, ...bodyParts] = rest
+  await request(`${base}/comments/${commentId}/replies`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      commit_id: pr.head.sha,
-      body,
-      event: event.toUpperCase(),
-    }),
+    body: JSON.stringify({ body: bodyParts.join(" ") }),
   })
-  console.log(`Review submitted: ${event.toUpperCase()}`)
-}
+  console.log(`Reply added to comment ${commentId}`)
+

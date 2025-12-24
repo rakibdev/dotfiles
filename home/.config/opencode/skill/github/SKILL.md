@@ -23,6 +23,7 @@ bun {base dir}/scripts/search-repos.ts 'topic:neovim lang:lua'
 ```
 
 **Tips**
+
 - Narrow by language: `lang:ts`, `lang:go`
 - Filter by stars: `stars:>100`, `stars:50..200`
 - Sorted by latest updates (default) to find active projects
@@ -42,6 +43,7 @@ bun {base dir}/scripts/search-code.ts 'useQuery filename:*.tsx'
 ```
 
 **Tips**
+
 - Use unique package names/imports to discover underrated repos
 - Filter by language: `lang:ts`
 - Use `filename:*.tsx` to target specific file types
@@ -82,12 +84,14 @@ bun {base dir}/scripts/pr.ts <owner> <repo> <pr_number> [method] [...args]
 ```
 
 Methods:
+
 - `get` (default) - PR details
 - `diff` - Raw diff
 - `files` - Changed files list
-- `comments` - Review comments
-- `reviews` - List all reviews
-- `review <event> [body]` - Submit review (APPROVE, REQUEST_CHANGES, COMMENT)
+- `comments` - List review comments with threads
+- `comment <path> <line> <body>` - Add comment on single line
+- `comment <path> <start_line> <end_line> <body>` - Add comment on line range
+- `reply <comment_id> <body>` - Reply to existing comment
 
 **Examples**
 
@@ -95,7 +99,13 @@ Methods:
 bun {base dir}/scripts/pr.ts facebook react 35404
 bun {base dir}/scripts/pr.ts facebook react 35404 diff
 bun {base dir}/scripts/pr.ts facebook react 35404 files
-bun {base dir}/scripts/pr.ts facebook react 35404 reviews
-bun {base dir}/scripts/pr.ts facebook react 35404 review APPROVE 'LGTM!'
-bun {base dir}/scripts/pr.ts facebook react 35404 review COMMENT 'Nice refactor'
+bun {base dir}/scripts/pr.ts facebook react 35404 comments
+bun {base dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 42 'Consider using a constant here'
+bun {base dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 10 15 'This block could be refactored'
 ```
+
+**Tips**
+
+- When asked to review a PR, first use `diff` to identify specific code blocks.
+- Provide feedback by making separate comments on specific lines or ranges instead of a single top-level review.
+- Check existing `comments` to see if a point was already raised or to respond to existing threads.
