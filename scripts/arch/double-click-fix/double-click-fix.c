@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define THRESHOLD_US 50000
+#define THRESHOLD_US 70000
 
 static char is_problem_key[KEY_MAX] = {0};
 static const int PROBLEM_KEYS[] = {KEY_BACKSPACE, KEY_R, KEY_N, KEY_C, KEY_SPACE, KEY_W};
