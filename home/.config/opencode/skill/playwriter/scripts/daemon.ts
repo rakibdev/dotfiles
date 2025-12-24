@@ -27,7 +27,13 @@ const usefulGlobals = {
   crypto,
   AbortController,
   AbortSignal,
-  structuredClone
+  structuredClone,
+  daemon: {
+    stop: () => {
+      cleanup()
+      return 'Daemon stopping...'
+    }
+  }
 }
 
 const cleanup = async () => {
@@ -90,7 +96,7 @@ const ensureConnection = async (): Promise<{ page: Page; context: BrowserContext
   return { page, context }
 }
 
-const execute = async (code: string, timeout = 5000): Promise<string> => {
+const execute = async (code: string, timeout = 5000): Promise<{ logs: { method: string; args: unknown[] }[]; result: unknown }> => {
   resetInactivityTimer()
 
   const logs: { method: string; args: unknown[] }[] = []
@@ -118,28 +124,15 @@ const execute = async (code: string, timeout = 5000): Promise<string> => {
     new Promise((_, reject) => setTimeout(() => reject(new Error(`Timeout after ${timeout}ms`)), timeout))
   ])
 
-  let output = ''
-  for (const { method, args } of logs) {
-    const formatted = args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ')
-    output += `[${method}] ${formatted}\n`
-  }
-
-  if (result !== undefined) {
-    output += `Return: ${typeof result === 'string' ? result : JSON.stringify(result, null, 2)}`
-  } else if (!logs.length) {
-    output = 'OK'
-  }
-
-  return output.trim()
+  return { logs, result }
 }
 
 const handleRequest = async (data: string): Promise<string> => {
   try {
     const { code, timeout } = JSON.parse(data) as { code: string; timeout?: number }
-    const result = await execute(code, timeout)
-    return JSON.stringify({ ok: true, result })
+    return JSON.stringify(await execute(code, timeout))
   } catch (error: any) {
-    return JSON.stringify({ ok: false, error: error.message })
+    return JSON.stringify({ error: error.message })
   }
 }
 

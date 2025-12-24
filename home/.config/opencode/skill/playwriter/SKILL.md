@@ -24,10 +24,13 @@ bun {base dir}/scripts/cmd.ts "console.log(page.url())"
 bun {base dir}/scripts/cmd.ts "await page.getByRole('button', { name: 'Submit' }).click()"
 
 # Get page title
-bun {base dir}/scripts/cmd.ts "const t = await page.evaluate(() => document.title); console.log(t)"
+bun {base dir}/scripts/cmd.ts "await page.title()"
 
 # Fill form
 bun {base dir}/scripts/cmd.ts "await page.getByLabel('Email').fill('test@example.com')"
+
+# Stop daemon
+bun {base dir}/scripts/cmd.ts "daemon.stop()"
 ```
 
 ## Context
@@ -37,6 +40,23 @@ Variables available in code:
 - `page` - Current Playwright page
 - `context` - Browser context
 - `state` - Persistent object across calls
+- `daemon` - Daemon control object ({ stop: () => void })
+
+## Output
+
+The script returns logs and the final result. If the result is an object, it's formatted as JSON.
+
+```bash
+bun {base dir}/scripts/cmd.ts "console.log('fetching...'); return { title: await page.title() }"
+```
+
+Output:
+```
+[log] fetching...
+{
+  "title": "Page Title"
+}
+```
 
 ## Debugging
 

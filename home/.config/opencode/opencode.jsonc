@@ -91,7 +91,7 @@
     "build": {
       "description": "Advanced AI coder with context-aware refactoring",
       "prompt": "{file:./code.md}",
-      "temperature": 0.7
+      "temperature": 0.5
     },
     "general": {
       "disable": true
@@ -107,13 +107,9 @@
   "tools": {
     "codesearch": false,
     "websearch": false,
-    "edit": false // using multiedit
+    "multiedit": false // using multiedit
   },
   "mcp": {
-    "playwriter": {
-      "type": "local",
-      "command": ["playwriter"]
-    },
     "ssh": {
       "type": "local",
       "command": ["bun", "/home/rakib/Downloads/dotfiles/mcp/ssh.ts"],
@@ -122,18 +118,12 @@
         "SSH_USER": "{env:SSH_USER}",
         "SSH_PASSWORD": "{env:SSH_PASSWORD}"
       }
-    },
-    "github": {
-      "type": "remote",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer {env:GITHUB_PAT}"
-      }
     }
   },
   "command": {
     "commit": {
       "agent": "build",
+      "model": "big-pickle",
       "template": "Stage edited files from current context. Create short generic commit message (lowercase) - describe what was fixed/added, not implementation details like 'move X to Y'. Commit and push. Do all in single command. Skip git status/diff/log commands. Work silently."
     }
   }

@@ -21,7 +21,13 @@ const startDaemon = async (): Promise<void> => {
 	throw new Error("Daemon failed to start");
 };
 
-const send = async (code: string, timeout?: number): Promise<string> => {
+type DaemonResponse = {
+	logs?: { method: string; args: unknown[] }[];
+	result?: any;
+	error?: string;
+};
+
+const send = async (code: string, timeout?: number): Promise<DaemonResponse> => {
 	if (!isDaemonRunning()) {
 		console.error("Starting daemon...");
 		await startDaemon();
@@ -42,12 +48,7 @@ const send = async (code: string, timeout?: number): Promise<string> => {
 				},
 				close() {
 					try {
-						const parsed = JSON.parse(response) as { ok: boolean; result?: string; error?: string };
-						if (!parsed.ok) {
-							reject(new Error(parsed.error));
-						} else {
-							resolve(parsed.result || "");
-						}
+						resolve(JSON.parse(response) as DaemonResponse);
 					} catch (e: any) {
 						reject(new Error(`Invalid response: ${response}`));
 					}
@@ -61,14 +62,18 @@ const send = async (code: string, timeout?: number): Promise<string> => {
 };
 
 const code = process.argv[2];
+const timeout = process.argv[3] ? Number(process.argv[3]) : undefined;
+
 if (!code) {
-	console.error("Usage: bun cmd.ts '<code>'");
 	process.exit(1);
 }
 
 try {
-	const result = await send(code, process.argv[3] ? Number(process.argv[3]) : undefined);
-	console.log(result);
+	const { logs, result, error } = await send(code, timeout);
+	if (error) throw new Error(error);
+
+	logs?.forEach((l) => console.log(`[${l.method}]`, ...l.args));
+	if (result !== undefined) console.log(result);
 } catch (e: any) {
 	console.error("Error:", e.message);
 	process.exit(1);
