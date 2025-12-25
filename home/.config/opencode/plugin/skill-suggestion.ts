@@ -115,8 +115,8 @@ export const SkillSuggestion: Plugin = async () => {
           sessionID: input.sessionID,
           messageID: input.messageID!,
           type: 'text',
-          text: `\n\nUse ${skillList} skill${matched.length > 1 ? 's' : ''} if relevant.`
-          // synthetic: true
+          text: `\n\nUse ${skillList} skill${matched.length > 1 ? 's' : ''} if relevant.`,
+          synthetic: true
         })
       }
     }
