@@ -1,6 +1,6 @@
 ---
 name: github
-description: Can browse code/issues of specific repo URL or search globally and comment on PRs.
+description: Can browse code/issues of specific repo URL or search globally on github and comment on PRs.
 ---
 
 ## Usage
