@@ -15,7 +15,7 @@ let counter = 0
 /**
  * Generates time-based IDs compatible with OpenCode's Identifier.ascending (prt_ prefix).
  * Using random UUIDs causes parts to sort incorrectly (sometimes prepending instead of appending).
- * @see /home/rakib/Downloads/opencode/opencode/packages/opencode/src/id/id.ts
+ * @see ~/Downloads/opencode/opencode/packages/opencode/src/id/id.ts
  */
 const partId = () => {
   const now = BigInt(Date.now()) * BigInt(0x1000) + BigInt(++counter)
