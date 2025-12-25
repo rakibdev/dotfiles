@@ -1,15 +1,23 @@
 ---
 name: github
-description: Tool for querying or updating GitHub.
+description: Use for browsing code/issues in single repo or globally, and comment on PRs.
 ---
-
-## Environment
-
-- `GITHUB_PAT` - Personal access token with `repo` scope
 
 ## Usage
 
-### Search Repositories
+### Browse Single Repo
+
+Use `webfetch` tool with GitChamber API to list, read, search code.
+
+**API_URL**: `https://gitchamber.com/repos/{owner}/{repo}/{branch}/`
+
+- **List**: `GET {API_URL}/files?glob=**/*.ts` (omit glob for all files)
+- **Read**: `GET {API_URL}/files/{path}?start=1&end=50&showLineNumbers=true`
+- **Search**: `GET {API_URL}/search/{query}?glob=**/*.ts`
+
+**Example**: `https://gitchamber.com/repos/facebook/react/main/files/README.md?start=10&end=50`
+
+### Global Repo Search
 
 ```bash
 bun {base dir}/scripts/search-repos.ts <query>
@@ -29,7 +37,7 @@ bun {base dir}/scripts/search-repos.ts 'topic:neovim lang:lua'
 - Sorted by latest updates (default) to find active projects
 - Use short, unique terms for better results
 
-### Search Code
+### Global Code Search
 
 ```bash
 bun {base dir}/scripts/search-code.ts <query>

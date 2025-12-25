@@ -1,6 +1,6 @@
 ---
 name: mongodb
-description: Tool for querying or updating MongoDB.
+description: Use for managing MongoDB.
 ---
 
 ## Usage

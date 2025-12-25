@@ -35,6 +35,8 @@ export default tool({
       }
     }).catch(() => undefined)
 
+    if (response?.status == 404) throw new Error('404 Not Found')
+
     if (response?.ok) {
       const text = await response.text()
       const contentType = response.headers.get('content-type') ?? ''
