@@ -1,6 +1,7 @@
 ---
 name: figma
 description: Tool for fetching Figma design data and downloading images.
+pattern: figma\.com/design/
 ---
 
 ## Environment

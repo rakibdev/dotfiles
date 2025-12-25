@@ -1,6 +1,7 @@
 ---
 name: github
 description: Can browse code/issues of specific repo URL or search globally on github and comment on PRs.
+pattern: github\.com/[\w-]+/[\w-]+
 ---
 
 ## Usage
