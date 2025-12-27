@@ -1,3 +1,9 @@
+---
+name: vue
+description: Vue coding style and best practices.
+pattern: \.vue(\s|$)
+---
+
 - Always use `toast.error(error.message)` in catch blocks, never `console.error`
 - Minimize DOM nesting by avoiding unnecessary wrappers (<div>)
 - Use modern v3.5+ syntax (e.g. defineModel, defineEmits named tuple, useTemplateRef)

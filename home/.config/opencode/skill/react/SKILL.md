@@ -1,3 +1,9 @@
+---
+name: react
+description: React coding style and best practices.
+pattern: \.(jsx|tsx)(\s|$)
+---
+
 - Use `toast.error(error.message)` in catch blocks. No `console.error` allowed!
 - Minimal DOM nesting. Use `<Fragment>` or `<>` instead of useless `<div>` wrappers
 - Modern React 19+ patterns only (e.g. `use` for promises/context, Server Actions, `useFormStatus`)

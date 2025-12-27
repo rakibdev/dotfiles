@@ -91,7 +91,7 @@
     "build": {
       "description": "Senior engineer who codes, plans and discuss.",
       "prompt": "{file:./general.md}",
-      "temperature": 0.4
+      "temperature": 0.8
     },
     "general": {
       "disable": true
