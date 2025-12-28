@@ -107,7 +107,7 @@
   "tools": {
     "codesearch": false,
     "websearch": false,
-    "multiedit": false // using multiedit
+    "edit": false // using multiedit
   },
   "mcp": {
     "ssh": {

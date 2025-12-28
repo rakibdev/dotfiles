@@ -5,8 +5,6 @@ type SkillMeta = {
   name: string
   description: string
   patterns: string[]
-  keywords: string[]
-  keywordThreshold: number
 }
 
 const SKILL_DIR = join(import.meta.dirname, '..', 'skill')
@@ -24,7 +22,7 @@ const partId = () => {
   return 'prt_' + bytes.toString('hex') + Math.random().toString(36).slice(2, 16)
 }
 
-const parseSkillMeta = (content: string): Omit<SkillMeta, 'keywords' | 'keywordThreshold'> | null => {
+const parseSkillMeta = (content: string): SkillMeta | null => {
   const match = content.match(/^---\n([\s\S]*?)\n---/)
   if (!match) return null
 
@@ -45,12 +43,6 @@ const parseSkillMeta = (content: string): Omit<SkillMeta, 'keywords' | 'keywordT
   return { name, description, patterns }
 }
 
-const extractKeywords = (name: string, description: string): string[] => {
-  const text = `${name} ${description}`.toLowerCase()
-  const words = text.match(/\b[a-z]{3,}\b/g) || []
-  return [...new Set(words)]
-}
-
 const loadSkills = async (): Promise<SkillMeta[]> => {
   const skills: SkillMeta[] = []
   const glob = new Bun.Glob('*/SKILL.md')
@@ -58,14 +50,7 @@ const loadSkills = async (): Promise<SkillMeta[]> => {
   for await (const path of glob.scan(SKILL_DIR)) {
     const content = await Bun.file(join(SKILL_DIR, path)).text()
     const meta = parseSkillMeta(content)
-    if (meta) {
-      const keywords = extractKeywords(meta.name, meta.description)
-      skills.push({
-        ...meta,
-        keywords,
-        keywordThreshold: Math.max(2, Math.ceil(keywords.length * 0.4))
-      })
-    }
+    if (meta) skills.push(meta)
   }
 
   return skills
@@ -80,10 +65,18 @@ const matchPatterns = (message: string, patterns: string[]): boolean => {
   return false
 }
 
-const scoreKeywords = (message: string, keywords: string[]): number => {
+const matchKeywords = (message: string, skill: SkillMeta): boolean => {
+  const text = `${skill.name} ${skill.description}`.toLowerCase()
+  const keywords = [...new Set(text.match(/\b[a-z]{3,}\b/g) || [])]
+  const threshold = Math.max(2, Math.ceil(keywords.length * 0.4))
+
   const msgLower = message.toLowerCase()
-  return keywords.filter(kw => msgLower.includes(kw)).length
+  const score = keywords.filter(kw => msgLower.includes(kw)).length
+
+  return score >= threshold
 }
+
+const suggested = new Map<string, Set<string>>()
 
 export const SkillSuggestion: Plugin = async () => {
   const skills = await loadSkills()
@@ -93,17 +86,21 @@ export const SkillSuggestion: Plugin = async () => {
       const textPart = output.parts.find(p => p.type === 'text')
       if (!textPart || textPart.type !== 'text') return
 
+      if (!suggested.has(input.sessionID)) suggested.set(input.sessionID, new Set())
+      const alreadySuggested = suggested.get(input.sessionID)!
+
       const msg = textPart.text
       const matched: string[] = []
 
       for (const skill of skills) {
+        if (alreadySuggested.has(skill.name)) continue
+
         if (skill.patterns.length && matchPatterns(msg, skill.patterns)) {
           matched.push(skill.name)
           continue
         }
 
-        const score = scoreKeywords(msg, skill.keywords)
-        if (score >= skill.keywordThreshold) {
+        if (matchKeywords(msg, skill)) {
           matched.push(skill.name)
         }
       }
@@ -114,10 +111,11 @@ export const SkillSuggestion: Plugin = async () => {
           id: partId(),
           sessionID: input.sessionID,
           messageID: input.messageID!,
-          type: 'text',
+          type: 'text' as const,
           text: `\n\nUse ${skillList} skill${matched.length > 1 ? 's' : ''} if relevant.`,
           synthetic: true
         })
+        matched.forEach(name => alreadySuggested.add(name))
       }
     }
   }

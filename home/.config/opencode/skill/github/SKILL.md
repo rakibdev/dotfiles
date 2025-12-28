@@ -1,10 +1,8 @@
 ---
 name: github
-description: Can browse code/issues of specific repo URL or search globally on github and comment on PRs.
+description: Can browse code/issues of specific repo, global search and comment on PRs.
 pattern: github\.com/[\w-]+/[\w-]+
 ---
-
-## Usage
 
 ### Browse Single Repo
 
@@ -12,11 +10,11 @@ Use `webfetch` tool with GitChamber API to list, read, search code.
 
 **API_URL**: `https://gitchamber.com/repos/{owner}/{repo}/{branch}/`
 
-- **List**: `GET {API_URL}/files?glob=**/*.ts` (omit glob for all files)
-- **Read**: `GET {API_URL}/files/{path}?start=1&end=50&showLineNumbers=true`
+- **List**: `GET {API_URL}/files/...?glob=**`
+- **Read**: `GET {API_URL}/files/...?glob=**&start=1&end=50&showLineNumbers=true`
 - **Search**: `GET {API_URL}/search/{query}?glob=**/*.ts`
 
-**Example**: `https://gitchamber.com/repos/facebook/react/main/files/README.md?start=10&end=50`
+Note: It'll 404 without `glob=**` or `glob=**/*.{ext}`.
 
 ### Global Repo Search
 
@@ -64,28 +62,6 @@ bun {base dir}/scripts/search-code.ts 'useQuery filename:*.tsx'
 bun {base dir}/scripts/search-issues.ts <issue|pr> <query>
 ```
 
-**Examples**
-
-```bash
-bun {base dir}/scripts/search-issues.ts issue 'repo:facebook/react state:open'
-bun {base dir}/scripts/search-issues.ts pr 'repo:vercel/next.js is:merged author:leerob'
-```
-
-### List Repository Issues
-
-```bash
-bun {base dir}/scripts/list-issues.ts <owner> <repo> [state]
-```
-
-State: `open` (default), `closed`, `all`
-
-**Examples**
-
-```bash
-bun {base dir}/scripts/list-issues.ts facebook react
-bun {base dir}/scripts/list-issues.ts vercel next.js closed
-```
-
 ### Pull Request Operations
 
 ```bash
@@ -105,11 +81,6 @@ Methods:
 **Examples**
 
 ```bash
-bun {base dir}/scripts/pr.ts facebook react 35404
-bun {base dir}/scripts/pr.ts facebook react 35404 diff
-bun {base dir}/scripts/pr.ts facebook react 35404 files
-bun {base dir}/scripts/pr.ts facebook react 35404 comments
-bun {base dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 42 'Consider using a constant here'
 bun {base dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 10 15 'This block could be refactored'
 ```
 

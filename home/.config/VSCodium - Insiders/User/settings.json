@@ -101,5 +101,6 @@
     "digialocean_keycrypt": "linux",
     "crossapi": "linux",
     "keycrypt": "linux"
-  }
+  },
+  "scm.repositories.selectionMode": "single"
 }
