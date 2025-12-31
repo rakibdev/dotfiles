@@ -9,8 +9,6 @@ description: Search web for latest docs and articles.
 bun {base dir}/scripts/search.ts <query>
 ```
 
-Returns title, links - use `webfetch` tool to read content.
-
 **Tips**
 
 - Use 2-4 key words for best result
