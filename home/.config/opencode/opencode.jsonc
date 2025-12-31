@@ -89,19 +89,27 @@
   },
   "agent": {
     "build": {
-      "description": "Senior engineer who codes, plans and discuss.",
-      "prompt": "{file:./general.md}",
-      "temperature": 0.8
+      "description": "Senior engineer who codes",
+      "prompt": "{file:./build.md}",
+      "temperature": 0.7
     },
-    "general": {
-      "disable": true
+    "explore": {
+      "mode": "all",
+      "color": "#ff0055",
+      "description": "Explore ideas, research codebase and plan approaches.",
+      "prompt": "{file:./explore.md}",
+      "temperature": 1,
+      "tools": {
+        "write": false,
+        "edit": false
+      }
     },
+
     "plan": {
       "disable": true
     },
-    "explore": {
-      "description": "Use this to research codebase, find relevant files, code snippets, and trace logic.",
-      "prompt": "{file:./explore.md}"
+    "general": {
+      "disable": true
     }
   },
   "tools": {
