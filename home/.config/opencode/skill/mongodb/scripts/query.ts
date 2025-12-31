@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb'
+import { MongoClient, ObjectId } from 'mongodb'
 
 const uri = process.env.MCP_MONGODB_URI
 if (!uri) {
@@ -13,8 +13,10 @@ const client = new MongoClient(uri)
 
 try {
   await client.connect()
-  const result = await eval(`(async (db) => { return ${query} })(client.db())`)
-  console.log(JSON.stringify(result?.toArray ? result.toArray() : result, null, 2))
+  const queryFn = new Function('db', 'ObjectId', `return ${query}`)
+  const result = await queryFn(client.db(), ObjectId)
+  const output = result && typeof result.toArray === 'function' ? await result.toArray() : result
+  console.log(JSON.stringify(output, null, 2))
 } catch (error: any) {
   console.error('Error:', error.message)
   process.exit(1)

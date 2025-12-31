@@ -1,1 +1,1 @@
-[ "$(tty)" = "/dev/tty1" ] && Hyprland
+[ "$(tty)" = "/dev/tty1" ] && start-hyprland
