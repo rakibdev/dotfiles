@@ -4,16 +4,8 @@ import { $ } from 'bun'
 
 const TIMEOUT = 30_000
 
-const toRawUrl = (url: string) => {
-  const match = url.match(/^(https?):\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/)
-  if (match) return `${match[1]}://raw.githubusercontent.com/${match[2]}/${match[3]}/${match[4]}`
-}
-
-const DESCRIPTION = `Fetches URL content and converts to markdown.
-
-- URL must be fully-formed (http:// or https://)
-- Read-only, does not modify files
-- Results may be summarized if content is large`
+const DESCRIPTION = `Fetches URL content as markdown.
+- URL must be fully-formed (http:// or https://)`
 
 export default tool({
   description: DESCRIPTION,
@@ -25,7 +17,7 @@ export default tool({
       throw new Error('URL must start with http:// or https://')
     }
 
-    const url = toRawUrl(args.url) ?? args.url
+    const url = args.url
 
     const response = await fetch(url, {
       signal: AbortSignal.timeout(TIMEOUT),

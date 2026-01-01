@@ -42,7 +42,7 @@ good response: _checks vscode keybindings.json, terminal keybindings - then pinp
 - Avoid thin wrappers and inline once-used variables/functions
 - Shorthands: Double quotes, `return;` over `return null`, `if (array.length)` omiting `> 0` and prefer single-line early returns.
 - `catch(error: any)` and directly use `error.message`. Avoid fallback: `error.message || "message"`
-- Keep logs concise: "Photo saved" not "Photo saved successfully"
+- Keep logs concise: "Photo saved" not "Photo saved successfully". No prefixes like "Error: ", "Failed to: " etc.
 
 **Function/Variable Naming**
 

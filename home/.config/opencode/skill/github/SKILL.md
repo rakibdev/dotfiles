@@ -1,71 +1,66 @@
 ---
 name: github
-description: Can browse code/issues of specific repo, global search and comment on PRs.
+description: Use for searching code/issues of single repo or globally. Comment/review PRs.
 pattern: github\.com/[\w-]+/[\w-]+
 ---
 
-### Browse Single Repo
-
-Use `webfetch` tool with GitChamber API to list, read, search code.
-
-**API_URL**: `https://gitchamber.com/repos/{owner}/{repo}/{branch}/`
-
-- **List**: `GET {API_URL}/files/...?glob=**`
-- **Read**: `GET {API_URL}/files/...?glob=**&start=1&end=50&showLineNumbers=true`
-- **Search**: `GET {API_URL}/search/{query}?glob=**/*.ts`
-
-Note: It'll 404 without `glob=**` or `glob=**/*.{ext}`.
-
-### Global Repo Search
+### Browse Files
 
 ```bash
-bun {base dir}/scripts/search-repos.ts <query>
+bun {base dir}/scripts/read.ts <github_url>
 ```
 
-**Examples**
-
-```bash
-bun {base dir}/scripts/search-repos.ts 'lang:ts stars:>100 mcp'
-bun {base dir}/scripts/search-repos.ts 'topic:neovim lang:lua'
-```
+- Accepts `blob` (file) or `tree` (directory) URLs.
 
 **Tips**
 
-- Narrow by language: `lang:ts`, `lang:go`
-- Filter by stars: `stars:>100`, `stars:50..200`
-- Sorted by latest updates (default) to find active projects
-- Use short, unique terms for better results
+- Defaults to `stars:>100` and sorted by `updated` to find trending repos.
+- `--stars 0` includes everything
+- Narrow by language: `lang:ts`, `lang:go`, `lang:rust`
 
-### Global Code Search
-
-```bash
-bun {base dir}/scripts/search-code.ts <query>
-```
-
-**Examples**
+### Code Search
 
 ```bash
-bun {base dir}/scripts/search-code.ts 'opencode-ai/plugin lang:ts'
-bun {base dir}/scripts/search-code.ts 'useQuery filename:*.tsx'
+bun {base dir}/scripts/search-code.ts <query> [--page N]
+
+# Global
+
+bun {base dir}/scripts/search-code.ts 'useQuery filename:\*.tsx'
+
+# Single repo
+
+bun {base dir}/scripts/search-code.ts 'useQuery repo:opencode-ai/opencode'
 ```
+
+bun {base dir}/scripts/search-code.ts 'tiptap components/ui lang:ts'
 
 **Tips**
 
-- Use unique package names/imports to discover underrated repos
-- Filter by language: `lang:ts`
-- Use `filename:*.tsx` to target specific file types
-- Search error messages to find solutions
+- Search `components/ui` (shadcn) + lib name to see real integrations
+- Use `filename:config.ts` or `lang:tsx` to target specific files
+- Add `repo:owner/name` to search within a specific repository
 
-### Search Issues/PRs
+### Search Repos
 
 ```bash
-bun {base dir}/scripts/search-issues.ts <issue|pr> <query>
+bun {base dir}/scripts/search-repos.ts <query> [--page N] [--stars N] [--sort updated|best-match]
+
+# Example
+bun {base dir}/scripts/search-repos.ts 'topic:neovim' --stars 1000 --sort best-match
+```
+
+### Search Issues
+
+```bash
+bun {base dir}/scripts/search-issues.ts <query>
 ```
 
 ### Pull Request Operations
 
 ```bash
 bun {base dir}/scripts/pr.ts <owner> <repo> <pr_number> [method] [...args]
+
+bun {base dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 10 15 'This block could be refactored'
 ```
 
 Methods:
@@ -78,14 +73,8 @@ Methods:
 - `comment <path> <start_line> <end_line> <body>` - Add comment on line range
 - `reply <comment_id> <body>` - Reply to existing comment
 
-**Examples**
-
-```bash
-bun {base dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 10 15 'This block could be refactored'
-```
-
 **Tips**
 
-- When asked to review a PR, first use `diff` to identify specific code blocks.
-- Provide feedback by making separate comments on specific lines or ranges instead of a single top-level review.
-- Check existing `comments` to see if a point was already raised or to respond to existing threads.
+- When reviewing a PR, first use `diff` to identify specific code blocks
+- Make separate comments on specific lines instead of a single top-level review
+- Check existing `comments` to see if a point was already raised
