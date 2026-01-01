@@ -1,6 +1,8 @@
 import { expect, test } from 'bun:test'
 import TurndownService from 'turndown'
 import { tables } from 'turndown-plugin-gfm'
+import { parseHTML } from 'linkedom'
+import { extractNavLinks } from '../webfetch'
 
 test('converts hyprlock wiki tables to markdown', async () => {
   const response = await fetch('https://wiki.hypr.land/Hypr-Ecosystem/hyprlock/')
@@ -25,4 +27,14 @@ test('shadcn theming page returns markdown via .md fallback', async () => {
   const md = await response.text()
   expect(md).toContain('```')
   expect(md).toMatch(/^---\n|^# /m)
+}, 10_000)
+
+test('extracts nav links from hyprlock page', async () => {
+  const response = await fetch('https://wiki.hypr.land/Hypr-Ecosystem/hyprlock/')
+  const html = await response.text()
+  const { document } = parseHTML(html)
+
+  const links = extractNavLinks(document, 'https://wiki.hypr.land/Hypr-Ecosystem/hyprlock/')
+
+  expect(links.length).toBeGreaterThan(0)
 }, 10_000)

@@ -2,6 +2,7 @@ import { tool } from '@opencode-ai/plugin'
 import { Readability } from '@mozilla/readability'
 import { parseHTML } from 'linkedom'
 import TurndownService from 'turndown'
+// @ts-expect-error
 import { tables } from 'turndown-plugin-gfm'
 import { chromium } from 'playwright-core'
 
@@ -126,35 +127,25 @@ const toMarkdown = (html: string, baseUrl?: string) => {
   return markdown
 }
 
-const extractNavLinks = (document: Document, baseUrl?: string) => {
+export const extractNavLinks = (document: Document, baseUrl?: string) => {
   const links: Array<{ text: string; href: string }> = []
   if (!baseUrl) return links
 
   const origin = new URL(baseUrl).origin
+  const currentPath = new URL(baseUrl).pathname
+  const basePath = currentPath.replace(/\/[^/]*\/?$/, '/')
 
-  for (const li of document.querySelectorAll('nav ul li, aside ul li')) {
-    const anchor = li.querySelector('a[href]')
-    if (!anchor) continue
-
+  for (const anchor of document.querySelectorAll('ul li > a[href]')) {
     const href = anchor.getAttribute('href')
     const text = anchor.textContent?.trim()
-    if (!href || !text || text.length < 2) continue
+    if (!href || !text || text.length < 2 || href.startsWith('#')) continue
 
     const fullUrl = href.startsWith('http') ? href : origin + (href.startsWith('/') ? href : '/' + href)
     if (!fullUrl.startsWith(origin)) continue
 
-    if (!links.some(l => l.href === fullUrl)) {
-      links.push({ text, href: fullUrl })
-    }
-  }
-
-  for (const anchor of document.querySelectorAll('a[rel="prev"], a[rel="next"]')) {
-    const href = anchor.getAttribute('href')
-    const text = anchor.textContent?.trim()
-    if (!href || !text || text.length < 2) continue
-
-    const fullUrl = href.startsWith('http') ? href : origin + (href.startsWith('/') ? href : '/' + href)
-    if (!fullUrl.startsWith(origin)) continue
+    const linkPath = new URL(fullUrl).pathname
+    if (!linkPath.startsWith(basePath)) continue
+    if (linkPath === currentPath || linkPath === currentPath + '/') continue
 
     if (!links.some(l => l.href === fullUrl)) {
       links.push({ text, href: fullUrl })
