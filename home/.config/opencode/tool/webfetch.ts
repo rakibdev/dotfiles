@@ -1,11 +1,21 @@
 import { tool } from '@opencode-ai/plugin'
+import { Readability } from '@mozilla/readability'
+import { parseHTML } from 'linkedom'
 import TurndownService from 'turndown'
-import { $ } from 'bun'
+import { tables } from 'turndown-plugin-gfm'
+import { chromium } from 'playwright-core'
 
-const TIMEOUT = 30_000
+const TIMEOUT = 5_000
+const PAGE_LOAD_TIMEOUT = 30_000
 
 const DESCRIPTION = `Fetches URL content as markdown.
-- URL must be fully-formed (http:// or https://)`
+- URL must be fully-formed (http:// or https://)
+- Uses Playwright for JS-rendered content`
+
+const USER_AGENT =
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
+const isMarkdown = (text: string) => text.startsWith('# ') || text.startsWith('---\n')
 
 export default tool({
   description: DESCRIPTION,
@@ -18,38 +28,65 @@ export default tool({
     }
 
     const url = args.url
+    const mdUrl = url.replace(/\.md($|\/)/, '$1').replace(/\/$/, '') + '.md'
 
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(TIMEOUT),
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
-      }
-    }).catch(() => undefined)
-
-    if (response?.status == 404) throw new Error('404 Not Found')
-
-    if (response?.ok) {
-      const text = await response.text()
-      const contentType = response.headers.get('content-type') ?? ''
-      // Some sites omit content-type; only skip toMarkdown when the header explicitly says non-HTML
-      if (contentType && !contentType.includes('text/html')) return text
-
-      const markdown = toMarkdown(text)
-      if (markdown.length > 100) return markdown
-    }
-
-    const html = await $`lightpanda fetch --dump --strip_mode full --http_timeout ${TIMEOUT} ${url}`
-      .text()
-      .catch((error: any) => {
-        throw new Error(`Lightpanda fetch failed: ${error.message}`)
+    const [mdResult, htmlResult] = await Promise.allSettled([
+      fetch(mdUrl, {
+        signal: AbortSignal.timeout(TIMEOUT),
+        headers: { 'User-Agent': USER_AGENT }
+      }).then(async response => {
+        if (!response.ok) throw new Error(response.statusText)
+        return response.text()
+      }),
+      fetch(url, {
+        signal: AbortSignal.timeout(TIMEOUT),
+        headers: { 'User-Agent': USER_AGENT }
+      }).then(async response => {
+        if (response.status == 404) throw new Error('404 Not Found')
+        return response.text()
       })
+    ])
 
-    return toMarkdown(html)
+    if (mdResult.status == 'fulfilled' && isMarkdown(mdResult.value)) return mdResult.value
+    if (htmlResult.status == 'rejected') throw htmlResult.reason
+
+    try {
+      const html = htmlResult.value
+      const markdown = toMarkdown(html, url)
+      // If we got meaningful content (> 250 chars), return it.
+      // Otherwise assume it's a client-side app and needs Playwright.
+      if (markdown.length > 250) return markdown
+    } catch {}
+
+    const browser = await chromium.launch({
+      executablePath: '/usr/bin/chromium',
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--headless']
+    })
+
+    try {
+      const page = await browser.newPage()
+      await page.goto(url, { waitUntil: 'networkidle', timeout: PAGE_LOAD_TIMEOUT })
+
+      await page.waitForTimeout(1000)
+
+      const content = await page.content()
+      return toMarkdown(content, url)
+    } finally {
+      await browser.close()
+    }
   }
 })
 
-function toMarkdown(html: string) {
+const toMarkdown = (html: string, baseUrl?: string) => {
+  const { document } = parseHTML(html)
+
+  const navLinks = extractNavLinks(document, baseUrl)
+
+  const reader = new Readability(document)
+  const article = reader.parse()
+
+  const content = article?.content ?? html
+
   const turndown = new TurndownService({
     headingStyle: 'atx',
     hr: '---',
@@ -58,24 +95,71 @@ function toMarkdown(html: string) {
     emDelimiter: '*'
   })
 
-  turndown.remove(['script', 'style', 'meta', 'link', 'nav', 'footer', 'header', 'aside'])
+  turndown.use(tables)
 
-  turndown.addRule('removeEmpty', {
-    filter: node => {
-      const tag = node.nodeName.toLowerCase()
-      if (['div', 'span', 'p'].includes(tag)) {
-        return !node.textContent?.trim()
-      }
-      return false
+  turndown.addRule('fencedCodeBlock', {
+    filter: (node, options) => {
+      return options.codeBlockStyle === 'fenced' && node.nodeName === 'PRE' && node.firstChild?.nodeName === 'CODE'
     },
-    replacement: () => ''
+    replacement: (_, node) => {
+      const code = node.firstChild as Element
+      const lang = code.getAttribute?.('class')?.match(/language-(\S+)/)?.[1] ?? ''
+      const text = code.textContent?.replace(/\n$/, '') ?? ''
+      return `\n\n\`\`\`${lang}\n${text}\n\`\`\`\n\n`
+    }
   })
 
-  return turndown
-    .turndown(html)
+  turndown.remove(['script', 'style', 'meta', 'link', 'nav', 'footer', 'header', 'aside'])
+
+  let markdown = turndown
+    .turndown(content)
     .replace(/\[\s*\]\([^)]*\)/g, '')
     .replace(/\[([^\]]+)\]\(([^)]+)\s+"[^"]*"\)/g, '[$1]($2)')
-    .replace(/\[([^\]]+)\]\([^)]+\)\s*\n+\s*\[\1\]\([^)]+\)/g, m => m.match(/\[[^\]]+\]\([^)]+\)/)?.[0] ?? m)
     .replace(/\n{3,}/g, '\n\n')
     .trim()
+
+  const unusedLinks = navLinks.filter(link => !markdown.includes(link.href))
+  if (unusedLinks.length) {
+    markdown += '\n\n---\n\n**Related pages:**\n' + unusedLinks.map(l => `- [${l.text}](${l.href})`).join('\n')
+  }
+
+  return markdown
+}
+
+const extractNavLinks = (document: Document, baseUrl?: string) => {
+  const links: Array<{ text: string; href: string }> = []
+  if (!baseUrl) return links
+
+  const origin = new URL(baseUrl).origin
+
+  for (const li of document.querySelectorAll('nav ul li, aside ul li')) {
+    const anchor = li.querySelector('a[href]')
+    if (!anchor) continue
+
+    const href = anchor.getAttribute('href')
+    const text = anchor.textContent?.trim()
+    if (!href || !text || text.length < 2) continue
+
+    const fullUrl = href.startsWith('http') ? href : origin + (href.startsWith('/') ? href : '/' + href)
+    if (!fullUrl.startsWith(origin)) continue
+
+    if (!links.some(l => l.href === fullUrl)) {
+      links.push({ text, href: fullUrl })
+    }
+  }
+
+  for (const anchor of document.querySelectorAll('a[rel="prev"], a[rel="next"]')) {
+    const href = anchor.getAttribute('href')
+    const text = anchor.textContent?.trim()
+    if (!href || !text || text.length < 2) continue
+
+    const fullUrl = href.startsWith('http') ? href : origin + (href.startsWith('/') ? href : '/' + href)
+    if (!fullUrl.startsWith(origin)) continue
+
+    if (!links.some(l => l.href === fullUrl)) {
+      links.push({ text, href: fullUrl })
+    }
+  }
+
+  return links
 }

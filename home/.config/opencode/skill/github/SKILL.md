@@ -10,13 +10,13 @@ pattern: github\.com/[\w-]+/[\w-]+
 bun {base dir}/scripts/read.ts <github_url>
 ```
 
-- Accepts `blob` (file) or `tree` (directory) URLs.
+- URL accepts `blob` (reading file) or `tree` (listing).
 
-**Tips**
-
+<tips>
 - Defaults to `stars:>100` and sorted by `updated` to find trending repos.
 - `--stars 0` includes everything
 - Narrow by language: `lang:ts`, `lang:go`, `lang:rust`
+</tips>
 
 ### Code Search
 
@@ -32,13 +32,10 @@ bun {base dir}/scripts/search-code.ts 'useQuery filename:\*.tsx'
 bun {base dir}/scripts/search-code.ts 'useQuery repo:opencode-ai/opencode'
 ```
 
-bun {base dir}/scripts/search-code.ts 'tiptap components/ui lang:ts'
-
-**Tips**
-
-- Search `components/ui` (shadcn) + lib name to see real integrations
-- Use `filename:config.ts` or `lang:tsx` to target specific files
+<tips>
+- Use combination of `path:...`, import substring `components/ui` (shadcn), and `lang:tsx`
 - Add `repo:owner/name` to search within a specific repository
+</tips>
 
 ### Search Repos
 
@@ -48,6 +45,10 @@ bun {base dir}/scripts/search-repos.ts <query> [--page N] [--stars N] [--sort up
 # Example
 bun {base dir}/scripts/search-repos.ts 'topic:neovim' --stars 1000 --sort best-match
 ```
+
+<tips>
+- Use 2 generic key terms for best result.
+</tips>
 
 ### Search Issues
 
@@ -63,8 +64,7 @@ bun {base dir}/scripts/pr.ts <owner> <repo> <pr_number> [method] [...args]
 bun {base dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 10 15 'This block could be refactored'
 ```
 
-Methods:
-
+<method>
 - `get` (default) - PR details
 - `diff` - Raw diff
 - `files` - Changed files list
@@ -72,9 +72,10 @@ Methods:
 - `comment <path> <line> <body>` - Add comment on single line
 - `comment <path> <start_line> <end_line> <body>` - Add comment on line range
 - `reply <comment_id> <body>` - Reply to existing comment
+</method>
 
-**Tips**
-
+<tips>
 - When reviewing a PR, first use `diff` to identify specific code blocks
 - Make separate comments on specific lines instead of a single top-level review
 - Check existing `comments` to see if a point was already raised
+</tips>
