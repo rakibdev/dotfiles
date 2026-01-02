@@ -25,10 +25,10 @@
     "external_directory": "allow"
   },
   "keybinds": {
+    "leader": "alt",
     "input_newline": "alt+enter",
-    "session_new": "ctrl+n",
-    "messages_last": "ctrl+down",
-    "model_list": "ctrl+/"
+    "session_new": "<leader>n",
+    "model_list": "<leader>m"
   },
   "lsp": false,
   "formatter": false,
@@ -62,17 +62,6 @@
             "output": ["text"]
           }
         },
-        "gemini-3-flash-preview": {
-          "name": "Gemini 3 Flash Preview (CLI)",
-          "limit": {
-            "context": 1048576,
-            "output": 65536
-          },
-          "modalities": {
-            "input": ["text", "image", "pdf"],
-            "output": ["text"]
-          }
-        },
         "antigravity-claude-opus-4-5-thinking-medium": {
           "name": "Claude Opus 4.5 Think Medium (Antigravity)",
           "limit": {
@@ -95,7 +84,7 @@
     },
     "explore": {
       "mode": "all",
-      "model": "antigravity-gemini-3-flash",
+      "model": "google/antigravity-gemini-3-flash",
       "color": "#ff0055",
       "description": "Explore ideas, research codebase and plan approaches.",
       "prompt": "{file:./explore.md}",
