@@ -52,9 +52,19 @@
 
   "files.enableTrash": false,
   "files.exclude": {
+    "**/node_modules": true,
     "**/build": true,
     "**/dist": true,
-    "**/node_modules": true
+    "**/.git": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules": true,
+    "**/build": true,
+    "**/dist": true,
+    "**/.git": true,
+    // Hidden folders (.*) are auto-excluded since they're typically cache/build artifacts.
+    // `.mongodb` storage folder with thousands of files spiked VSCode to 98% CPU.
+    "**/.*": true
   },
 
   "git.pruneOnFetch": true,

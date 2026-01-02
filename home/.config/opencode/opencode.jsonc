@@ -36,12 +36,12 @@
     // fix: Each `tool_use` block must have a corresponding `tool_result`
     // "batch_tool": true
   },
-  "plugin": ["opencode-antigravity-auth@1.0.6"],
+  "plugin": ["opencode-antigravity-auth@1.2.7"],
   "provider": {
     "google": {
       "models": {
-        "gemini-3-pro-high": {
-          "name": "Gemini 3 Pro High (Antigravity)",
+        "antigravity-gemini-3-pro-low": {
+          "name": "Gemini 3 Pro Low (Antigravity)",
           "limit": {
             "context": 1048576,
             "output": 65535
@@ -51,7 +51,7 @@
             "output": ["text"]
           }
         },
-        "gemini-3-flash": {
+        "antigravity-gemini-3-flash": {
           "name": "Gemini 3 Flash (Antigravity)",
           "limit": {
             "context": 1048576,
@@ -62,19 +62,19 @@
             "output": ["text"]
           }
         },
-        "claude-sonnet-4-5": {
-          "name": "Claude Sonnet 4.5 (Antigravity)",
+        "gemini-3-flash-preview": {
+          "name": "Gemini 3 Flash Preview (CLI)",
           "limit": {
-            "context": 200000,
-            "output": 64000
+            "context": 1048576,
+            "output": 65536
           },
           "modalities": {
             "input": ["text", "image", "pdf"],
             "output": ["text"]
           }
         },
-        "claude-opus-4-5-thinking": {
-          "name": "Claude Opus 4.5 Thinking (Antigravity)",
+        "antigravity-claude-opus-4-5-thinking-medium": {
+          "name": "Claude Opus 4.5 Think Medium (Antigravity)",
           "limit": {
             "context": 200000,
             "output": 64000
@@ -95,6 +95,7 @@
     },
     "explore": {
       "mode": "all",
+      "model": "antigravity-gemini-3-flash",
       "color": "#ff0055",
       "description": "Explore ideas, research codebase and plan approaches.",
       "prompt": "{file:./explore.md}",
@@ -104,7 +105,6 @@
         "edit": false
       }
     },
-
     "plan": {
       "disable": true
     },
@@ -115,7 +115,7 @@
   "tools": {
     "codesearch": false,
     "websearch": false,
-    "edit": false // using multiedit
+    "multiedit": false // using multiedit
   },
   "mcp": {
     "ssh": {
