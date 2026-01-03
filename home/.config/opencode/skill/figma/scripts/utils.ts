@@ -1,15 +1,15 @@
-import { mkdir, readFile, writeFile } from "fs/promises"
-import { join } from "path"
-import { homedir } from "os"
+import { mkdir, readFile, writeFile } from 'fs/promises'
+import { join } from 'path'
+import { homedir } from 'os'
 
 export const token = process.env.FIGMA_ACCESS_TOKEN
 if (!token) {
-  console.error("Error: FIGMA_ACCESS_TOKEN env not set")
+  console.error('Error: FIGMA_ACCESS_TOKEN env not set')
   process.exit(1)
 }
 
-export const cacheDir = join(homedir(), ".cache", "figma")
-export const cacheTTL = 3 * 24 * 60 * 60 * 1000 // 3 days
+export const cacheDir = join(homedir(), '.cache', 'figma')
+export const cacheTTL = 10 * 24 * 60 * 60 * 1000 // 10 days
 
 export type ParsedFigmaUrl = {
   fileKey: string
@@ -19,36 +19,36 @@ export type ParsedFigmaUrl = {
 /**
  * Parse Figma URL or raw fileKey/nodeId args
  * Accepts:
- * - Full URL: https://www.figma.com/design/Pa39K9YSc1tBeNmJqy2stM/...?node-id=825-17286
- * - File key only: Pa39K9YSc1tBeNmJqy2stM
- * - File key + node ID: Pa39K9YSc1tBeNmJqy2stM 825-17286
+ * - Full URL: https://www.figma.com/design/andoid/...?node-id=825-17286
+ * - File key only: andoid
+ * - File key + node ID: andoid 825-17286
  */
 export const parseFigmaArgs = (args: string[]): ParsedFigmaUrl & { extra: string[] } => {
   const [first, ...rest] = args
   if (!first) {
-    console.error("Error: No Figma URL or file key provided")
+    console.error('Error: No Figma URL or file key provided')
     process.exit(1)
   }
 
   // Check if it's a URL
-  if (first.includes("figma.com")) {
+  if (first.includes('figma.com')) {
     const url = new URL(first)
     const pathMatch = url.pathname.match(/\/(file|design)\/([a-zA-Z0-9]+)/)
     if (!pathMatch) {
-      console.error("Error: Invalid Figma URL")
+      console.error('Error: Invalid Figma URL')
       process.exit(1)
     }
     const fileKey = pathMatch[2]
-    const nodeId = url.searchParams.get("node-id")?.replace(/-/g, ":")
+    const nodeId = url.searchParams.get('node-id')?.replace(/-/g, ':')
     return { fileKey, nodeId: nodeId || undefined, extra: rest }
   }
 
   // Raw args: fileKey [nodeId]
-  const nodeId = rest[0]?.replace(/-/g, ":")
+  const nodeId = rest[0]?.replace(/-/g, ':')
   return {
     fileKey: first,
     nodeId: nodeId || undefined,
-    extra: rest.slice(1),
+    extra: rest.slice(1)
   }
 }
 
@@ -56,12 +56,12 @@ export const getCachePath = (fileKey: string) => join(cacheDir, `${fileKey}.json
 
 export const loadFromCache = async (fileKey: string) => {
   try {
-    const data = JSON.parse(await readFile(getCachePath(fileKey), "utf-8"))
+    const data = JSON.parse(await readFile(getCachePath(fileKey), 'utf-8'))
     if (Date.now() - data.fetchedAt < cacheTTL) {
-      console.error("[cache hit]")
+      console.error('[cache hit]')
       return data.file
     }
-    console.error("[cache expired]")
+    console.error('[cache expired]')
   } catch {}
   return null
 }
@@ -73,7 +73,7 @@ export const saveToCache = async (fileKey: string, file: any) => {
 
 export const fetchFigmaFile = async (fileKey: string) => {
   const res = await fetch(`https://api.figma.com/v1/files/${fileKey}`, {
-    headers: { "X-Figma-Token": token },
+    headers: { 'X-Figma-Token': token }
   })
   if (!res.ok) throw new Error(`Figma API error: ${res.status} ${res.statusText}`)
   return res.json()
@@ -82,7 +82,7 @@ export const fetchFigmaFile = async (fileKey: string) => {
 export const getFile = async (fileKey: string) => {
   const cached = await loadFromCache(fileKey)
   if (cached) return cached
-  console.error("[fetching from API...]")
+  console.error('[fetching from API...]')
   const file = await fetchFigmaFile(fileKey)
   await saveToCache(fileKey, file)
   return file
