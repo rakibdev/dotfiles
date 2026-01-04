@@ -1,6 +1,6 @@
 import { request } from "./utils"
 
-const [owner, repo, prNumber, method = "get", ...rest] = process.argv.slice(2)
+const [owner, repo, prNumber, method, ...rest] = process.argv.slice(2)
 const base = `/repos/${owner}/${repo}/pulls/${prNumber}`
 
 type PR = {
@@ -32,16 +32,7 @@ type Comment = {
   in_reply_to_id?: number
 }
 
-if (method == "get") {
-  const pr = await request<PR>(base)
-  console.log(`#${pr.number} ${pr.title}`)
-  console.log(`State: ${pr.state} | Merged: ${pr.merged}`)
-  console.log(`Author: @${pr.user.login}`)
-  console.log(`Branch: ${pr.head.ref} → ${pr.base.ref}`)
-  console.log(`HEAD: ${pr.head.sha}`)
-  console.log(`URL: ${pr.html_url}`)
-  if (pr.body) console.log(`\n${pr.body.slice(0, 500)}`)
-} else if (method == "diff") {
+if (method == "diff") {
   const res = await fetch(`https://api.github.com${base}`, {
     headers: {
       Authorization: `Bearer ${process.env.GITHUB_PAT}`,
@@ -53,32 +44,6 @@ if (method == "get") {
   const files = await request<File[]>(`${base}/files`)
   for (const f of files) {
     console.log(`[${f.status}] ${f.filename} (+${f.additions} -${f.deletions})`)
-  }
-} else if (method == "comments") {
-  const comments = await request<Comment[]>(`${base}/comments`)
-  const threads = new Map<number, Comment[]>()
-  const roots: Comment[] = []
-
-  for (const c of comments) {
-    if (c.in_reply_to_id) {
-      const thread = threads.get(c.in_reply_to_id) || []
-      thread.push(c)
-      threads.set(c.in_reply_to_id, thread)
-    } else {
-      roots.push(c)
-      threads.set(c.id, [])
-    }
-  }
-
-  for (const root of roots) {
-    const lineInfo = root.start_line ? `L${root.start_line}-${root.line}` : `L${root.line}`
-    console.log(`[${root.id}] ${root.path}:${lineInfo} @${root.user.login}`)
-    console.log(`  ${root.body.slice(0, 300)}`)
-    const replies = threads.get(root.id) || []
-    for (const reply of replies) {
-      console.log(`  ↳ @${reply.user.login}: ${reply.body.slice(0, 200)}`)
-    }
-    console.log()
   }
 } else if (method == "comment") {
   const pr = await request<PR>(base)
