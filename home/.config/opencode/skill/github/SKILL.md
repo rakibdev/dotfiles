@@ -1,6 +1,6 @@
 ---
 name: github
-description: Can list/read files, fetch issues, search code in single repo or globally. Comment on PRs. Use this over `webfetch` for github URLs.
+description: Can list/read files, fetch issues, search code in single repo or globally. Write PR comments. Use this over `webfetch` for github URLs.
 pattern: github\.com/[\w-]+/[\w-]+
 ---
 

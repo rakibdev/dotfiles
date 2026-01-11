@@ -127,7 +127,7 @@ const toMarkdown = (html: string, baseUrl?: string) => {
   return markdown
 }
 
-export const extractNavLinks = (document: Document, baseUrl?: string) => {
+const extractNavLinks = (document: Document, baseUrl?: string) => {
   const links: Array<{ text: string; href: string }> = []
   if (!baseUrl) return links
 

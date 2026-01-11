@@ -7,8 +7,6 @@
   "permission": {
     "webfetch": "allow",
     "bash": {
-      "*env*": "deny",
-      "*opencode.jsonc*": "deny",
       "*": "allow",
       "rm *": "ask",
       "sudo *": "ask",
@@ -17,6 +15,9 @@
       "git diff *": "allow",
       "git status *": "allow",
       "git show *": "allow",
+
+      // todo: not working. e.g. `echo env`
+      "*env*": "ask",
 
       // mongodb skill: allow only read operations
       "*db.*find*": "allow",
@@ -41,20 +42,33 @@
   "provider": {
     "google": {
       "models": {
-        "antigravity-gemini-3-flash": {
+        "gemini-3-flash": {
           "name": "Gemini 3 Flash (Antigravity)",
+          "reasoning": true,
           "limit": { "context": 1048576, "output": 65536 },
-          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] }
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "variants": {
+            "none": { "reasoning": false, "options": { "thinkingConfig": { "includeThoughts": false } } },
+            "minimal": { "options": { "thinkingConfig": { "thinkingLevel": "minimal", "includeThoughts": true } } }
+          }
         },
-        "antigravity-gemini-3-pro-low": {
-          "name": "Gemini 3 Pro Low (Antigravity)",
-          "limit": { "context": 1048576, "output": 65535 },
-          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] }
+        "gemini-3-pro-preview": {
+          "name": "Gemini 3 Pro (Antigravity)",
+          "reasoning": true,
+          "limit": { "context": 1000000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "variants": {
+            "low": { "options": { "thinkingConfig": { "thinkingLevel": "low", "includeThoughts": true } } }
+          }
         },
-        "antigravity-claude-opus-4-5-thinking-low": {
-          "name": "Claude Opus 4.5 Low (Antigravity)",
+        "gemini-claude-opus-4-5-thinking": {
+          "name": "Claude Opus 4.5 (Antigravity)",
+          "reasoning": true,
           "limit": { "context": 200000, "output": 64000 },
-          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] }
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "variants": {
+            "low": { "options": { "thinkingConfig": { "thinkingBudget": 4000, "includeThoughts": true } } }
+          }
         }
       }
     }
@@ -63,11 +77,11 @@
     "build": {
       "description": "Senior engineer who codes",
       "prompt": "{file:./build.md}",
-      "temperature": 1
+      "temperature": 0.7
     },
     "explore": {
       "mode": "all",
-      "model": "google/antigravity-gemini-3-flash",
+      "model": "google/gemini-3-flash",
       "color": "#ff0055",
       "description": "Explore ideas, research codebase and plan approaches.",
       "prompt": "{file:./explore.md}",
@@ -87,7 +101,8 @@
   "tools": {
     "codesearch": false,
     "websearch": false,
-    "multiedit": false // using multiedit
+    "edit": false, // using multiedit
+    "google_search": false // shekohex/opencode-google-antigravity-auth plugin
   },
   "mcp": {
     "ssh": {
