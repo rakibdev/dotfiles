@@ -2,7 +2,7 @@
   "name": "vscode-ai",
   "displayName": "VSCode AI",
   "description": "VSCode extension for AI agents",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "publisher": "rakib",
   "private": true,
   "engines": {

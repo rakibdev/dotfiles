@@ -21,6 +21,10 @@
     "command": "workbench.action.navigateForward",
     "when": "canNavigateForward"
   },
+  {
+    "key": "ctrl+shift+g",
+    "command": "-editor.action.announceCursorPosition"
+  },
 
   {
     "key": "ctrl+v",

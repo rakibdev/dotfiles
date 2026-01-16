@@ -37,12 +37,14 @@
   },
   "editor.pasteAs.preferences": ["text.updateImports"],
   "diffEditor.ignoreTrimWhitespace": true,
+
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.rightClickBehavior": "copyPaste",
   "terminal.integrated.enablePersistentSessions": false,
   "terminal.integrated.shellIntegration.history": 10,
   "terminal.integrated.stickyScroll.enabled": false,
+  "terminal.integrated.initialHint": false,
 
   "security.workspace.trust.enabled": false,
   "security.workspace.trust.untrustedFiles": "open",
@@ -112,6 +114,5 @@
     "crossapi": "linux",
     "keycrypt": "linux"
   },
-  "scm.repositories.selectionMode": "single",
-  "diffEditor.renderSideBySide": false
+  "scm.repositories.selectionMode": "single"
 }

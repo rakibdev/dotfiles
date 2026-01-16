@@ -1,5 +1,6 @@
 import type { Plugin } from '@opencode-ai/plugin'
 import { join } from 'path'
+import { partId } from './utils/id'
 
 type SkillMeta = {
   name: string
@@ -8,19 +9,6 @@ type SkillMeta = {
 }
 
 const SKILL_DIR = join(import.meta.dirname, '..', 'skill')
-
-let counter = 0
-/**
- * Generates time-based IDs compatible with OpenCode's Identifier.ascending (prt_ prefix).
- * Using random UUIDs causes parts to sort incorrectly (sometimes prepending instead of appending).
- * @see ~/Downloads/opencode/opencode/packages/opencode/src/id/id.ts
- */
-const partId = () => {
-  const now = BigInt(Date.now()) * BigInt(0x1000) + BigInt(++counter)
-  const bytes = Buffer.alloc(6)
-  for (let i = 0; i < 6; i++) bytes[i] = Number((now >> BigInt(40 - 8 * i)) & BigInt(0xff))
-  return 'prt_' + bytes.toString('hex') + Math.random().toString(36).slice(2, 16)
-}
 
 const parseSkillMeta = (content: string): SkillMeta | null => {
   const match = content.match(/^---\n([\s\S]*?)\n---/)
@@ -90,32 +78,32 @@ export const SkillSuggestion: Plugin = async () => {
       const alreadySuggested = suggested.get(input.sessionID)!
 
       const msg = textPart.text
-      const matched: string[] = []
+      const matched: SkillMeta[] = []
 
       for (const skill of skills) {
         if (alreadySuggested.has(skill.name)) continue
 
         if (skill.patterns.length && matchPatterns(msg, skill.patterns)) {
-          matched.push(skill.name)
+          matched.push(skill)
           continue
         }
 
         if (matchKeywords(msg, skill)) {
-          matched.push(skill.name)
+          matched.push(skill)
         }
       }
 
       if (matched.length) {
-        const skillList = matched.join(', ')
+        const list = matched.map(s => `- ${s.name}: ${s.description}`).join('\n')
         output.parts.push({
           id: partId(),
           sessionID: input.sessionID,
           messageID: input.messageID!,
           type: 'text' as const,
-          text: `\n\nUse ${skillList} skill${matched.length > 1 ? 's' : ''} if relevant.`,
+          text: `\n\nSkills:\n${list}`,
           synthetic: true
         })
-        matched.forEach(name => alreadySuggested.add(name))
+        matched.forEach(s => alreadySuggested.add(s.name))
       }
     }
   }

@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = hyprland
+
+[Action]
+Description = Rebuilding Hyprland plugins...
+When = PostTransaction
+Exec = /usr/bin/sudo -u rakib /home/rakib/Downloads/dotfiles/scripts/rebuild-hyprland-plugins.sh

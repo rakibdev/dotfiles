@@ -9,9 +9,15 @@ if (!query) process.exit(1)
 const html = await requestInternal(`/search?q=${encodeURIComponent(query)}&type=code&p=${page}`)
 
 const jsonMatch = html.match(/data-target="react-app\.embeddedData">(\{.+?\})<\/script>/s)
-const data = jsonMatch ? JSON.parse(jsonMatch[1]) : {}
-const results = data.payload?.results || []
-const pageCount = data.payload?.page_count || 1
+const data = jsonMatch ? JSON.parse(jsonMatch[1]) : null
+
+if (!data.payload?.logged_in) {
+  console.log('GITHUB_USER_SESSION expired or invalid')
+  process.exit(1)
+}
+
+const results = data.payload.results || []
+const pageCount = data.payload.page_count || 1
 
 console.log('<search-results>')
 for (const r of results) {

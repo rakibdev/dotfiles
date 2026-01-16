@@ -23,6 +23,8 @@ Analyze the workspace and generate an ultra-concise `AGENTS.md` to bootstrap AI 
     - Note if a `scripts/` folder exists for custom tooling.
     - Check for `.env.example` to see required vars.
     - Look for DB schemas (e.g. `schema.prisma`, `drizzle/`, `migrations/`).
+5.  **API & Ports**:
+    - Scan backend code for listening ports (e.g., search for `listen`, `PORT`).
 
 ## Output Format (AGENTS.md)
 
@@ -35,6 +37,14 @@ Keep it brutally short. Use bullet points. No fluff.
 - **## Tech**: Top 3-5 critical libs/frameworks.
 - **## Commands**: High-frequency scripts only.
 - **## Config**: Path aliases, critical `.env` vars (keys only), and DB info (e.g. "Drizzle + Postgres").
+- **## API Testing**:
+
+  - Provide a curl command to test the API.
+  - ```bash
+    curl -H "Authorization: Bearer $API_KEY" http://localhost:8000/...
+    ```
+    Assume API_KEY exists.
+
 - **## Rules**: (Optional) Project-specific constraints (e.g. "Use shadcn for UI", "Directly inline queryFn").
 
 Optimize for token efficiency. NEVER include these instructions in the output.
