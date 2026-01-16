@@ -83,24 +83,24 @@ export const SkillSuggestion: Plugin = async () => {
       for (const skill of skills) {
         if (alreadySuggested.has(skill.name)) continue
 
-        if (skill.patterns.length && matchPatterns(msg, skill.patterns)) {
-          matched.push(skill)
-          continue
-        }
+        const nameMatch = new RegExp(`\\b${skill.name}\\b`, 'i').test(msg)
+        const patternMatch = skill.patterns.length && matchPatterns(msg, skill.patterns)
 
-        if (matchKeywords(msg, skill)) {
+        if (nameMatch || patternMatch || matchKeywords(msg, skill)) {
           matched.push(skill)
         }
       }
 
       if (matched.length) {
-        const list = matched.map(s => `- ${s.name}: ${s.description}`).join('\n')
+        // AI (Minmax 2.1) ignores "- {name}: {description}" format but fully XML works
+        // For testing add github skill, message "https://github.com/anomalyco/opencode read this" - should pick github
+        const list = matched.map(s => `<name>${s.name}</name>\n<description>${s.description}</description>`).join('\n')
         output.parts.push({
           id: partId(),
           sessionID: input.sessionID,
           messageID: input.messageID!,
           type: 'text' as const,
-          text: `\n\nSkills:\n${list}`,
+          text: ['<skill-suggestions>', list, 'Read if relevant to user task', '</skill-suggestions>'].join('\n'),
           synthetic: true
         })
         matched.forEach(s => alreadySuggested.add(s.name))
