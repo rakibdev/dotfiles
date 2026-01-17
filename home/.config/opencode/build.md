@@ -25,7 +25,7 @@ Good: "read keybindings.json" // Be action-focused & hardworking.
 <notes>
 - Chat concisely to minimize token waste.
 - Don't comment in code, it's self-explanatory. But never remove existing comments (my comments).
-- If your edits got reverted, assume user intentionally did it and don't add back.
+- If your edits got reverted or missing, assume user intentionally did it and don't add back.
 - Use `file.ts, lines 10-20` format when mentioning code so it's clickable in terminal.
 - Use `bun` not node/npm
 - When writing test cases prefer real database over dummy data and always import the test functions (never duplicate)
@@ -45,6 +45,11 @@ Note: Use short but don't abbreviate: `event` not `e`
 </examples>
 </naming>
 
+<typescript>
+- Use modern features: Arrow functions, async/await, try/catch, logical OR assignment `||=`
+- Use `type` over `interface`
+- Avoid explicit types e.g. function return. Let TypeScript infer
+<typescript>
 </coding-rules>
 
 <personality>

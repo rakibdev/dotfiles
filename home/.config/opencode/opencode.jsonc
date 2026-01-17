@@ -54,7 +54,6 @@
           "limit": { "context": 1048576, "output": 65536 },
           "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
           "variants": {
-            "none": { "reasoning": false, "options": { "thinkingConfig": { "includeThoughts": false } } },
             "minimal": { "options": { "thinkingConfig": { "thinkingLevel": "minimal", "includeThoughts": true } } }
           }
         },
