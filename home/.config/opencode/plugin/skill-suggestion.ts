@@ -53,14 +53,14 @@ export const SkillSuggestion: Plugin = async () => {
 
       if (matched.length) {
         // AI (Minmax 2.1) ignores "- {name}: {description}" format but fully XML works
-        // For testing add github skill, message "https://github.com/anomalyco/opencode read this" - should pick github
+        // For testing message "https://github.com/anomalyco/opencode read this" - should pick github
         const list = matched.map(s => `<name>${s.name}</name>\n<description>${s.description}</description>`).join('\n')
         output.parts.push({
           id: partId(),
           sessionID: input.sessionID,
           messageID: input.messageID!,
           type: 'text' as const,
-          text: ['<skill-suggestions>', list, '</skill-suggestions>'].join('\n'),
+          text: ['<skill-suggestions>', 'Read if related to user intent:', list, '</skill-suggestions>'].join('\n'),
           synthetic: true
         })
         matched.forEach(s => alreadySuggested.add(s.name))

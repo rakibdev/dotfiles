@@ -74,6 +74,7 @@
   "git.confirmSync": false,
   "git.inputValidationSubjectLength": 120,
 
+  "typescript.experimental.useTsgo": false,
   "typescript.preferences.useAliasesForRenames": false,
   "typescript.preferences.preferTypeOnlyAutoImports": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
@@ -97,6 +98,9 @@
   },
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "vscode.markdown-language-features"
   },
 
   "editor.defaultFormatter": "esbenp.prettier-vscode",

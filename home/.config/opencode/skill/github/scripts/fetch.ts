@@ -141,7 +141,6 @@ ${cleanedBody}
 ${cleanedComments.map(c => `[${c.id}] User: ${c.user} ${c.meta}\n${c.body}`).join('\n\n')}
 </comments>
 </pr>`)
-
   } catch (e: any) {
     console.error(e.message)
     process.exit(1)
@@ -167,37 +166,28 @@ if (data.issueNumber) {
     process.exit(1)
   }
 } else {
-  // Directory listing via GitChamber
   const { owner, repo, ref, path } = data
-  const baseUrl = `https://gitchamber.com/repos/${owner}/${repo}/${ref}/files`
-  const cleanPath = path.replace(/^\/+/, '').replace(/\/+$/, '')
-  const glob = cleanPath ? `${cleanPath}/**` : '**'
 
   try {
-    const res = await fetch(`${baseUrl}?glob=${glob}`)
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
+    const items = await request<any[]>(`/repos/${owner}/${repo}/contents/${path}?ref=${ref}`)
+    if (!Array.isArray(items)) throw new Error('Not a directory')
 
-    const files = await res.json()
-    if (!Array.isArray(files)) throw new Error('Invalid response')
+    const output = items
+      .map(item => (item.type == 'dir' ? `${item.name}/` : item.name))
+      .sort()
+      .join('\n')
 
-    // Filter for immediate children
-    const prefix = cleanPath ? `${cleanPath}/` : ''
-    const immediate = new Set<string>()
+    console.log(output)
 
-    files.forEach((path: string) => {
-      if (!path.startsWith(prefix)) return
-      const rel = path.slice(prefix.length)
-      if (!rel) return
-
-      const parts = rel.split('/')
-      if (parts.length === 1) {
-        immediate.add(parts[0])
-      } else {
-        immediate.add(`${parts[0]}/`)
+    const readmeItem = items.find(item => item.name.toLowerCase() === 'readme.md')
+    if (readmeItem) {
+      console.log('\n<readme>')
+      const res = await fetch(readmeItem.download_url)
+      if (res.ok) {
+        console.log(cleanBody(await res.text()))
       }
-    })
-
-    console.log(Array.from(immediate).sort().join('\n'))
+      console.log('</readme>')
+    }
   } catch (error: any) {
     console.error(error.message)
     process.exit(1)

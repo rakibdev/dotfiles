@@ -1,23 +1,22 @@
 ---
 name: github
-description: Can list/read files, fetch issues, search code in single repo or globally. Write PR comments. Use this over `webfetch` for github URLs.
+description: Browse GitHub URLs (don't use webfetch), repos, issues, search code and manage PR.
 pattern: github\.com/[\w-]+/[\w-]+
 ---
 
 # Browse
 
-URL containing `blob`, `tree`, `issues/...` or `pull/...`
-
+URL contains `blob` (file), `tree` (dir), `issues/...` or `pull/...`.
 ```bash
-bun {base dir}/scripts/fetch.ts <github_url>
+bun {dir}/scripts/fetch.ts <github_url>
 ```
 
 # Code Search
 
 ```bash
-bun {base dir}/scripts/search-code.ts <query> [--page N]
-bun {base dir}/scripts/search-code.ts 'useQuery filename:\*.tsx' # global
-bun {base dir}/scripts/search-code.ts 'useQuery repo:opencode-ai/opencode' # single repo
+bun {dir}/scripts/grep.ts <query> [--page N]
+bun {dir}/scripts/grep.ts 'useQuery filename:\*.tsx' # global
+bun {dir}/scripts/grep.ts 'useQuery repo:opencode-ai/opencode' # single repo
 ```
 
 - Use combination of import name, and `lang:tsx` and `path:` if unique (e.g. config files).
@@ -26,8 +25,8 @@ bun {base dir}/scripts/search-code.ts 'useQuery repo:opencode-ai/opencode' # sin
 # Search Repos
 
 ```bash
-bun {base dir}/scripts/search-repos.ts <query> [--page N] [--stars N] [--sort updated|best-match]
-bun {base dir}/scripts/search-repos.ts 'topic:neovim' --stars 1000 --sort best-match
+bun {dir}/scripts/search-repos.ts <query> [--page N] [--stars N] [--sort updated|best-match]
+bun {dir}/scripts/search-repos.ts 'topic:neovim' --stars 1000 --sort best-match
 ```
 
 - Use 1-2 generic terms (framework name) for wide results. Read at least 3 pages.
@@ -37,14 +36,14 @@ bun {base dir}/scripts/search-repos.ts 'topic:neovim' --stars 1000 --sort best-m
 # Search Issues
 
 ```bash
-bun {base dir}/scripts/search-issues.ts <query>
+bun {dir}/scripts/search-issues.ts <query>
 ```
 
 # Pull Request Operations
 
 ```bash
-bun {base dir}/scripts/pr.ts <owner> <repo> <pr_number> <method> [...args]
-bun {base dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 10 15 'This block could be refactored'
+bun {dir}/scripts/pr.ts <owner> <repo> <pr_number> <method> [...args]
+bun {dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 10 15 'This block could be refactored'
 ```
 
 <method>
