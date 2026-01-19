@@ -87,15 +87,15 @@
   },
   "agent": {
     "build": {
-      "description": "Senior engineer who codes",
+      "description": "Senior coding engineer",
       "prompt": "{file:./build.md}",
       "temperature": 1
     },
     "explore": {
-      "mode": "all",
-      "model": "google/gemini-3-flash",
+      "mode": "primary",
+      "model": "google/antigravity-gemini-3-flash",
       "color": "#ff0055",
-      "description": "Explore ideas, research codebase and plan approaches.",
+      "description": "Research codebases, explore and plans.",
       "prompt": "{file:./explore.md}",
       "temperature": 1,
       "tools": {
