@@ -6,7 +6,7 @@
   },
   "permission": {
     "external_directory": "allow",
-    "edit": "deny", // using multiedit
+    // "edit": "deny", // using multiedit
     // "multiedit": "allow",
     "webfetch": "allow",
     "codesearch": "deny",
@@ -46,6 +46,23 @@
     // "batch_tool": true
   },
   "provider": {
+    "kilocode": {
+      "models": {
+        "moonshotai/kimi-k2.5:free": {
+          "name": "Kimi K2.5 (Free)",
+          "limit": { "context": 262144, "output": 8192 },
+          "modalities": { "input": ["text", "image"], "output": ["text"] }
+        },
+        "minimax/minimax-m2.1:free": {
+          "name": "MiniMax M2.1 (Free)",
+          "limit": { "context": 204800, "output": 8192 }
+        },
+        "z-ai/glm-4.7:free": {
+          "name": "GLM 4.7 (Free)",
+          "limit": { "context": 202000, "output": 8192 }
+        }
+      }
+    },
     "google": {
       "models": {
         "antigravity-gemini-3-flash": {
@@ -64,23 +81,18 @@
             "low": { "thinkingLevel": "low" }
           }
         },
+        "antigravity-claude-sonnet-4-5": {
+          "name": "Claude Sonnet 4.5 (Antigravity)",
+          "limit": { "context": 200000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] }
+        },
         "antigravity-claude-opus-4-5-thinking": {
           "name": "Claude Opus 4.5 Thinking (Antigravity)",
           "limit": { "context": 200000, "output": 64000 },
           "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
           "variants": {
-            "low": { "thinkingConfig": { "thinkingBudget": 8192 } }
+            "low": { "thinkingConfig": { "thinkingBudget": 4000 } }
           }
-        },
-        "gemini-3-flash-preview": {
-          "name": "Gemini 3 Flash (Gemini CLI)",
-          "limit": { "context": 1048576, "output": 65536 },
-          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] }
-        },
-        "gemini-3-pro-preview": {
-          "name": "Gemini 3 Pro (Gemini CLI)",
-          "limit": { "context": 1048576, "output": 65535 },
-          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] }
         }
       }
     }
@@ -98,8 +110,9 @@
       "description": "Research codebases, explore and plans.",
       "prompt": "{file:./explore.md}",
       "temperature": 1,
-      "tools": {
-        "edit": false
+      "permission": {
+        "edit": "deny",
+        "skill": "allow"
       }
     },
     "plan": {

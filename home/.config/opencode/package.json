@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@opencode-ai/plugin": "1.1.25",
+    "@opencode-ai/plugin": "^1.1.42",
     "linkedom": "^0.18.12",
     "mongodb": "^7.0.0",
     "playwright-core": "^1.57.0",
