@@ -1,6 +1,6 @@
 ---
 name: mongodb
-description: Use for managing MongoDB.
+description: Use for managing MongoDB (a DB already connected)
 ---
 
 ## Usage
