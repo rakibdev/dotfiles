@@ -1,12 +1,14 @@
 ---
 name: github
-description: Browse GitHub URLs (don't use webfetch), repos, issues, search code and manage PR.
+description: Fetch GitHub URLs, repos, issues, pull requests, code search
 pattern: github\.com/[\w-]+/[\w-]+
+lazy: false
 ---
 
 # Browse
 
 URL contains `blob` (file), `tree` (dir), `issues/...` or `pull/...`.
+
 ```bash
 bun {dir}/scripts/fetch.ts <github_url>
 ```

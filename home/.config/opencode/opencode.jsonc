@@ -46,23 +46,6 @@
     // "batch_tool": true
   },
   "provider": {
-    "kilocode": {
-      "models": {
-        "moonshotai/kimi-k2.5:free": {
-          "name": "Kimi K2.5 (Free)",
-          "limit": { "context": 262144, "output": 8192 },
-          "modalities": { "input": ["text", "image"], "output": ["text"] }
-        },
-        "minimax/minimax-m2.1:free": {
-          "name": "MiniMax M2.1 (Free)",
-          "limit": { "context": 204800, "output": 8192 }
-        },
-        "z-ai/glm-4.7:free": {
-          "name": "GLM 4.7 (Free)",
-          "limit": { "context": 202000, "output": 8192 }
-        }
-      }
-    },
     "google": {
       "models": {
         "antigravity-gemini-3-flash": {
@@ -105,7 +88,6 @@
     },
     "explore": {
       "mode": "primary",
-      "model": "google/antigravity-gemini-3-flash",
       "color": "#ff0055",
       "description": "Research codebases, explore and plans.",
       "prompt": "{file:./explore.md}",
