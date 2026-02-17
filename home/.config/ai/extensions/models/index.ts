@@ -43,19 +43,12 @@ const CLAUDE_BASE = {
   input: ['text', 'image'] as ('text' | 'image')[]
 }
 
-const stripThinking = (ctx: any) => ({
-  ...ctx,
-  messages: ctx.messages.map((m: any) =>
-    m.role == 'assistant' ? { ...m, content: m.content.filter((b: any) => b.type != 'thinking') } : m
-  )
-})
-
 const kimi = (id: string, name: string, streamOpts: Record<string, any> = {}): ModelDef => {
   const model = { ...KIMI_BASE, id, name, ...streamOpts } as Model<'anthropic-messages'>
   return {
     ...model,
     stream: (context, options) =>
-      streamAnthropic(model, streamOpts.reasoning ? stripThinking(context) : context, {
+      streamAnthropic(model, context, {
         ...options,
         apiKey: resolveEnv('{KIMI_API_KEY}'),
         ...streamOpts

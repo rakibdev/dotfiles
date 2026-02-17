@@ -1,0 +1,40 @@
+{
+  "model": [
+    "kimi-thinking",
+    "gemini-3-pro-low",
+    "gemini-3-flash"
+  ],
+  "permissions": {
+    "bash": {
+      "*": "allow",
+      "rm *": "ask",
+      "sudo *": "ask",
+      "bun -e *": "ask",
+      "git *": "ask",
+      "git diff *": "allow",
+      "git status *": "allow",
+      "git show *": "allow",
+
+      // todo: not working. e.g. `echo env`
+      "*env*": "ask",
+
+      // mongodb skill: allow only read operations
+      "*db.*find*": "allow",
+      "*db.*count*": "allow",
+      "*db.*aggregate*": "allow",
+      "*db.*": "ask"
+    }
+  },
+  "agents": {
+    "code": {
+      "prompt": "~/.config/opencode/build.md",
+      "temperature": 1
+    },
+    "explore": {
+      "color": "#ff0055",
+      "prompt": "~/.config/opencode/explore.md",
+      "temperature": 1,
+      "model": "kimi"
+    }
+  }
+}
