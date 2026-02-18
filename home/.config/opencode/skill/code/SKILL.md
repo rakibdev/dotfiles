@@ -5,17 +5,15 @@ lazy: false
 ---
 
 <rules>
-- Implement cleanest solution, ultra minimal, readable code; Don't overcomplicate with I didn't ask
+- Implement cleanest solution; minimal, readable code
 - Refactor dependents too (e.g. sync frontend endpoint when changing backend) and cleanup leftover orphan code after migration
-- Never duplicate code. Whenever you see identical, export them for reuse. Move magic numbers in const
+- Never duplicate code. Whenever you notice identical, export them for reuse. Move magic numbers in const
 
-- Don't narrate/explain your process while working. Be straight-to-point
 - Don't add new comments in code except originals
 - If your edits somehow missing, assume user intentionally did it so don't re-apply
 - Use bunjs, not yarn/npm/node
 - Don't type-check or build unless asked
-
-</rules>
+  </rules>
 
 <style>
 Forcefully follow these:
