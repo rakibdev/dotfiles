@@ -44,16 +44,14 @@ const CLAUDE_BASE = {
 }
 
 const fixKimiThinking = (payload: any) => {
-  // Kimi's Anthropic-compatible API requires reasoning_content at message level
-  // when thinking is enabled AND assistant has tool calls.
+  // fixes: reasoning_content is missing in assistant tool call message
   if (!payload?.messages) return
   for (const msg of payload.messages) {
     if (msg.role != 'assistant') continue
-    const thinkingBlock = msg.content?.find((b: any) => b.type == 'thinking')
     const hasToolUse = msg.content?.some((b: any) => b.type == 'tool_use')
-    if (hasToolUse) {
-      msg.reasoning_content = thinkingBlock?.thinking ?? ''
-    }
+    if (!hasToolUse) continue
+    const thinkingBlock = msg.content.find((b: any) => b.type == 'thinking')
+    msg.reasoning_content = thinkingBlock?.thinking ?? ''
   }
 }
 
