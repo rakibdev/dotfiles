@@ -51,8 +51,8 @@ const fixKimiThinking = (payload: any) => {
     if (msg.role != 'assistant') continue
     const thinkingBlock = msg.content?.find((b: any) => b.type == 'thinking')
     const hasToolUse = msg.content?.some((b: any) => b.type == 'tool_use')
-    if (thinkingBlock && hasToolUse) {
-      msg.reasoning_content = thinkingBlock.thinking ?? ''
+    if (hasToolUse) {
+      msg.reasoning_content = thinkingBlock?.thinking ?? ''
     }
   }
 }
