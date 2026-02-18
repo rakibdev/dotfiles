@@ -64,8 +64,9 @@ const getUserText = (msg: AgentMessage): string => {
   return content?.find?.((p: any) => p.type == 'text')?.text ?? ''
 }
 
-export default defineExtension(() => ({
-  onAgentTurn: async (messages) => {
+export default defineExtension(ctx => ({
+  onAgentTurn: async () => {
+    const messages = ctx.getMessages?.() ?? []
     const skills = await loadSkills()
     if (!skills.length) return
 

@@ -43,6 +43,20 @@ const CLAUDE_BASE = {
   input: ['text', 'image'] as ('text' | 'image')[]
 }
 
+const fixKimiThinking = (payload: any) => {
+  // Kimi's Anthropic-compatible API requires reasoning_content at message level
+  // when thinking is enabled AND assistant has tool calls.
+  if (!payload?.messages) return
+  for (const msg of payload.messages) {
+    if (msg.role != 'assistant') continue
+    const thinkingBlock = msg.content?.find((b: any) => b.type == 'thinking')
+    const hasToolUse = msg.content?.some((b: any) => b.type == 'tool_use')
+    if (thinkingBlock && hasToolUse) {
+      msg.reasoning_content = thinkingBlock.thinking ?? ''
+    }
+  }
+}
+
 const kimi = (id: string, name: string, streamOpts: Record<string, any> = {}): ModelDef => {
   const model = { ...KIMI_BASE, id, name, ...streamOpts } as Model<'anthropic-messages'>
   return {
@@ -51,7 +65,8 @@ const kimi = (id: string, name: string, streamOpts: Record<string, any> = {}): M
       streamAnthropic(model, context, {
         ...options,
         apiKey: resolveEnv('{KIMI_API_KEY}'),
-        ...streamOpts
+        ...streamOpts,
+        onPayload: streamOpts.thinkingEnabled ? fixKimiThinking : undefined
       })
   }
 }
@@ -94,10 +109,10 @@ export default defineExtension(ctx => {
         },
         { getApiKey, thinking: { type: 'enabled', budgetTokens: 2048 } }
       ),
-      'claude-sonnet-45': claude(
+      'claude-sonnet-46': claude(
         {
-          id: 'claude-sonnet-4-5-20250929',
-          name: 'Claude Sonnet 4.5',
+          id: 'claude-sonnet-4-6',
+          name: 'Claude Sonnet 4.6',
           reasoning: false,
           contextWindow: 200000,
           maxTokens: 16384,
