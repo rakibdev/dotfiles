@@ -10,15 +10,15 @@ lazy: false
 URL contains `blob` (file), `tree` (dir), `issues/...` or `pull/...`.
 
 ```bash
-bun {dir}/scripts/fetch.ts <github_url>
+bun scripts/fetch.ts <github_url>
 ```
 
 # Code Search
 
 ```bash
-bun {dir}/scripts/grep.ts <query> [--page N]
-bun {dir}/scripts/grep.ts 'useQuery filename:\*.tsx' # global
-bun {dir}/scripts/grep.ts 'useQuery repo:opencode-ai/opencode' # single repo
+bun scripts/grep.ts <query> [--page N]
+bun scripts/grep.ts 'useQuery filename:\*.tsx' # global
+bun scripts/grep.ts 'useQuery repo:opencode-ai/opencode' # single repo
 ```
 
 - Use combination of import name, and `lang:tsx` and `path:` if unique (e.g. config files).
@@ -27,8 +27,8 @@ bun {dir}/scripts/grep.ts 'useQuery repo:opencode-ai/opencode' # single repo
 # Search Repos
 
 ```bash
-bun {dir}/scripts/search-repos.ts <query> [--page N] [--stars N] [--sort updated|best-match]
-bun {dir}/scripts/search-repos.ts 'topic:neovim' --stars 1000 --sort best-match
+bun scripts/search-repos.ts <query> [--page N] [--stars N] [--sort updated|best-match]
+bun scripts/search-repos.ts 'topic:neovim' --stars 1000 --sort best-match
 ```
 
 - Use 1-2 generic terms (framework name) for wide results. Read at least 3 pages.
@@ -38,14 +38,14 @@ bun {dir}/scripts/search-repos.ts 'topic:neovim' --stars 1000 --sort best-match
 # Search Issues
 
 ```bash
-bun {dir}/scripts/search-issues.ts <query>
+bun scripts/search-issues.ts <query>
 ```
 
 # Pull Request Operations
 
 ```bash
-bun {dir}/scripts/pr.ts <owner> <repo> <pr_number> <method> [...args]
-bun {dir}/scripts/pr.ts facebook react 35404 comment src/index.ts 10 15 'This block could be refactored'
+bun scripts/pr.ts <owner> <repo> <pr_number> <method> [...args]
+bun scripts/pr.ts facebook react 35404 comment src/index.ts 10 15 'This block could be refactored'
 ```
 
 <method>

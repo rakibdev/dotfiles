@@ -6,7 +6,7 @@ description: Search web for latest docs and articles.
 ## Usage
 
 ```bash
-bun {dir}/scripts/search.ts <query>
+bun scripts/search.ts <query>
 ```
 
 **Tips**

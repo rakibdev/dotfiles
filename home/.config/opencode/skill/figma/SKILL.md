@@ -13,44 +13,44 @@ pattern: figma\.com/design/
 ### Get Node Data
 
 ```bash
-bun {dir}/scripts/get-node.ts "<figmaUrl>" [depth]
-bun {dir}/scripts/get-node.ts "<fileKey>" [nodeId] [depth]
+bun scripts/get-node.ts "<figmaUrl>" [depth]
+bun scripts/get-node.ts "<fileKey>" [nodeId] [depth]
 ```
 
 **Examples**
 
 ```bash
 # Get node from URL (preferred)
-bun {dir}/scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286"
+bun scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286"
 
 # Limit depth for overview
-bun {dir}/scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286" 2
+bun scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286" 2
 
 # Get entire file (no node-id in URL)
-bun {dir}/scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile" 2
+bun scripts/get-node.ts "https://www.figma.com/design/abc123/MyFile" 2
 
 # Raw args (fileKey + nodeId)
-bun {dir}/scripts/get-node.ts "abc123" "825-17286" 3
+bun scripts/get-node.ts "abc123" "825-17286" 3
 ```
 
 ### Download Image
 
 ```bash
-bun {dir}/scripts/download-image.ts "<figmaUrl>" "<outputPath>" [format] [scale]
-bun {dir}/scripts/download-image.ts "<fileKey>" "<nodeId>" "<outputPath>" [format] [scale]
+bun scripts/download-image.ts "<figmaUrl>" "<outputPath>" [format] [scale]
+bun scripts/download-image.ts "<fileKey>" "<nodeId>" "<outputPath>" [format] [scale]
 ```
 
 **Examples**
 
 ```bash
 # Download from URL (preferred)
-bun {dir}/scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286" "./assets/card.png"
+bun scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=825-17286" "./assets/card.png"
 
 # Download as SVG
-bun {dir}/scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=100-200" "./assets/icon.svg" svg
+bun scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=100-200" "./assets/icon.svg" svg
 
 # PNG at 3x scale
-bun {dir}/scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=100-200" "./assets/hero.png" png 3
+bun scripts/download-image.ts "https://www.figma.com/design/abc123/MyFile?node-id=100-200" "./assets/hero.png" png 3
 ```
 
 ## Tips

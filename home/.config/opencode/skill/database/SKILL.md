@@ -9,13 +9,13 @@ pattern: \bdb\b
 Scripts has database already connected. Run SQL queries directly:
 
 ```bash
-bun {dir}/scripts/query.ts "<query>"
+bun scripts/query.ts "<query>"
 
 # Parameters
-bun {dir}/scripts/query.ts "sql\`SELECT * FROM users WHERE active = ${true}\`"
+bun scripts/query.ts "sql\`SELECT * FROM users WHERE active = ${true}\`"
 
 # Batching
-bun {dir}/scripts/query.ts "Promise.all([
+bun scripts/query.ts "Promise.all([
   sql\`...\`,
   sql\`...`
 ])"

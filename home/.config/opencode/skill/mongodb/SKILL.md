@@ -6,20 +6,20 @@ description: Use for managing MongoDB (a DB already connected)
 ## Usage
 
 ```bash
-bun {dir}/scripts/query.ts "<query>"
+bun scripts/query.ts "<query>"
 ```
 
 **Examples**
 
 ```bash
 # Simple read
-bun {dir}/scripts/query.ts "db.collection('users').findOne()"
+bun scripts/query.ts "db.collection('users').findOne()"
 
 # Query with ObjectId
-bun {dir}/scripts/query.ts "db.collection('users').findOne({ _id: new ObjectId('...') })"
+bun scripts/query.ts "db.collection('users').findOne({ _id: new ObjectId('...') })"
 
 # Multi-step update (Batching)
-bun {dir}/scripts/query.ts "Promise.all([
+bun scripts/query.ts "Promise.all([
   db.collection('rewards').deleteMany({ userId: new ObjectId('...') }),
   db.collection('users').updateOne({ _id: new ObjectId('...') }, { \$set: { 'dailyXp.count': 0 } })
 ])"

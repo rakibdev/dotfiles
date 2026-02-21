@@ -36,7 +36,6 @@ const resolvePage = (targets: Target[], tab?: string) => {
   if (!tab) return targets[0]
   const idx = parseInt(tab)
   if (!isNaN(idx)) return targets[idx - 1]
-  return targets.find(t => t.url.includes(tab))
 }
 
 type Session = { send: (method: string, params?: object) => Promise<any>; close: () => void }
