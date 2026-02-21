@@ -1,9 +1,5 @@
 {
-  "model": [
-    "kimi-thinking",
-    "gemini-3-pro-low",
-    "gemini-3-flash"
-  ],
+  "model": ["kimi-thinking", "gemini-3-pro-low", "gemini-3-flash"],
   "permissions": {
     "bash": {
       "*": "allow",
@@ -32,9 +28,7 @@
     },
     "explore": {
       "color": "#ff0055",
-      "prompt": "~/.config/opencode/explore.md",
-      "temperature": 1,
-      "model": "kimi"
+      "model": "gemini-3-flash"
     }
   }
 }
