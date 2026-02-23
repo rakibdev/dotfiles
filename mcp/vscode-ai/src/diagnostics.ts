@@ -30,9 +30,8 @@ const ensureOpenWithDiagnostics = async (uri: vscode.Uri) => {
   try {
     const doc = await vscode.workspace.openTextDocument(uri)
     const diagnosticPromise = waitForDiagnostics(uri)
-    await vscode.window.showTextDocument(doc, { preserveFocus: true, preview: true })
+    await vscode.window.showTextDocument(doc, { preserveFocus: true, preview: false })
     await diagnosticPromise
-    await vscode.commands.executeCommand('workbench.action.closeActiveEditor')
   } catch {}
 }
 

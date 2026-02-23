@@ -135,13 +135,12 @@ export const vscode = {
     return results.filter(r => r != null)
   },
 
-  async first<T>(method: string, params?: Record<string, unknown>): Promise<T | null> {
+  async first<T>(method: string, params?: Record<string, unknown>): Promise<T | undefined> {
     const windows = await this.windows()
     for (const w of windows) {
       try {
         return await w.rpc<T>(method, params)
       } catch {}
     }
-    return null
   }
 }

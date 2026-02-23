@@ -20,7 +20,10 @@ const parseSkillMeta = (content: string): SkillInfo | undefined => {
   if (!name || !description) return
 
   const patterns = patternMatch
-    ? patternMatch.split(',').map(p => p.trim()).filter(Boolean)
+    ? patternMatch
+        .split(',')
+        .map(p => p.trim())
+        .filter(Boolean)
     : []
 
   return { name, description, patterns }
@@ -30,7 +33,7 @@ let skillsCache: SkillInfo[] | undefined
 
 const loadSkills = async (): Promise<SkillInfo[]> => {
   if (skillsCache) return skillsCache
-  if (!existsSync(SKILLS_DIR)) return skillsCache = []
+  if (!existsSync(SKILLS_DIR)) return (skillsCache = [])
 
   const skills: SkillInfo[] = []
   const glob = new Bun.Glob('*/SKILL.md')
@@ -39,14 +42,16 @@ const loadSkills = async (): Promise<SkillInfo[]> => {
     const meta = parseSkillMeta(content)
     if (meta) skills.push(meta)
   }
-  return skillsCache = skills
+  return (skillsCache = skills)
 }
 
 const matchSkill = (text: string, skill: SkillInfo) => {
   if (new RegExp(`\\b${skill.name}\\b`, 'i').test(text)) return true
 
   for (const pattern of skill.patterns) {
-    try { if (new RegExp(pattern, 'i').test(text)) return true } catch {}
+    try {
+      if (new RegExp(pattern, 'i').test(text)) return true
+    } catch {}
   }
 
   const keywords = [...new Set(`${skill.name} ${skill.description}`.toLowerCase().match(/\b[a-z]{3,}\b/g) || [])]
@@ -55,25 +60,20 @@ const matchSkill = (text: string, skill: SkillInfo) => {
   return keywords.filter(kw => lower.includes(kw)).length >= threshold
 }
 
+const userText = (messages: AgentMessage[]) => {
+  const last = [...messages].reverse().find(m => m.role == 'user') as any
+  return last?.content?.find?.((p: any) => p.type == 'text')?.text ?? ''
+}
+
 const suggested = new Set<string>()
 let callId = 0
 
-const getUserText = (msg: AgentMessage): string => {
-  const content = (msg as any).content
-  if (typeof content == 'string') return content
-  return content?.find?.((p: any) => p.type == 'text')?.text ?? ''
-}
-
-export default defineExtension(ctx => ({
-  onAgentTurn: async () => {
-    const messages = ctx.getMessages?.() ?? []
+export default defineExtension(() => ({
+  onInput: async messages => {
     const skills = await loadSkills()
     if (!skills.length) return
 
-    const lastUser = [...messages].reverse().find(m => m.role == 'user')
-    if (!lastUser) return
-
-    const text = getUserText(lastUser)
+    const text = userText(messages)
     if (!text) return
 
     const matched = skills.filter(s => !suggested.has(s.name) && matchSkill(text, s))
@@ -81,33 +81,46 @@ export default defineExtension(ctx => ({
 
     matched.forEach(s => suggested.add(s.name))
 
+    const now = Date.now()
     const id = `skill-suggest-${++callId}`
+    // Weak models (Minimax 2.1) ignores "- {name}: {description}" format but fully XML works
+    // For testing message "https://github.com/anomalyco/opencode read this" - should pick github
     const list = matched.map(s => `<name>${s.name}</name>\n<description>${s.description}</description>`).join('\n')
+    const xmlContent = [
+      { type: 'text' as const, text: `<skill-suggestions>\nRead if relevant:\n${list}\n</skill-suggestions>` }
+    ]
 
-    return [...messages, {
+    const aiContext = {
+      role: 'user' as const,
+      content: xmlContent,
+      visibility: 'ai',
+      timestamp: now
+    } as unknown as AgentMessage
+
+    const call = {
       role: 'assistant' as const,
       content: [
-        { type: 'text' as const, text: `Using ${matched.map(s => s.name).join(', ')} skill${matched.length > 1 ? 's' : ''}` },
         {
-          type: 'toolCall' as const,
-          id,
-          name: 'skill',
-          arguments: { name: matched[0].name }
-        }
+          type: 'text' as const,
+          text: `Using ${matched.map(s => s.name).join(', ')} skill${matched.length > 1 ? 's' : ''}`
+        },
+        { type: 'toolCall' as const, id, name: 'skill', arguments: { name: matched[0].name } }
       ],
-      api: 'messages' as any,
-      provider: '' as any,
-      model: '',
-      usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-      stopReason: 'toolCall' as any,
-      timestamp: Date.now()
-    }, {
+      visibility: 'ui',
+      timestamp: now + 1
+    } as unknown as AgentMessage
+
+    const result = {
       role: 'toolResult' as const,
       toolCallId: id,
       toolName: 'skill',
-      content: [{ type: 'text' as const, text: `<skill-suggestions>\nRead if related to user intent:\n${list}\n</skill-suggestions>` }],
+      content: xmlContent,
+      details: { skills: matched.map(s => s.name) },
       isError: false,
-      timestamp: Date.now()
-    }]
+      visibility: 'ui',
+      timestamp: now + 2
+    } as unknown as AgentMessage
+
+    return [...messages, aiContext, call, result]
   }
 }))

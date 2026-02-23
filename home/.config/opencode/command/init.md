@@ -41,9 +41,9 @@ Keep it brutally short. Use bullet points. No fluff.
 
   - Provide a curl command to test the API.
   - ```bash
-    curl -H "Authorization: Bearer $API_KEY" http://localhost:8000/...
+    curl -H "Authorization: Bearer $API_KEY" http://localhost:{PORT}/...
     ```
-    Assume API_KEY exists.
+    Assume $API_KEY exists.
 
 - **## Rules**: (Optional) Project-specific constraints (e.g. "Use shadcn for UI", "Directly inline queryFn").
 
