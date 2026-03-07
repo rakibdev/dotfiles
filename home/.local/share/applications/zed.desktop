@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Zed
+Exec=/home/rakib/Downloads/zed/target/release-dev/zed %F
+Icon=zed
+Type=Application
+Categories=Development;
