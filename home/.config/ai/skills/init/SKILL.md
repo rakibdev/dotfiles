@@ -38,7 +38,6 @@ Keep it brutally short. Use bullet points. No fluff.
 - **## Commands**: High-frequency scripts only.
 - **## Config**: Path aliases, critical `.env` vars (keys only), and DB info (e.g. "Drizzle + Postgres").
 - **## API Testing**:
-
   - Provide a curl command to test the API.
   - ```bash
     curl -H "Authorization: Bearer $API_KEY" http://localhost:{PORT}/...

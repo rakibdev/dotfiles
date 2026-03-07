@@ -1,5 +1,5 @@
 {
-  "model": ["kimi-thinking", "gemini-3-pro-low", "gemini-3-flash"],
+  "model": ["kimi"],
   "permissions": {
     "bash": {
       "*": "allow",
@@ -23,12 +23,22 @@
   },
   "agents": {
     "code": {
-      "prompt": "~/.config/opencode/build.md",
+      "prompt": "~/.config/ai/code.md",
       "temperature": 1
     },
     "explore": {
       "color": "#ff0055",
-      "model": "gemini-3-flash"
+      "model": "kimi"
     }
-  }
+  },
+  "lsp": [
+    {
+      "command": [
+        "/home/rakib/.vscodium-insiders/extensions/typescriptteam.native-preview-0.20260306.1-linux-x64/lib/tsgo",
+        "--lsp",
+        "--stdio"
+      ],
+      "extensions": [".ts", ".tsx", ".js", ".jsx"]
+    }
+  ]
 }

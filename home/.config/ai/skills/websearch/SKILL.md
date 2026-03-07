@@ -1,6 +1,7 @@
 ---
 name: websearch
 description: Search web for latest docs and articles.
+lazy: false
 ---
 
 ## Usage

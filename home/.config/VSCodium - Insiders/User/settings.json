@@ -74,12 +74,12 @@
   "git.confirmSync": false,
   "git.inputValidationSubjectLength": 120,
 
-  "typescript.experimental.useTsgo": false,
-  "typescript.preferences.useAliasesForRenames": false,
-  "typescript.preferences.preferTypeOnlyAutoImports": true,
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "typescript.updateImportsOnPaste.enabled": true,
-  "javascript.updateImportsOnFileMove.enabled": "always",
+  "ts.experimental.useTsgo": false,
+  "ts.preferences.useAliasesForRenames": false,
+  "ts.preferences.preferTypeOnlyAutoImports": true,
+  "ts.updateImportsOnFileMove.enabled": "always",
+  "ts.updateImportsOnPaste.enabled": true,
+  "js/ts.updateImportsOnFileMove.enabled": "always",
 
   "json.schemaDownload.enable": true,
 

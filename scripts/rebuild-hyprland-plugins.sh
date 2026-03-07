@@ -1,11 +1,10 @@
-PLUGIN_DIR="/home/rakib/Downloads/hyprland-plugins/hyprscrolling"
-SO_PATH="$PLUGIN_DIR/hyprscrolling.so"
+PLUGIN_DIR="$HOME/Downloads/dotfiles/hyprland-scrolling"
 
-echo "Rebuilding hyprscrolling..."
+echo "Rebuilding hyprland-scrolling..."
 cd "$PLUGIN_DIR" || exit 1
 
-hyprctl plugin unload "$SO_PATH" 2>/dev/null
+hyprctl plugin unload "$PLUGIN_DIR/libscrolling-patches.so" 2>/dev/null
 
 make clean && make
 
-hyprctl plugin load "$SO_PATH"
+hyprctl plugin load "$PLUGIN_DIR/libscrolling-patches.so"

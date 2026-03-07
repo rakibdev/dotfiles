@@ -2,17 +2,12 @@ import {
   defineExtension,
   type ModelDef,
   type Model,
-  getModel,
   streamAnthropic,
-  streamOpenAICompletions,
-  streamGoogleGeminiCli
+  streamOpenAICompletions
 } from 'coder/api'
 import { streamClaude, type ClaudeStreamOptions } from './anthropic'
 
 const resolveEnv = (val: string) => val.replace(/\{(\w+)\}/g, (_, k) => process.env[k] ?? '')
-
-const GEMINI_3_FLASH = getModel('google-antigravity', 'gemini-3-flash')
-const GEMINI_3_PRO_LOW = getModel('google-antigravity', 'gemini-3-pro-low')
 
 const KIMI_BASE = {
   api: 'anthropic-messages',
@@ -69,13 +64,6 @@ const kimi = (id: string, name: string, streamOpts: Record<string, any> = {}): M
   }
 }
 
-const gemini = (base: Model<any>, name: string, thinking: Record<string, any> = {}): ModelDef => ({
-  ...base,
-  name,
-  stream: (context, options) =>
-    streamGoogleGeminiCli(base as any, context, { ...options, thinking: { enabled: true, ...thinking } })
-})
-
 const claude = (
   cfg: {
     id: string
@@ -93,6 +81,7 @@ const claude = (
 
 export default defineExtension(ctx => {
   const getApiKey = () => ctx.getApiKey?.('anthropic') as Promise<string | undefined>
+  const { settingsPath } = ctx
 
   return {
     models: {
@@ -105,7 +94,7 @@ export default defineExtension(ctx => {
           maxTokens: 32000,
           cost: { input: 15, output: 75, cacheRead: 1.5, cacheWrite: 18.75 }
         },
-        { getApiKey, thinking: { type: 'enabled', budgetTokens: 2048 } }
+        { getApiKey, settingsPath, thinking: { type: 'enabled', budgetTokens: 2048 } }
       ),
       'claude-sonnet-46': claude(
         {
@@ -116,7 +105,7 @@ export default defineExtension(ctx => {
           maxTokens: 16384,
           cost: { input: 3, output: 15, cacheRead: 0.3, cacheWrite: 3.75 }
         },
-        { getApiKey, thinking: { type: 'disabled' } }
+        { getApiKey, settingsPath }
       ),
       'claude-haiku-45': claude(
         {
@@ -127,7 +116,7 @@ export default defineExtension(ctx => {
           maxTokens: 8192,
           cost: { input: 0.8, output: 4, cacheRead: 0.08, cacheWrite: 1 }
         },
-        { getApiKey, thinking: { type: 'disabled' } }
+        { getApiKey, settingsPath }
       ),
 
       kimi: kimi('kimi-for-coding', 'Kimi 2.5'),
@@ -149,8 +138,6 @@ export default defineExtension(ctx => {
           )
       } as ModelDef,
 
-      'gemini-3-flash': gemini(GEMINI_3_FLASH, 'Gemini 3 Flash', { level: 'LOW' }),
-      'gemini-3-pro-low': gemini(GEMINI_3_PRO_LOW, 'Gemini 3 Pro Low', { level: 'LOW' })
     }
   }
 })
