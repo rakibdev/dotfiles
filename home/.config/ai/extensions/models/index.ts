@@ -3,6 +3,7 @@ import {
   type ModelDef,
   type Model,
   streamAnthropic,
+  streamOpenAICompletions,
   streamClaude,
   type ClaudeStreamOptions,
   COPILOT_HEADERS,
@@ -12,6 +13,8 @@ import {
 } from 'coder/api'
 
 const resolveEnv = (val: string) => val.replace(/\{(\w+)\}/g, (_, k) => process.env[k] ?? '')
+
+const ZERO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
 
 const KIMI_BASE = {
   api: 'anthropic-messages',
@@ -29,6 +32,7 @@ const OPENCODE_BASE = {
   baseUrl: 'https://opencode.ai/zen/v1',
   reasoning: false,
   input: ['text'],
+  cost: ZERO_COST,
   contextWindow: 100000,
   maxTokens: 8192
 } as const
@@ -80,8 +84,6 @@ const claude = (
   return { ...model, stream: (context, options) => streamClaude(model, context, options, opts) }
 }
 
-const COPILOT_ZERO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
-
 const copilotAnthropic = (id: string, name: string, opts: Record<string, any> = {}): ModelDef => {
   const model = {
     id,
@@ -92,15 +94,14 @@ const copilotAnthropic = (id: string, name: string, opts: Record<string, any> = 
     headers: COPILOT_HEADERS,
     reasoning: true,
     input: ['text', 'image'] as ('text' | 'image')[],
-    cost: COPILOT_ZERO_COST,
+    cost: ZERO_COST,
     contextWindow: 128000,
     maxTokens: 32000,
     ...opts
   } satisfies Model<'anthropic-messages'>
   return {
     ...model,
-    stream: (context, options) =>
-      streamCopilotAnthropic(model, context, { ...options, interleavedThinking: true })
+    stream: (context, options) => streamCopilotAnthropic(model, context, { ...options, interleavedThinking: true })
   }
 }
 
@@ -114,7 +115,7 @@ const copilotOpenAI = (id: string, name: string, opts: Record<string, any> = {})
     headers: COPILOT_HEADERS,
     reasoning: true,
     input: ['text', 'image'] as ('text' | 'image')[],
-    cost: COPILOT_ZERO_COST,
+    cost: ZERO_COST,
     contextWindow: 128000,
     maxTokens: 64000,
     ...opts
@@ -166,6 +167,14 @@ export default defineExtension(ctx => {
         },
         { getApiKey, settingsPath }
       ),
+
+      'big-pickle': (() => {
+        const model = { ...OPENCODE_BASE, id: 'big-pickle', name: 'Big Pickle' } satisfies Model<'openai-completions'>
+        return {
+          ...model,
+          stream: (context, options) => streamOpenAICompletions(model, context, { ...options, apiKey: ' ' })
+        } satisfies ModelDef
+      })(),
 
       kimi: kimi('kimi-for-coding', 'Kimi 2.5'),
       'kimi-thinking': kimi('kimi-for-coding', 'Kimi 2.5 Thinking', {
