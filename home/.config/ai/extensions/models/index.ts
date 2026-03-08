@@ -3,9 +3,9 @@ import {
   type ModelDef,
   type Model,
   streamAnthropic,
-  streamOpenAICompletions
+  streamClaude,
+  type ClaudeStreamOptions
 } from 'coder/api'
-import { streamClaude, type ClaudeStreamOptions } from './anthropic'
 
 const resolveEnv = (val: string) => val.replace(/\{(\w+)\}/g, (_, k) => process.env[k] ?? '')
 
@@ -39,7 +39,6 @@ const CLAUDE_BASE = {
 }
 
 const fixKimiThinking = (payload: any) => {
-  // fixes: reasoning_content is missing in assistant tool call message
   if (!payload?.messages) return
   for (const msg of payload.messages) {
     if (msg.role != 'assistant') continue
@@ -109,7 +108,7 @@ export default defineExtension(ctx => {
       ),
       'claude-haiku-45': claude(
         {
-          id: 'claude-haiku-4-5-20251001',
+          id: 'claude-haiku-4-5',
           name: 'Claude Haiku 4.5',
           reasoning: false,
           contextWindow: 200000,
@@ -124,20 +123,7 @@ export default defineExtension(ctx => {
         reasoning: true,
         thinkingEnabled: true,
         thinkingBudgetTokens: 16000
-      }),
-
-      'minimax-m2.5': {
-        ...OPENCODE_BASE,
-        id: 'minimax-m2.5-free',
-        name: 'Minimax M2.5',
-        stream: (context, options) =>
-          streamOpenAICompletions(
-            { ...OPENCODE_BASE, id: 'minimax-m2.5-free', name: 'Minimax M2.5' } as Model<'openai-completions'>,
-            context,
-            { ...options, apiKey: ' ' }
-          )
-      } as ModelDef,
-
+      })
     }
   }
 })
