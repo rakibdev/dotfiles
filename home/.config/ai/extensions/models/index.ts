@@ -4,7 +4,11 @@ import {
   type Model,
   streamAnthropic,
   streamClaude,
-  type ClaudeStreamOptions
+  type ClaudeStreamOptions,
+  COPILOT_HEADERS,
+  COPILOT_BASE_URL,
+  streamCopilotAnthropic,
+  streamCopilotOpenAIResponses
 } from 'coder/api'
 
 const resolveEnv = (val: string) => val.replace(/\{(\w+)\}/g, (_, k) => process.env[k] ?? '')
@@ -15,7 +19,6 @@ const KIMI_BASE = {
   baseUrl: 'https://api.kimi.com/coding',
   reasoning: false,
   input: ['text'],
-  cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
   contextWindow: 262144,
   maxTokens: 32768
 } as const
@@ -26,7 +29,6 @@ const OPENCODE_BASE = {
   baseUrl: 'https://opencode.ai/zen/v1',
   reasoning: false,
   input: ['text'],
-  cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
   contextWindow: 100000,
   maxTokens: 8192
 } as const
@@ -78,12 +80,59 @@ const claude = (
   return { ...model, stream: (context, options) => streamClaude(model, context, options, opts) }
 }
 
+const COPILOT_ZERO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
+
+const copilotAnthropic = (id: string, name: string, opts: Record<string, any> = {}): ModelDef => {
+  const model = {
+    id,
+    name,
+    api: 'anthropic-messages' as const,
+    provider: 'github-copilot',
+    baseUrl: COPILOT_BASE_URL,
+    headers: COPILOT_HEADERS,
+    reasoning: true,
+    input: ['text', 'image'] as ('text' | 'image')[],
+    cost: COPILOT_ZERO_COST,
+    contextWindow: 128000,
+    maxTokens: 32000,
+    ...opts
+  } satisfies Model<'anthropic-messages'>
+  return {
+    ...model,
+    stream: (context, options) =>
+      streamCopilotAnthropic(model, context, { ...options, interleavedThinking: true })
+  }
+}
+
+const copilotOpenAI = (id: string, name: string, opts: Record<string, any> = {}): ModelDef => {
+  const model = {
+    id,
+    name,
+    api: 'openai-responses' as const,
+    provider: 'github-copilot',
+    baseUrl: COPILOT_BASE_URL,
+    headers: COPILOT_HEADERS,
+    reasoning: true,
+    input: ['text', 'image'] as ('text' | 'image')[],
+    cost: COPILOT_ZERO_COST,
+    contextWindow: 128000,
+    maxTokens: 64000,
+    ...opts
+  } satisfies Model<'openai-responses'>
+  return {
+    ...model,
+    stream: (context, options) => streamCopilotOpenAIResponses(model, context, options)
+  }
+}
+
 export default defineExtension(ctx => {
   const getApiKey = () => ctx.getApiKey?.('anthropic') as Promise<string | undefined>
   const { settingsPath } = ctx
 
   return {
     models: {
+      'copilot-claude-haiku-45': copilotAnthropic('claude-haiku-4.5', 'Claude Haiku 4.5 (Copilot)'),
+      'copilot-gpt-5-mini': copilotOpenAI('gpt-5-mini', 'GPT-5 Mini (Copilot)'),
       'claude-opus-46-minimal': claude(
         {
           id: 'claude-opus-4-6',
