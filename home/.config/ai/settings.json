@@ -3,8 +3,9 @@
   "permissions": {
     "bash": {
       "*": "allow",
-      "rm *": "ask",
-      "sudo *": "ask",
+      "/\\brm\\s/": "ask",
+      // not needed because terminal already ask password
+      // "sudo *": "ask"
       "bun -e *": "ask",
       "git *": "ask",
       "git diff *": "allow",
@@ -33,12 +34,9 @@
   },
   "lsp": [
     {
-      "command": [
-        "/home/rakib/.vscodium-insiders/extensions/typescriptteam.native-preview-0.20260306.1-linux-x64/lib/tsgo",
-        "--lsp",
-        "--stdio"
-      ],
-      "extensions": [".ts", ".tsx", ".js", ".jsx"]
+      "command": ["tsgo", "--lsp", "--stdio"],
+      "extensions": [".ts", ".tsx", ".js", ".jsx"],
+      "diagDebounce": 500
     }
   ]
 }
