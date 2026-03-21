@@ -14,18 +14,45 @@ import {
 
 const ZERO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
 
-const opencodeGo = (id: string, name: string): ModelDef => {
+const opencodeZen = (id: string, name: string, options?: Record<string, any>): ModelDef => {
   const model = {
     id,
     name,
-    baseUrl: 'https://opencode.ai/zen/go/v1',
-    input: ['text'] as ('text' | 'image')[],
+    baseUrl: 'https://opencode.ai/zen/v1',
+    input: ['text', 'image'] as ('text' | 'image')[],
     cost: ZERO_COST
   } as Model<'openai-completions'>
   return {
     ...model,
-    stream: (context, options) =>
-      streamOpenAICompletions(model, context, { ...options, apiKey: process.env.OPENCODE_GO_KEY })
+    stream: (context, _options) =>
+      streamOpenAICompletions(model, context, {
+        ...options,
+        ..._options,
+        apiKey: ' ',
+        headers: {
+          // Required for free tier - opencode.ai checks this header to bypass IP-based rate limits
+          'x-opencode-session': 'user123'
+        }
+      })
+  }
+}
+
+const opencodeGo = (id: string, name: string, options?: Record<string, any>): ModelDef => {
+  const model = {
+    id,
+    name,
+    baseUrl: 'https://opencode.ai/zen/go/v1',
+    input: ['text', 'image'] as ('text' | 'image')[],
+    cost: ZERO_COST
+  } as Model<'openai-completions'>
+  return {
+    ...model,
+    stream: (context, _options) =>
+      streamOpenAICompletions(model, context, {
+        ...options,
+        ..._options,
+        apiKey: process.env.OPENCODE_GO_KEY
+      })
   }
 }
 
@@ -34,7 +61,8 @@ const opencodeGoAnthropic = (id: string, name: string): ModelDef => {
     id,
     name,
     baseUrl: 'https://opencode.ai/zen/go',
-    input: ['text'] as ('text' | 'image')[]
+    input: ['text', 'image'] as ('text' | 'image')[],
+    cost: ZERO_COST
   } as Model<'anthropic-messages'>
   return {
     ...model,
@@ -112,9 +140,15 @@ export default defineExtension(ctx => {
 
   return {
     models: {
+      'mimo-v2-pro-free': opencodeZen('mimo-v2-pro-free', 'MiMo V2 Pro Free'),
       'glm-5': opencodeGo('glm-5', 'GLM-5'),
-      'kimi-k2-5': opencodeGo('kimi-k2.5', 'Kimi K2.5'),
-      'minimax-m2-5': opencodeGoAnthropic('minimax-m2.5', 'MiniMax M2.5'),
+      'kimi-k2-5': opencodeGo('kimi-k2.5', 'Kimi K2.5', {
+        onPayload: (payload: any) => {
+          payload.reasoning_effort = 'high'
+          return payload
+        }
+      }),
+      'minimax-m2-7': opencodeGoAnthropic('minimax-m2.7', 'MiniMax M2.7'),
       'copilot-claude-haiku-45': copilotAnthropic('claude-haiku-4.5', 'Claude Haiku 4.5 (Copilot)'),
       'copilot-gpt-5-mini': copilotOpenAI('gpt-5-mini', 'GPT-5 Mini (Copilot)'),
       'claude-sonnet-46': claudeCode(

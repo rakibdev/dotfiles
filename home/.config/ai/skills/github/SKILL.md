@@ -2,7 +2,6 @@
 name: github
 description: Fetch GitHub URLs, repos, issues, pull requests, code search
 pattern: github\.com/[\w-]+/[\w-]+
-lazy: false
 ---
 
 # Browse
@@ -31,15 +30,19 @@ bun scripts/search-repos.ts <query> [--page N] [--stars N] [--sort updated|best-
 bun scripts/search-repos.ts 'topic:neovim' --stars 1000 --sort best-match
 ```
 
-- Use 1-2 generic terms (framework name) for wide results. Read at least 3 pages.
-- Narrow by language: `lang:ts`
 - Default is `stars:100` (minimum) and sorted by `updated` to find underrated repos.
 
-# Search Issues
+# Guide: Finding Projects
+
+1. Build keyword combo: Use 2-3 distinct substrings that would appear in the code e.g. to find opencode plugins that edit files, search for `opencode` + `edit` + `file`. Don't use overly specific terms like `opencode-plugin` since authors may not use that exact phrase. Use lang filter e.g. `lang:tsx`.
+
+2. Search and paginate at least 5 pages:
 
 ```bash
-bun scripts/search-issues.ts <query>
+bun scripts/grep.ts 'opencode edit file lang:ts' --page 1
 ```
+
+3. Spot clean, relevant results and read full file to understand implementation.
 
 # Pull Request Operations
 

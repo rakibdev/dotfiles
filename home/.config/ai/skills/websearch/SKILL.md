@@ -1,16 +1,13 @@
 ---
 name: websearch
-description: Search web for latest docs and articles.
-lazy: false
+description: Search Google
 ---
 
-## Usage
-
 ```bash
-bun scripts/search.ts <query>
+bun scripts/search.ts "bun js"      # offset 0 (default)
+bun scripts/search.ts "bun js" 20   # offset 20 (page 2)
 ```
 
-**Tips**
-
-- Use 2-4 key words for best result
-- Include library/language/framework names
+<tips>
+- Use 2-3 commonly used keywords for best result
+</tips>

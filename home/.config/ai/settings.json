@@ -1,5 +1,5 @@
 {
-  "model": ["kimi"],
+  "model": ["kimi-k2-5"],
   "permissions": {
     "bash": {
       "*": "allow",
@@ -23,13 +23,15 @@
     }
   },
   "agents": {
-    "code": {
-      "prompt": "~/.config/ai/code.md",
-      "temperature": 1
+    "general": {
+      "prompt": "~/.config/ai/general.md"
+    },
+    "coder": {
+      "prompt": "~/.config/ai/coder.md",
+      "description": "Use for implementating complex task"
     },
     "explore": {
-      "color": "#ff0055",
-      "model": "kimi"
+      "model": "kimi-k2-5"
     }
   },
   "lsp": [

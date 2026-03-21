@@ -45,31 +45,21 @@ Reduces unnecessary SSD write.
 sudo rm -r /var/log/journal/*
 ```
 
-<br>
-
 ## Blacklisting unused kernel modules
 
 [/etc/modprobe.d/blacklists.conf](/etc/modprobe.d/blacklists.conf)
-
-<br>
 
 ## PipeWire
 
 [/home/rakib/.config/pipewire/pipewire.conf.d](/home/rakib/.config/pipewire/pipewire.conf.d)
 
-<br>
-
 ## BlueZ battery missing
 
 Add `--experimental` flag [/etc/systemd/system/bluetooth.service.d/bluetooth.conf](/etc/systemd/system/bluetooth.service.d/bluetooth.conf)
 
-<br>
-
 ## Remove pacman multilib
 
 During Wine installation I added "multilib” in [/etc/pacman.conf](/etc/pacman.conf) which resulted in duplicate 32-bit version of each package. I don't use Wine now.
-
-<br>
 
 ## Cleanup unused packages
 
@@ -96,3 +86,11 @@ Useful for downloading files faster e.g. GitHub releases from browser.
 - wf-recorder
 - wl-clipboard
 - wtype
+
+## Chrome Search Shortcuts
+
+Settings → Search engine
+
+| Name | Shortcut | URL |
+|------|----------|-----|
+| GitHub Code Search | `gh` | `https://github.com/search?q=%s&type=code` |

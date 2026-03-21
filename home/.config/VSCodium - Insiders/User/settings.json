@@ -80,6 +80,7 @@
   "ts.updateImportsOnFileMove.enabled": "always",
   "ts.updateImportsOnPaste.enabled": true,
   "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.experimental.useTsgo": true,
 
   "json.schemaDownload.enable": true,
 
@@ -118,5 +119,7 @@
     "crossapi": "linux",
     "keycrypt": "linux"
   },
-  "scm.repositories.selectionMode": "single"
+  "scm.repositories.selectionMode": "single",
+  "zig.zls.enabled": "on",
+  "zig.path": "zig"
 }

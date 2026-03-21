@@ -1,33 +1,21 @@
 ---
 name: mongodb
-description: Use for managing MongoDB (a DB already connected)
+description: Script for read/write MongoDB
 ---
 
 ## Usage
 
 ```bash
-bun scripts/query.ts "<query>"
+bun -e "
+import { MongoClient } from 'mongodb'
+const client = new MongoClient(process.env.MCP_MONGODB_URI)
+const db = client.db()
+// your query here
+console.log(await db.collection('users').find().limit(1).toArray())
+await client.close()
+"
 ```
 
-**Examples**
-
-```bash
-# Simple read
-bun scripts/query.ts "db.collection('users').findOne()"
-
-# Query with ObjectId
-bun scripts/query.ts "db.collection('users').findOne({ _id: new ObjectId('...') })"
-
-# Multi-step update (Batching)
-bun scripts/query.ts "Promise.all([
-  db.collection('rewards').deleteMany({ userId: new ObjectId('...') }),
-  db.collection('users').updateOne({ _id: new ObjectId('...') }, { \$set: { 'dailyXp.count': 0 } })
-])"
-```
-
-## Tips
-
-- **Use query.ts over writing one-off scripts.** Use `Promise.all` for parallel operations or an IIFE `(async () => { ... })()` for complex multi-step logic.
-- `ObjectId` is globally available in the query context.
-- Use `limit(1)` or `findOne()` to understand schema without wasting tokens.
-- Use `countDocuments()` instead of fetching docs for existence checks.
+- Import `ObjectId` from `mongodb` if needed.
+- Use `bun -e` directly. Don't write scripts to files.
+- `MCP_MONGODB_URI` is set in `.env` — bun loads it automatically.
