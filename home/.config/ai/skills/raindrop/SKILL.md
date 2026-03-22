@@ -211,3 +211,5 @@ Use **curl** for simple requests or **bun -e** for multi-step logic. Both use `$
 ## Rate Limits
 
 120 requests per minute per user. Batch operations (`PUT /raindrops/*`, `DELETE /raindrops/*`) count as one request.
+
+When doing one-by-one updates (e.g. `PUT /raindrop/{id}`), add **300ms delay** between requests to stay under the limit.
