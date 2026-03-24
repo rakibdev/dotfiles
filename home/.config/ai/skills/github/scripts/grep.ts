@@ -18,8 +18,6 @@ if (!data.payload?.logged_in) {
 
 const results = data.payload.results || []
 const pageCount = data.payload.page_count || 1
-
-console.log('<search-results>')
 for (const r of results) {
   const repo = r.repo_nwo
   const path = r.path
@@ -67,5 +65,4 @@ for (const r of results) {
 }
 
 if (!results.length) console.log('No results')
-console.log(`Page ${page} | ${page < pageCount ? `Next: --page ${page + 1}` : 'End reached'}`)
-console.log('</search-results>')
+else console.log(`Page ${page} | ${page < pageCount ? `Next: --page ${page + 1}` : 'End reached'}`)

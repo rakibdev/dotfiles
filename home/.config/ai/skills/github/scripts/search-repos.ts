@@ -21,7 +21,7 @@ const html = await requestInternal(
 
 const jsonMatch = html.match(/data-target="react-app\.embeddedData">(\{.+?\})<\/script>/s)
 if (!jsonMatch) {
-  console.log('<search-results>\nNo results\nPage 1 | End\n</search-results>')
+  console.log('No results\nPage 1 | End')
   process.exit(0)
 }
 
@@ -29,7 +29,6 @@ const data = JSON.parse(jsonMatch[1])
 const results = data.payload?.results || []
 const pageCount = data.payload?.page_count || 1
 
-console.log('<search-results>')
 for (const r of results) {
   const name = r.hl_name.replace(/<\/?em>/g, '')
   const desc = r.hl_trunc_description?.replace(/<\/?em>/g, '').replace(/&amp;/g, '&') || ''
@@ -45,4 +44,4 @@ for (const r of results) {
 
 if (!results.length) console.log('No results')
 console.log(`Page ${page} | ${page < pageCount ? `Next: --page ${page + 1}` : 'End'}`)
-console.log('</search-results>')
+
