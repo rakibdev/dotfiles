@@ -31,14 +31,13 @@
     ]
   },
   "scripts": {
-    "dev": "DEV=true bun ./scripts/build.ts",
-    "build": "bun ./scripts/build.ts",
+    "dev": "bun build ./src/extension.ts --outdir ./build --format cjs --target node --external vscode --sourcemap=inline --watch",
+    "build": "bun build ./src/extension.ts --outdir ./build --format cjs --target node --external vscode --minify",
     "package": "bun run build && bun --bun vsce package --no-dependencies --allow-missing-repository"
   },
   "devDependencies": {
     "@types/bun": "^1.3.0",
     "@types/vscode": "^1.99.0",
-    "@vscode/vsce": "^3.0.0",
-    "esbuild": "^0.25.0"
+    "@vscode/vsce": "^3.0.0"
   }
 }
