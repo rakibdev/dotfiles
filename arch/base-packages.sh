@@ -8,7 +8,11 @@ pkgs=(
   foot
   grim
   slurp
+  unzip
+  wf-recorder
   wl-clipboard
+  ddcutil
+  tumbler
 )
 
 missing=()

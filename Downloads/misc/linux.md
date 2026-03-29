@@ -80,13 +80,6 @@ Useful for downloading files faster e.g. GitHub releases from browser.
 
 - `ffmpegthumbnailer` - Video thumbnail generator.
 
-## Packages
-
-- unzip
-- wf-recorder
-- wl-clipboard
-- wtype
-
 ## Chrome Search Shortcuts
 
 Settings → Search engine

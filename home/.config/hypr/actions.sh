@@ -3,7 +3,7 @@ close_tab_or_window() {
     if [[ $window == "foot" || $window == "thunar" ]]; then
         hyprctl dispatch killactive
     else
-        wtype -M ctrl w -m ctrl
+        hyprctl dispatch sendshortcut "CTRL, W,"
     fi
 }
 

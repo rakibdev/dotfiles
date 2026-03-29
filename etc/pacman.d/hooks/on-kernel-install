@@ -14,5 +14,5 @@ osUuid=$(blkid -s UUID -o value $osDisk) || cancel "failed to get UUID for $osDi
 if ! efibootmgr | grep -q "\* $label"; then
     efibootmgr --create --disk $efiDisk --part $efiPart --label "$label" \
         --loader /vmlinuz-linux \
-        --unicode "root=UUID=$osUuid rw zswap.enabled=0 initrd=\\amd-ucode.img initrd=\\booster-linux.img"
+        --unicode "root=UUID=$osUuid rw initrd=\\amd-ucode.img initrd=\\booster-linux.img"
 fi
