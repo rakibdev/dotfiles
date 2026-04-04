@@ -26,19 +26,19 @@
     "general": {
       "prompt": "~/.config/ai/general.md"
     },
-    "coder": {
-      "prompt": "~/.config/ai/coder.md",
-      "description": "Use for implementating complex task"
+    "code": {
+      "prompt": "~/.config/ai/code.md",
+      "description": "Use before large implementation"
     },
     "explore": {
       "model": "kimi-k2-5"
     }
-  },
-  "lsp": [
-    {
-      "command": ["tsgo", "--lsp", "--stdio"],
-      "extensions": [".ts", ".tsx", ".js", ".jsx"],
-      "diagDebounce": 500
-    }
-  ]
+  }
+  //  "lsp": [
+  //  {
+  //     "command": ["tsgo", "--lsp", "--stdio"],
+  //     "extensions": [".ts", ".tsx", ".js", ".jsx"],
+  //     "diagDebounce": 500
+  //  }
+  // ]
 }

@@ -85,10 +85,10 @@ Fix: https://github.com/DerTeufel/lineage_device_lenovo_x606fa/commit/4f81a6a489
 
 ## Favorite apps
 
-- [Cromite](https://github.com/uazo/cromite)
+- [Cromite](https://github.com/uazo/cromite/releases)
 - [MiXplorer](https://mixplorer.com/beta) & MixTheme Creator.
 - [Dantotsu](https://github.com/rebelonion/Dantotsu/releases)
-- [YouTube Lite and Music (Telegram)](https://t.me/rvx_lite) & [MicroG by WSTxda.](https://github.com/WSTxda/MicroG-RE/releases)
+- [YouTube Lite](https://github.com/peternmuller/revanced-morphe-builder/releases) & [MicroG by WSTxda.](https://github.com/WSTxda/MicroG-RE/releases)
 - [Aurora Store Nightly](https://auroraoss.com/AuroraStore/Nightly)
 - [librecamera](https://github.com/iakmds/librecamera/releases)
 - [Mauth](https://github.com/X1nto/Mauth/releases)

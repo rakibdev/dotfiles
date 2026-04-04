@@ -139,8 +139,7 @@ export default defineExtension(ctx => {
 
   return {
     models: {
-      'mimo-v2-pro-free': opencodeZen('mimo-v2-pro-free', 'MiMo V2 Pro Free'),
-      'glm-5': opencodeGo('glm-5', 'GLM-5'),
+      'mimo-v2-pro': opencodeGo('mimo-v2-pro', 'MiMo V2 Pro'),
       'kimi-k2-5': opencodeGo('kimi-k2.5', 'Kimi K2.5', {
         onPayload: (payload: any) => {
           payload.reasoning_effort = 'high'
@@ -149,7 +148,6 @@ export default defineExtension(ctx => {
       }),
       'minimax-m2-7': opencodeGoAnthropic('minimax-m2.7', 'MiniMax M2.7'),
       'copilot-claude-haiku-45': copilotAnthropic('claude-haiku-4.5', 'Claude Haiku 4.5 (Copilot)'),
-      'copilot-gpt-5-mini': copilotOpenAI('gpt-5-mini', 'GPT-5 Mini (Copilot)'),
       'claude-sonnet-46': claudeCode(
         {
           id: 'claude-sonnet-4-6',
