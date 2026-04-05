@@ -6,7 +6,6 @@
       "/\\brm\\s/": "ask",
       // not needed because terminal already ask password
       // "sudo *": "ask"
-      "bun -e *": "ask",
       "git *": "ask",
       "git diff *": "allow",
       "git status *": "allow",
