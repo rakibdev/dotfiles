@@ -6,7 +6,7 @@ endif
 
 CXXFLAGS = -shared -fPIC -std=c++23 -Wno-c++11-narrowing
 INCLUDES  = $(shell pkg-config --cflags hyprland libdrm libinput libudev wayland-server xkbcommon)
-TARGET    = libscrolling-patches.so
+TARGET    = libhyprland-scrolling.so
 
 all: $(TARGET)
 

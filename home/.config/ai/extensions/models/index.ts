@@ -1,5 +1,4 @@
-import { defineExtension, type ModelDef, type Model } from 'coder/api'
-import type { ClaudeStreamOptions } from 'coder/api'
+const defineExtension = (fn: (ctx: any) => any) => fn
 
 const ZERO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
 
@@ -18,14 +17,14 @@ export default defineExtension(ctx => {
   const getApiKey = () => ctx.getApiKey?.('anthropic') as Promise<string | undefined>
   const { settingsPath } = ctx
 
-  const opencodeZen = (id: string, name: string, options?: Record<string, any>): ModelDef => {
+  const opencodeZen = (id: string, name: string, options?: Record<string, any>): any => {
     const model = {
       id,
       name,
       baseUrl: 'https://opencode.ai/zen/v1',
       input: ['text', 'image'] as ('text' | 'image')[],
       cost: ZERO_COST
-    } as Model<'openai-completions'>
+    }
     return {
       ...model,
       stream: (context, _options) =>
@@ -40,40 +39,40 @@ export default defineExtension(ctx => {
     }
   }
 
-  const opencodeGo = (id: string, name: string, options?: Record<string, any>): ModelDef => {
+  const opencodeGo = (id: string, name: string, options?: Record<string, any>): any => {
     const model = {
       id,
       name,
       baseUrl: 'https://opencode.ai/zen/go/v1',
       input: ['text', 'image'] as ('text' | 'image')[],
       cost: ZERO_COST
-    } as Model<'openai-completions'>
+    }
     return {
       ...model,
       stream: (context, _options) =>
         streamOpenAICompletions(model, context, {
           ...options,
           ..._options,
-          apiKey: process.env.OPENCODE_GO_KEY
+          apiKey: process.env.OPENCODE_API_KEY
         })
     }
   }
 
-  const opencodeGoAnthropic = (id: string, name: string): ModelDef => {
+  const opencodeGoAnthropic = (id: string, name: string): any => {
     const model = {
       id,
       name,
       baseUrl: 'https://opencode.ai/zen/go',
       input: ['text', 'image'] as ('text' | 'image')[],
       cost: ZERO_COST
-    } as Model<'anthropic-messages'>
+    }
     return {
       ...model,
-      stream: (context, options) => streamAnthropic(model, context, { ...options, apiKey: process.env.OPENCODE_GO_KEY })
+      stream: (context, options) => streamAnthropic(model, context, { ...options, apiKey: process.env.OPENCODE_API_KEY })
     }
   }
 
-  const copilotAnthropic = (id: string, name: string, opts: Record<string, any> = {}): ModelDef => {
+  const copilotAnthropic = (id: string, name: string, opts: Record<string, any> = {}): any => {
     const model = {
       id,
       name,
@@ -87,14 +86,14 @@ export default defineExtension(ctx => {
       contextWindow: 128000,
       maxTokens: 32000,
       ...opts
-    } satisfies Model<'anthropic-messages'>
+    }
     return {
       ...model,
       stream: (context, options) => streamCopilotAnthropic(model, context, { ...options, interleavedThinking: true })
     }
   }
 
-  const copilotOpenAI = (id: string, name: string, opts: Record<string, any> = {}): ModelDef => {
+  const copilotOpenAI = (id: string, name: string, opts: Record<string, any> = {}): any => {
     const model = {
       id,
       name,
@@ -108,7 +107,7 @@ export default defineExtension(ctx => {
       contextWindow: 128000,
       maxTokens: 64000,
       ...opts
-    } satisfies Model<'openai-responses'>
+    }
     return {
       ...model,
       stream: (context, options) => streamCopilotOpenAIResponses(model, context, options)
@@ -129,11 +128,11 @@ export default defineExtension(ctx => {
       reasoning: boolean
       contextWindow: number
       maxTokens: number
-      cost: Model<any>['cost']
+      cost: any
     },
-    opts: ClaudeStreamOptions
-  ): ModelDef => {
-    const model = { ...CLAUDE_BASE, ...cfg } satisfies Model<any>
+    opts: any
+  ): any => {
+    const model = { ...CLAUDE_BASE, ...cfg }
     return { ...model, stream: (context, options) => streamClaude(model, context, options, opts) }
   }
 

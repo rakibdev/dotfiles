@@ -1,11 +1,7 @@
 {
   "HighEfficiencyModeEnabled": true,
   "MemorySaverModeSavings": 2,
-  "ClearBrowsingDataOnExitList": [
-    "browsing_history",
-    "download_history",
-    "autofill"
-  ],
+  "ClearBrowsingDataOnExitList": ["browsing_history", "download_history", "autofill"],
   "SiteSearchSettings": [
     {
       "name": "GitHub Code",

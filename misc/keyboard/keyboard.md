@@ -10,8 +10,6 @@ If you see `Received invalid protocol version from device`:
 
 # Keyboard Remapping
 
-- Delete → Print
-For SysRq. Not Page_Up because it's for cycling terminals in vscode.
-
+- Right Alt → Print // For SysRq
 - Page_Down → Grave/Tilde
 - Caps Lock → Super
