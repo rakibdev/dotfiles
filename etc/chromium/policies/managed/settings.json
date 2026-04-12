@@ -7,6 +7,11 @@
       "name": "GitHub Code",
       "shortcut": "gh",
       "url": "https://github.com/search?q={searchTerms}&type=code"
+    },
+    {
+      "name": "YouTube",
+      "shortcut": "yt",
+      "url": "https://www.youtube.com/results?search_query={searchTerms}"
     }
   ]
 }

@@ -18,7 +18,7 @@ done
 
 if $selection; then selectArea; fi
 
-recordFile="$(xdg-user-dir DOWNLOAD)/recording.mp4"
+recordFile="$HOME/Downloads/recording.mp4"
 recording=true
 
 stopRecording() {
@@ -34,8 +34,7 @@ stopRecording() {
 cmd="yes | wf-recorder -f $recordFile"
 if $selection; then cmd+=" -g \"$area\""; fi
 if $audio; then
-  src=$(pactl get-default-source)
-  cmd+=" --audio=\"$src.monitor\""
+  cmd+=" --audio=$(pactl get-default-sink).monitor"
 fi
 echo $cmd
 cmd+=" &>/dev/null & disown"

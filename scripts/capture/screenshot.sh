@@ -36,7 +36,7 @@ EOF
   exit 0
 fi
 
-file="$(xdg-user-dir DOWNLOAD)/screenshot.png"
+file="$HOME/Downloads/screenshot.png"
 if $selection; then grim -g "$area" $file; else grim $file; fi
 wl-copy < $file
 notify-send "Screenshot" "Saved & copied to clipboard." --hint string:image-path:file://$file
