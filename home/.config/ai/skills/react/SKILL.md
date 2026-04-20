@@ -1,7 +1,6 @@
 ---
 name: react
 description: React coding style and best practices.
-pattern: \.(jsx|tsx)(\s|$)
 ---
 
 - Use `toast.error(error.message)` in catch blocks. No `console.error` allowed!
