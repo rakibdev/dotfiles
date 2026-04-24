@@ -36,7 +36,9 @@
     // Avoid `source.organizeImports` it makes `.vue` file saving slow.
   },
   "editor.pasteAs.preferences": ["text.updateImports"],
-  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.ignoreTrimWhitespace": true,
+
+  "chat.disableAIFeatures": true,
 
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.copyOnSelection": true,
@@ -74,12 +76,10 @@
   "git.confirmSync": false,
   "git.inputValidationSubjectLength": 120,
 
-  "ts.experimental.useTsgo": false,
-  "ts.preferences.useAliasesForRenames": false,
-  "ts.preferences.preferTypeOnlyAutoImports": true,
-  "ts.updateImportsOnFileMove.enabled": "always",
-  "ts.updateImportsOnPaste.enabled": true,
+  "js/ts.preferences.useAliasesForRenames": false,
+  "js/ts.preferences.preferTypeOnlyAutoImports": true,
   "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.updateImportsOnPaste.enabled": true,
   "js/ts.experimental.useTsgo": true,
 
   "json.schemaDownload.enable": true,

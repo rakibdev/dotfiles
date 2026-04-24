@@ -25,7 +25,9 @@ const parse = (url: string) => {
 
   const match = url.match(/github\.com\/([^/]+)\/([^/]+)(?:\/(blob|tree)\/([^/]+)(?:\/(.*))?)?/)
   if (match) {
-    const [, owner, repo, type = 'tree', ref = 'main', path = ''] = match
+    let [, owner, repo, type = 'tree', ref = 'main', path = ''] = match
+    // Pure hex string means commit SHA, use main for latest
+    if (/^[a-f0-9]+$/.test(ref)) ref = 'main'
     return { owner, repo, type, ref, path }
   }
 }
