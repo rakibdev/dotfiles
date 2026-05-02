@@ -5,6 +5,11 @@ description: Control browser tabs via raw CDP. Code runs as browser JS in the pa
 
 Daemon auto-starts on first use, auto-kills after **3 minutes** of inactivity.
 
+Requires Helium browser running with remote debugging. Set env before starting daemon:
+```bash
+BROWSER_PROFILE_DIR=/home/rakib/.config/net.imput.helium bun scripts/daemon.ts
+```
+
 ## Usage
 
 ```bash
