@@ -1,6 +1,6 @@
 close_tab_or_window() {
     local window=$(hyprctl activewindow | pcregrep -o1 "class: (\w+)")
-    if [[ $window == "foot" || $window == "thunar" ]]; then
+    if [[ $window == "foot" || $window == "thunar" ]] ; then
         hyprctl dispatch killactive
     else
         hyprctl dispatch sendshortcut "CTRL, W,"
@@ -10,7 +10,7 @@ close_tab_or_window() {
 cycle_recent_windows() {
     local state_file="/tmp/toggle_window"
     
-    if [[ -f $state_file ]]; then
+    if [[ -f $state_file ]] ; then
         rm $state_file
         hyprctl dispatch layoutmsg "move -col"
     else
@@ -19,5 +19,5 @@ cycle_recent_windows() {
     fi
 }
 
-if [ "$1" == "close-tab-or-window" ]; then close_tab_or_window; fi
-if [ "$1" == "cycle-recent-windows" ]; then cycle_recent_windows; fi
+if [ "$1" == "close-tab-or-window" ] ; then close_tab_or_window ; fi
+if [ "$1" == "cycle-recent-windows" ] ; then cycle_recent_windows ; fi

@@ -1,14 +1,14 @@
 pkgname=double-click-fix
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="R65 keyboard double-click fix"
 arch=('x86_64')
 license=('MIT')
-source=('double-click-fix.zig' 'double-click-fix.service')
+source=('double-click-fix.c' 'double-click-fix.service')
 sha256sums=('SKIP' 'SKIP')
 
 build() {
-    zig build-exe double-click-fix.zig -OReleaseSmall -femit-bin=double-click-fix
+    gcc -O2 -nostdlib -static -fno-stack-protector -o double-click-fix double-click-fix.c
 }
 
 package() {

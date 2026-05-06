@@ -1,33 +1,26 @@
+import { getBrowser } from 'browser'
+
 export const request = async <T = any>(endpoint: string, options?: RequestInit): Promise<T> => {
   const url = endpoint.startsWith('http') ? endpoint : `https://api.github.com${endpoint}`
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${process.env.GITHUB_PAT}`,
-      Accept: 'application/vnd.github+json',
-      ...options?.headers
-    }
-  })
+  const headers: Record<string, string> = {
+    Accept: 'application/vnd.github+json',
+    ...options?.headers as Record<string, string>
+  }
+  if (process.env.GITHUB_PAT) headers.Authorization = `Bearer ${process.env.GITHUB_PAT}`
+  const res = await fetch(url, { ...options, headers })
   if (!res.ok) throw new Error(`GitHub API error: ${res.status} ${await res.text()}`)
   return res.json()
 }
 
 const getCookie = async (domain: string, name: string) => {
-  const port = process.env.PLAYWRIGHT_PORT
-  if (!port) throw new Error('PLAYWRIGHT_PORT not set')
-  const base = `http://127.0.0.1:${port}`
-  const [{ webSocketDebuggerUrl }] = await fetch(`${base}/json/list`).then(r => r.json())
-  const ws = new WebSocket(webSocketDebuggerUrl)
-  const cookies: { name: string; value: string }[] = await new Promise((resolve, reject) => {
-    ws.onopen = () =>
-      ws.send(JSON.stringify({ id: 1, method: 'Network.getCookies', params: { urls: [`https://${domain}`] } }))
-    ws.onmessage = ({ data }) => {
-      resolve(JSON.parse(data).result.cookies)
-      ws.close()
-    }
-    ws.onerror = reject
-  })
-  return cookies.find(c => c.name === name)?.value
+  const browser = await getBrowser()
+  const targets = await browser.getTargets()
+  if (!targets.length) throw new Error('No open tabs in browser')
+  const session = await browser.connect(targets[0].targetId)
+  const { cookies } = await session.send('Network.getCookies', { urls: [`https://${domain}`] })
+  session.close()
+  browser.close()
+  return (cookies as { name: string; value: string }[]).find(c => c.name === name)?.value
 }
 
 const cachePath = new URL('../cache.json', import.meta.url).pathname

@@ -1,11 +1,5 @@
 import { existsSync } from 'node:fs'
 
-const PORT = process.env.PLAYWRIGHT_PORT
-if (!PORT) {
-  console.error('PLAYWRIGHT_PORT not set')
-  process.exit(1)
-}
-
 const SOCK = '/tmp/browser.sock'
 const DAEMON_SCRIPT = new URL('./daemon.ts', import.meta.url).pathname
 

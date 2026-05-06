@@ -10,6 +10,6 @@ If you see `Received invalid protocol version from device`:
 
 # Keyboard Remapping
 
-- Right Alt → Print // For SysRq
+- Win → Print // For SysRq
 - Page_Down → Grave/Tilde
 - Caps Lock → Super

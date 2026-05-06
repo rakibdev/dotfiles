@@ -1,18 +1,11 @@
+import { streamAlibaba } from './alibaba.ts'
+
 const defineExtension = (fn: (ctx: any) => any) => fn
 
 const ZERO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
 
 export default defineExtension(ctx => {
-  const {
-    streamClaude,
-    streamAnthropic,
-    streamOpenAICompletions,
-    streamOpenAIResponses,
-    COPILOT_HEADERS,
-    COPILOT_BASE_URL,
-    streamCopilotAnthropic,
-    streamCopilotOpenAIResponses
-  } = ctx
+  const { streamClaude, streamOpenAICompletions, COPILOT_HEADERS, COPILOT_BASE_URL, streamCopilotAnthropic } = ctx
 
   const getApiKey = () => ctx.getApiKey?.('anthropic') as Promise<string | undefined>
   const { settingsPath } = ctx
@@ -39,11 +32,11 @@ export default defineExtension(ctx => {
     }
   }
 
-  const opencodeGo = (id: string, name: string, options?: Record<string, any>): any => {
+  const crofai = (id: string, name: string, options?: Record<string, any>): any => {
     const model = {
       id,
       name,
-      baseUrl: 'https://opencode.ai/zen/go/v1',
+      baseUrl: 'https://crof.ai/v2',
       input: ['text', 'image'] as ('text' | 'image')[],
       cost: ZERO_COST
     }
@@ -53,22 +46,8 @@ export default defineExtension(ctx => {
         streamOpenAICompletions(model, context, {
           ...options,
           ..._options,
-          apiKey: process.env.OPENCODE_API_KEY
+          apiKey: process.env.CROF_AI
         })
-    }
-  }
-
-  const opencodeGoAnthropic = (id: string, name: string): any => {
-    const model = {
-      id,
-      name,
-      baseUrl: 'https://opencode.ai/zen/go',
-      input: ['text', 'image'] as ('text' | 'image')[],
-      cost: ZERO_COST
-    }
-    return {
-      ...model,
-      stream: (context, options) => streamAnthropic(model, context, { ...options, apiKey: process.env.OPENCODE_API_KEY })
     }
   }
 
@@ -92,28 +71,6 @@ export default defineExtension(ctx => {
       stream: (context, options) => streamCopilotAnthropic(model, context, { ...options, interleavedThinking: true })
     }
   }
-
-  const copilotOpenAI = (id: string, name: string, opts: Record<string, any> = {}): any => {
-    const model = {
-      id,
-      name,
-      api: 'openai-responses' as const,
-      provider: 'github-copilot',
-      baseUrl: COPILOT_BASE_URL,
-      headers: COPILOT_HEADERS,
-      reasoning: true,
-      input: ['text', 'image'] as ('text' | 'image')[],
-      cost: ZERO_COST,
-      contextWindow: 128000,
-      maxTokens: 64000,
-      ...opts
-    }
-    return {
-      ...model,
-      stream: (context, options) => streamCopilotOpenAIResponses(model, context, options)
-    }
-  }
-
   const CLAUDE_BASE = {
     api: 'claude-agent-sdk' as any,
     provider: 'claude',
@@ -138,14 +95,14 @@ export default defineExtension(ctx => {
 
   return {
     models: {
-      'mimo-v2-pro': opencodeGo('mimo-v2-pro', 'MiMo V2 Pro'),
-      'kimi-k2-5': opencodeGo('kimi-k2.5', 'Kimi K2.5', {
+      'kimi-k2-6': crofai('kimi-k2.6', 'Kimi K2.6', {
         onPayload: (payload: any) => {
-          payload.reasoning_effort = 'high'
+          payload.reasoning_effort = 'low'
           return payload
         }
       }),
-      'minimax-m2-7': opencodeGoAnthropic('minimax-m2.7', 'MiniMax M2.7'),
+      'deepseek-v4-pro': crofai('deepseek-v4-pro', 'DeepSeek V4 Pro'),
+      'qwen3.6-27b': crofai('qwen3.6-27b', 'Qwen 3.6'),
       'copilot-claude-haiku-45': copilotAnthropic('claude-haiku-4.5', 'Claude Haiku 4.5 (Copilot)'),
       'claude-sonnet-46': claudeCode(
         {
@@ -167,7 +124,7 @@ export default defineExtension(ctx => {
           maxTokens: 8192,
           cost: { input: 0.8, output: 4, cacheRead: 0.08, cacheWrite: 1 }
         },
-        { getApiKey, settingsPath }
+        { getApiKey, settingsPath, persistSession: true, maxTurns: 30 }
       )
     }
   }

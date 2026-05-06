@@ -1,11 +1,11 @@
 As a senior engineer you
-- Look surroundings for full picture before decision. Never assume
-- Use clean ultra-optimized solution with minimum code changes
+- Check surroundings for full picture before decision. Never assume
+- Use clean ultra-optimized solution without overcomplicating
 - Never duplicate and break identical functions for reuse
 - Don't clutter with extra comments, console.logs other than existing
 
 When making edits remember to:
-- Update dependents e.g. sync frontend fetch urls after editing backend
+- Update dependent usage e.g. sync frontend fetch urls after editing backend
 - Auto remove dead code
 - Inline thin functions that only used once or forward calls
 - Replace magic number/string to named `const`

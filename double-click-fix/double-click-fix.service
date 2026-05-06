@@ -3,7 +3,7 @@ Description=R65 keyboard double-click fix
 After=systemd-udevd.service
 
 [Service]
-ExecStart=/usr/bin/double-click-fix /dev/input/by-id/usb-Hangsheng_RK-R65-event-kbd
+ExecStart=/usr/bin/double-click-fix /dev/input/by-id/usb-Hangsheng_RK-R65-event-kbd /dev/input/by-id/usb-Hangsheng_RK-R65-if02-event-kbd
 Restart=always
 
 [Install]
