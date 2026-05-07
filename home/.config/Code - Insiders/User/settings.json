@@ -25,16 +25,11 @@
   "editor.mouseWheelScrollSensitivity": 6,
   "editor.copyWithSyntaxHighlighting": false,
   "editor.accessibilitySupport": "off",
-  "editor.formatOnSave": true,
   "editor.scrollbar.horizontal": "hidden",
   // "editor.glyphMargin": true,
   "breadcrumbs.enabled": false,
   "problems.decorations.enabled": false,
   "editor.find.addExtraSpaceOnTop": false,
-  "editor.codeActionsOnSave": {
-    // "source.removeUnusedImports": "always"
-    // Avoid `source.organizeImports` it makes `.vue` file saving slow.
-  },
   "editor.pasteAs.preferences": ["text.updateImports"],
   "diffEditor.ignoreTrimWhitespace": true,
 
@@ -94,12 +89,6 @@
   // clangd related.
   "clangd.path": "/usr/bin/clangd", // "pacman -S clang".
   "clangd.arguments": ["--header-insertion=iwyu"],
-  "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "[cpp]": {
     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
   },
@@ -107,12 +96,13 @@
     "editor.defaultFormatter": "vscode.markdown-language-features"
   },
 
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "prettier.arrowParens": "avoid",
-  "prettier.singleQuote": true,
-  "prettier.trailingComma": "none",
-  "prettier.printWidth": 120,
-  "prettier.semi": false,
+  // bun add -g oxfmt (aur oxfmt-bin don't work)
+  // yay -S oxlint-bin
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  },
 
   "editor.inlineSuggest.suppressSuggestions": true,
   "git.blame.editorDecoration.enabled": true,
@@ -122,7 +112,5 @@
     "crossapi": "linux",
     "keycrypt": "linux"
   },
-  "scm.repositories.selectionMode": "single",
-  "zig.zls.enabled": "on",
-  "zig.path": "zig"
+  "scm.repositories.selectionMode": "single"
 }
