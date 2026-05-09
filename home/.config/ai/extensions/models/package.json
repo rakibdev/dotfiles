@@ -1,0 +1,8 @@
+{
+  "name": "models-extension",
+  "type": "module",
+  "dependencies": {
+    "@ai-sdk/alibaba": "latest",
+    "@mariozechner/pi-ai": "0.70.6"
+  }
+}

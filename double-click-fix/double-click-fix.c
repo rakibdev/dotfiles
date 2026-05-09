@@ -4,13 +4,10 @@
 #include <linux/uinput.h>
 #include <sys/epoll.h>
 
-#define THRESHOLD_US 50000
-#define KEY_SPACE    57
-#define NUM_KEYS     8
+#define THRESHOLD_US 100000
 
-static const unsigned short PROBLEM_KEYS[NUM_KEYS] = { 14, 17, 18, 19, 31, 49, 46, 57 };
-static unsigned char KEY_IDX[KEY_SPACE + 1];
-static long long     last_down[NUM_KEYS];
+static long long   last_down[KEY_MAX];
+static signed char key_held[KEY_MAX];
 
 static inline long sys1(long n, long a) {
     long r;
@@ -43,9 +40,6 @@ void run(long argc, char **argv) {
         write(2, "Usage: double-click-fix /dev/input/eventX [...]\n", 48);
         exit(1);
     }
-
-    for (int i = 0; i <= KEY_SPACE; i++) KEY_IDX[i] = 0xFF;
-    for (unsigned i = 0; i < NUM_KEYS; i++) KEY_IDX[PROBLEM_KEYS[i]] = (unsigned char)i;
 
     int fds[8], nfds = 0;
     for (int i = 1; i < argc && nfds < 8; i++) {
@@ -81,12 +75,15 @@ void run(long argc, char **argv) {
         for (int i = 0; i < n; i++) {
             struct input_event e;
             if (read(events[i].data.fd, &e, sizeof(e)) != sizeof(e)) continue;
-            if (e.type == EV_KEY && e.code <= KEY_SPACE && KEY_IDX[e.code] != 0xFF) {
-                unsigned idx = KEY_IDX[e.code];
-                long long now = (long long)e.time.tv_sec * 1000000 + e.time.tv_usec;
+            if (e.type == EV_KEY && e.code < KEY_MAX) {
                 if (e.value == 1) {
-                    if (last_down[idx] && now - last_down[idx] < THRESHOLD_US) continue;
-                    last_down[idx] = now;
+                    if (key_held[e.code]) continue;
+                    long long now = (long long)e.time.tv_sec * 1000000 + e.time.tv_usec;
+                    if (last_down[e.code] && now - last_down[e.code] < THRESHOLD_US) continue;
+                    last_down[e.code] = now;
+                    key_held[e.code] = 1;
+                } else if (e.value == 0) {
+                    key_held[e.code] = 0;
                 }
             }
             write(ui, &e, sizeof(e));

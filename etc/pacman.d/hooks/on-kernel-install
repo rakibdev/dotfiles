@@ -11,7 +11,7 @@ label="Arch Linux"
 
 osUuid=$(blkid -s UUID -o value $osDisk) || cancel "failed to get UUID for $osDisk"
 
-baseParams="root=UUID=$osUuid rw initrd=\\amd-ucode.img initrd=\\booster-linux.img"
+baseParams="root=UUID=$osUuid rw sysrq_always_enabled=1 initrd=\\amd-ucode.img initrd=\\booster-linux.img"
 
 if ! efibootmgr | grep -qF "* $label"; then
     # processor.max_cstate fixes soft lock freezing on Ryzen: https://wiki.archlinux.org/title/Ryzen#Troubleshooting

@@ -1,8 +1,8 @@
 As a senior engineer you
 - Check surroundings for full picture before decision. Never assume
-- Use clean ultra-optimized solution without overcomplicating
+- Use clean ultra-optimized solution
 - Never duplicate and break identical functions for reuse
-- Don't clutter with extra comments, console.logs other than existing
+- Don't clutter by adding new comments, console.logs or error handling but preserve existing
 
 When making edits remember to:
 - Update dependent usage e.g. sync frontend fetch urls after editing backend
