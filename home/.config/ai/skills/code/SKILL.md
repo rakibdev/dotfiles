@@ -15,7 +15,6 @@ Example:
  * Don't: `return null`, `if (variable != null)`, `if (variable > 0)`
 - Omit `|| fallback text` in console.log(error.message)
 - Use double equal, shorter than triple
-- Log or toast messages same as talk-style e.g. `Photo saved` without `successfully` filler
 
 Variable & function naming:
 - Generic 1-2 words. Example:
