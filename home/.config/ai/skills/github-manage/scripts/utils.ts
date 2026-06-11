@@ -1,4 +1,4 @@
-import { getBrowser } from 'browser'
+import { getBrowser } from '@ai/browser/cdp'
 
 export const request = async <T = any>(endpoint: string, options?: RequestInit): Promise<T> => {
   const url = endpoint.startsWith('http') ? endpoint : `https://api.github.com${endpoint}`
@@ -50,7 +50,6 @@ export const requestInternal = async (endpoint: string, retry = true): Promise<s
   const url = endpoint.startsWith('http') ? endpoint : `https://github.com${endpoint}`
   const res = await fetch(url, {
     headers: {
-      // Note: Code search requires 'user_session' cookie. 'saved_user_sessions' only works for repo search.
       cookie: `user_session=${session}`,
       'User-Agent':
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'

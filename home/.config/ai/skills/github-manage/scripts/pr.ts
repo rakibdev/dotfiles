@@ -87,4 +87,3 @@ if (method == "diff") {
   })
   console.log(`Reply added to comment ${commentId}`)
 }
-

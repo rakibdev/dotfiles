@@ -1,4 +1,4 @@
-import { requestInternal, formatDate, parseCliArgs } from './utils'
+import { requestInternal, formatDate, parseCliArgs } from '../../github-manage/scripts/utils'
 
 const { args, get } = parseCliArgs()
 
@@ -44,4 +44,3 @@ for (const r of results) {
 
 if (!results.length) console.log('No results')
 console.log(`Page ${page} | ${page < pageCount ? `Next: --page ${page + 1}` : 'End'}`)
-

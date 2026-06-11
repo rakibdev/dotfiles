@@ -1,5 +1,5 @@
 setopt PROMPT_SUBST
-PROMPT='$([ $? -eq 0 ] && echo "%F{blue}●" || echo "%F{red}●") %F{cyan}%~${reset_color} '
+PROMPT='%F{cyan}%~${reset_color} '
 
 # Ctrl + arrow
 bindkey "^[[1;5C" forward-word
@@ -28,3 +28,4 @@ alias ls='ls --color=auto'
 alias npm=bun
 
 export PATH="$HOME/.bun/bin:$HOME/.local/bin:$PATH"
+export DOCKER_HOST="unix:///run/user/1000/podman/podman.sock"

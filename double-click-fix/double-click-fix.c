@@ -6,8 +6,8 @@
 
 #define THRESHOLD_US 100000
 
-static long long   last_down[KEY_MAX];
-static signed char key_held[KEY_MAX];
+static long long last_down[KEY_MAX];
+static int       key_owner[KEY_MAX];
 
 static inline long sys1(long n, long a) {
     long r;
@@ -76,14 +76,16 @@ void run(long argc, char **argv) {
             struct input_event e;
             if (read(events[i].data.fd, &e, sizeof(e)) != sizeof(e)) continue;
             if (e.type == EV_KEY && e.code < KEY_MAX) {
+                int src = events[i].data.fd;
                 if (e.value == 1) {
-                    if (key_held[e.code]) continue;
+                    if (key_owner[e.code]) continue;
                     long long now = (long long)e.time.tv_sec * 1000000 + e.time.tv_usec;
                     if (last_down[e.code] && now - last_down[e.code] < THRESHOLD_US) continue;
                     last_down[e.code] = now;
-                    key_held[e.code] = 1;
-                } else if (e.value == 0) {
-                    key_held[e.code] = 0;
+                    key_owner[e.code] = src;
+                } else {
+                    if (key_owner[e.code] && key_owner[e.code] != src) continue;
+                    if (e.value == 0) key_owner[e.code] = 0;
                 }
             }
             write(ui, &e, sizeof(e));

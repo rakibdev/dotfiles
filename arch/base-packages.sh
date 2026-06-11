@@ -13,6 +13,7 @@ pkgs=(
   wl-clipboard
   ddcutil
   tumbler
+  ffmpegthumbnailer
 )
 
 missing=()
