@@ -95,8 +95,8 @@ function M.open()
   end)
 
   Snacks.picker({
-    title   = '',
-    prompt  = ' ',
+    title   = pickerUtil.title,
+    prompt  = pickerUtil.prompt,
     layout  = pickerUtil.layout,
     win     = pickerUtil.win,
     items   = sorted,

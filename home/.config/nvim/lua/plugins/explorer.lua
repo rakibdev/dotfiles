@@ -15,14 +15,6 @@ return {
           local cwd = item.dir and item.file or vim.fn.fnamemodify(item.file, ':h')
           require('plugins.terminal.api').new(cwd)
         end,
-        yank_path = function(picker, item)
-          local selected = picker:selected()
-          local items = #selected > 0 and selected or (item and { item } or {})
-          if #items == 0 then return end
-          local paths = vim.tbl_map(function(i) return i.file end, items)
-          vim.fn.setreg('+', table.concat(paths, '\n'))
-          vim.notify('Copied ' .. #items .. ' files')
-        end,
       },
       sources = {
         explorer = {
@@ -43,7 +35,7 @@ return {
                 ['<Esc>']        = false,
                 ['<C-p>']        = false, -- unblock fff find_files keymap
                 ['<C-g>']        = false, -- unblock git panel keymap
-                ['<C-c>']        = 'yank_path',
+                ['<C-c>']        = { 'explorer_yank', mode = { 'n', 'v' } },
                 ['t']            = 'open_terminal',
                 ['n']            = 'explorer_add',
               },

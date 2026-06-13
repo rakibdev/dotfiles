@@ -1,5 +1,8 @@
 local M = {}
 
+M.title  = ''
+M.prompt = ' '
+
 M.layout = {
   hidden = { 'preview' },
   layout = {

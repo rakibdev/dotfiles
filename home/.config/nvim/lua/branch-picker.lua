@@ -1,5 +1,7 @@
 local M = {}
 
+local pickerUtil = require('utils.picker')
+
 function M.open()
   local root = require('utils.git').getActiveRoot()
   if not root then
@@ -7,16 +9,12 @@ function M.open()
     return
   end
   Snacks.picker.git_branches({
-    cwd    = root,
-    layout = { preview = false, layout = { width = 0.4 } },
+    title    = pickerUtil.title,
+    prompt   = pickerUtil.prompt,
+    cwd      = root,
+    layout   = pickerUtil.layout,
+    win      = pickerUtil.win,
     on_close = function() vim.cmd('redrawstatus!') end,
-    win = {
-      input = {
-        keys = {
-          ['<Esc>'] = { 'cancel', mode = { 'n', 'i' } },
-        },
-      },
-    },
   })
 end
 
