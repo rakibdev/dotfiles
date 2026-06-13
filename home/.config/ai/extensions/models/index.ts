@@ -103,6 +103,7 @@ export default defineExtension(ctx => {
       }),
       'deepseek-v4-pro': crofai('deepseek-v4-pro', 'DeepSeek V4 Pro'),
       'qwen3.6-27b': crofai('qwen3.6-27b', 'Qwen 3.6'),
+      'minimax-m2.5-free': opencodeZen('minimax-m2.5-free', 'MiniMax M2.5 Free'),
       'copilot-claude-haiku-45': copilotAnthropic('claude-haiku-4.5', 'Claude Haiku 4.5 (Copilot)'),
       'claude-sonnet-46': claudeCode(
         {

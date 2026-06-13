@@ -1,0 +1,13 @@
+pkgname=criu-dummy
+pkgver=4.2
+pkgrel=1
+pkgdesc="Dummy replacement for criu"
+arch=('any')
+url="https://criu.org"
+license=('GPL2')
+provides=('criu')
+conflicts=('criu')
+
+package() {
+    :
+}

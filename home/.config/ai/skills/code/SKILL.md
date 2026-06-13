@@ -1,6 +1,6 @@
 ---
 name: code
-description: Coding rules
+description:
 ---
 - Reuse code. Split identical functions, turn magic number/string to named `const`
 - Clean redundant or fallback code

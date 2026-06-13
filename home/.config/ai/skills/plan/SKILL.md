@@ -4,7 +4,6 @@ description:
 ---
 Draft implementation plan.
 
-<rules>
 - Read provided URLs if any. Don't assume links content
 - Deep-dive files for full picture before plan
 - Plan incrementally. If user requests adjustments, output only plan changes
@@ -27,5 +26,3 @@ Questions:
 1. Should `generateColors` return HEX or HSL?
 2. Should generation happen dynamically on client-side, or at build time?
 </output-example>
-
-</rules>

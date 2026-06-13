@@ -1,5 +1,6 @@
 {
   "model": ["kimi-k2-5"],
+  "agent": "general",
   "permissions": {
     "bash": {
       "*": "allow",
@@ -24,13 +25,6 @@
   "agents": {
     "general": {
       "prompt": "~/.config/ai/general.md"
-    },
-    "code": {
-      "prompt": "~/.config/ai/code.md",
-      "description": "Use before large implementation"
-    },
-    "explore": {
-      "model": "kimi-k2-5"
     }
   }
   //  "lsp": [

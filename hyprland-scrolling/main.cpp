@@ -18,8 +18,8 @@
 #include <hyprland/src/layout/algorithm/tiled/scrolling/ScrollTapeController.hpp>
 #undef private
 
+#include <hyprland/src/helpers/varlist/VarList.hpp>
 #include <hyprutils/string/VarList2.hpp>
-using namespace Hyprutils::String;
 using namespace Layout::Tiled;
 using namespace Layout;
 
