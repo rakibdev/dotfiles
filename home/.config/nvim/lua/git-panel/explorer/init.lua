@@ -123,18 +123,9 @@ M.refresh = git.async(function(state)
 	end
 end)
 
-function M.init(state)
+local function setupWin(state, win)
 	local SIDEBAR_WIDTH = require('plugins.explorer').sidebarWidth
-	local buf = vim.api.nvim_create_buf(false, true)
-	vim.bo[buf].buftype = 'nofile'
-	vim.bo[buf].bufhidden = 'wipe'
-	vim.bo[buf].modifiable = false
-	vim.bo[buf].swapfile = false
-	pcall(vim.api.nvim_buf_set_name, buf, 'Source Control')
-	state.explorerBuf = buf
-
-	local win = state.explorerWin
-	vim.api.nvim_win_set_buf(win, buf)
+	vim.api.nvim_win_set_buf(win, state.explorerBuf)
 	vim.api.nvim_win_set_width(win, SIDEBAR_WIDTH)
 	vim.wo[win].winfixwidth = true
 	vim.wo[win].winfixbuf = true -- disables opening files in this window; when explorer is focused and fff opens a file, nvim would open it here instead of diff area
@@ -142,11 +133,47 @@ function M.init(state)
 	vim.wo[win].relativenumber = false
 	vim.wo[win].signcolumn = 'no'
 	vim.wo[win].cursorline = true
-	-- Hide borders and intersection handles to blend window seamlessly
 	vim.wo[win].fillchars = 'eob: ,vert: ,horiz:─,vertleft: '
+end
+
+function M.toggleWin(state)
+	if state.explorerWin and vim.api.nvim_win_is_valid(state.explorerWin) then
+		if state.commitWin and vim.api.nvim_win_is_valid(state.commitWin) then
+			vim.api.nvim_win_close(state.commitWin, false)
+			state.commitWin = nil
+		end
+		vim.api.nvim_win_close(state.explorerWin, false)
+		state.explorerWin = nil
+	else
+		local leftmostWin = (state.diffOrigWin and vim.api.nvim_win_is_valid(state.diffOrigWin))
+			and state.diffOrigWin or state.diffAreaWin
+		vim.api.nvim_set_current_win(leftmostWin)
+		vim.cmd('leftabove vsplit')
+		state.explorerWin = vim.api.nvim_get_current_win()
+		setupWin(state, state.explorerWin)
+		render.render(state)
+		vim.api.nvim_set_current_win(state.explorerWin)
+		vim.cmd('belowright 2split')
+		state.commitWin = vim.api.nvim_get_current_win()
+		require('git-panel.explorer.commit').setupWin(state, state.commitWin)
+		vim.api.nvim_set_current_win(state.diffAreaWin)
+	end
+end
+
+function M.init(state)
+	local buf = vim.api.nvim_create_buf(false, true)
+	vim.bo[buf].buftype = 'nofile'
+	vim.bo[buf].bufhidden = 'hide'
+	vim.bo[buf].modifiable = false
+	vim.bo[buf].swapfile = false
+	pcall(vim.api.nvim_buf_set_name, buf, 'Source Control')
+	state.explorerBuf = buf
+
+	-- Hide borders and intersection handles to blend window seamlessly
+	setupWin(state, state.explorerWin)
 
 	local function openAtCursor()
-		local lnum = vim.api.nvim_win_get_cursor(win)[1]
+		local lnum = vim.api.nvim_win_get_cursor(state.explorerWin)[1]
 		local info = state.lineMap[lnum]
 		if not info then
 			return
@@ -177,7 +204,7 @@ function M.init(state)
 			end
 			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'x', false)
 		else
-			startLine = vim.api.nvim_win_get_cursor(win)[1]
+			startLine = vim.api.nvim_win_get_cursor(state.explorerWin)[1]
 			endLine = startLine
 		end
 

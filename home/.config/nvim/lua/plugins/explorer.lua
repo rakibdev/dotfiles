@@ -4,7 +4,14 @@ return {
   'folke/snacks.nvim',
   sidebarWidth = SIDEBAR_WIDTH, -- exported: require('plugins.explorer').sidebarWidth
   keys = {
-    { '<C-b>', function() Snacks.explorer.open() end, desc = 'File explorer' },
+    { '<C-b>', function()
+        local gp = require('git-panel')
+        if gp._state and vim.api.nvim_get_current_tabpage() == gp._state.tab then
+          require('git-panel.explorer').toggleWin(gp._state)
+        else
+          Snacks.explorer.open()
+        end
+      end, desc = 'File explorer' },
   },
   opts = {
     explorer = {},
@@ -38,6 +45,7 @@ return {
                 ['<Esc>']        = false,
                 ['<C-p>']        = false, -- unblock fff find_files keymap
                 ['<C-g>']        = false, -- unblock git panel keymap
+                ['<C-b>']        = 'close',
                 ['<C-c>']        = { 'explorer_yank', mode = { 'n', 'v' } },
                 ['t']            = 'open_terminal',
                 ['n']            = 'explorer_add',

@@ -74,21 +74,21 @@ function M.open()
   require('git-panel.diff')
   require('git-panel.explorer').init(state)
 
+  local group = vim.api.nvim_create_augroup('GitPanelTabClose', { clear = true })
   vim.api.nvim_create_autocmd('TabClosed', {
-    group = vim.api.nvim_create_augroup('GitPanelTabClose', { clear = true }),
+    group = group,
     callback = function()
+      if vim.api.nvim_tabpage_is_valid(state.tab) then
+        return
+      end
       vim.o.showtabline   = state.origShowtabline
       require('git-panel.explorer.watcher').stop(state)
       pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelRefresh')
       gitUtil.locked            = false
       require('statusbar').fileProvider = nil
       M._state = nil
-      vim.schedule(function()
-        local file = gitUtil.activeFile
-        if file then pcall(Snacks.explorer.reveal, { file = file }) end
-      end)
+      pcall(vim.api.nvim_del_augroup_by_id, group)
     end,
-    once = true,
   })
 end
 

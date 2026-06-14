@@ -54,6 +54,11 @@ function M.findFiles()
     end,
     confirm = function(p, item)
       p:close()
+      -- file was opening inside commit box when it was focused
+      local gpState = require('git-panel')._state
+      if vim.api.nvim_win_is_valid((gpState or {}).diffAreaWin or -1) then
+        vim.api.nvim_set_current_win(gpState.diffAreaWin)
+      end
       vim.cmd('edit ' .. vim.fn.fnameescape(item.file))
       syncGitPanel(vim.fn.expand('%:p'))
     end,

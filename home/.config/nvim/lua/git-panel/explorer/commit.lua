@@ -4,19 +4,8 @@ local ns = vim.api.nvim_create_namespace 'git_panel_commit'
 
 local spinnerFrames = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' }
 
-function M.init(state)
-	vim.api.nvim_set_current_win(state.explorerWin)
-	vim.cmd 'belowright 2split'
-	local win = vim.api.nvim_get_current_win()
-	local buf = vim.api.nvim_create_buf(false, true)
-	state.commitWin = win
-	state.commitBuf = buf
-
-	vim.api.nvim_win_set_buf(win, buf)
-	vim.bo[buf].buftype = 'nofile'
-	vim.bo[buf].bufhidden = 'wipe'
-	vim.bo[buf].filetype = 'gitcommit' -- used by blink.cmp for dictionary completion
-	vim.bo[buf].textwidth = 0
+function M.setupWin(state, win)
+	vim.api.nvim_win_set_buf(win, state.commitBuf)
 	vim.wo[win].wrap = true
 	vim.wo[win].colorcolumn = ''
 	vim.wo[win].number = false
@@ -28,6 +17,21 @@ function M.init(state)
 	vim.wo[win].fillchars = 'eob: ,vert: ,horiz:─,vertleft: '
 	vim.wo[win].statuscolumn = ' '
 	vim.api.nvim_win_set_height(win, 3)
+end
+
+function M.init(state)
+	vim.api.nvim_set_current_win(state.explorerWin)
+	vim.cmd 'belowright 2split'
+	local win = vim.api.nvim_get_current_win()
+	local buf = vim.api.nvim_create_buf(false, true)
+	state.commitWin = win
+	state.commitBuf = buf
+
+	vim.bo[buf].buftype = 'nofile'
+	vim.bo[buf].bufhidden = 'hide'
+	vim.bo[buf].filetype = 'gitcommit' -- used by blink.cmp for dictionary completion
+	vim.bo[buf].textwidth = 0
+	M.setupWin(state, win)
 
 	local function showPlaceholder()
 		local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
