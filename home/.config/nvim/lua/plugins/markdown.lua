@@ -10,8 +10,9 @@ return {
 		heading = {
 			sign = false,
 			backgrounds = {},
-      -- inline removes left gap in heading
-			position = 'inline',     }
+			-- inline removes left gap in heading
+			position = 'inline',
+		},
 		code = { sign = false },
 		link = {
 			image = false,

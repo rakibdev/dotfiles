@@ -13,6 +13,6 @@ return {
       cpp             = { 'clang_format' },
       lua             = { 'stylua' },
     },
-    format_on_save = { timeout_ms = 800 },
+    format_on_save = {},
   },
 }
