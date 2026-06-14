@@ -47,10 +47,12 @@ function M.open()
     return
   end
 
-  gitUtil.pinnedRoot = root
-  local currentFile = vim.fn.expand('%:p')
-  local state = newState(root)
-  state.preselect = (currentFile ~= '' and vim.fn.filereadable(currentFile) == 1) and currentFile or nil
+  gitUtil.activeRoot = root
+  gitUtil.locked     = true
+  local currentFile  = vim.fn.expand('%:p')
+  local lastFile     = gitUtil.activeFile
+  local state        = newState(root)
+  state.preselect    = (currentFile ~= '' and vim.fn.filereadable(currentFile) == 1) and currentFile or lastFile
   require('statusbar').fileProvider = function()
     if not state.selected then return nil end
     local path    = state.selected.entry.path
@@ -75,12 +77,16 @@ function M.open()
   vim.api.nvim_create_autocmd('TabClosed', {
     group = vim.api.nvim_create_augroup('GitPanelTabClose', { clear = true }),
     callback = function()
-      vim.o.showtabline = state.origShowtabline
+      vim.o.showtabline   = state.origShowtabline
       require('git-panel.explorer.watcher').stop(state)
       pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelRefresh')
-      require('utils.git').pinnedRoot   = nil
+      gitUtil.locked            = false
       require('statusbar').fileProvider = nil
       M._state = nil
+      vim.schedule(function()
+        local file = gitUtil.activeFile
+        if file then pcall(Snacks.explorer.reveal, { file = file }) end
+      end)
     end,
     once = true,
   })

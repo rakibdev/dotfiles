@@ -18,6 +18,9 @@ return {
       },
       sources = {
         explorer = {
+          on_change = function(_, item)
+            if item and not item.dir then require('utils.git').activeFile = item.file end
+          end,
           layout = { preset = 'sidebar', preview = false, hidden = { 'input' }, width = SIDEBAR_WIDTH },
           formatters = {
             file = { filename_only = true },

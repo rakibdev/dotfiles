@@ -1,11 +1,12 @@
 local M = {}
 
-M.repos      = {}
-M.activeRoot = nil
-M.pinnedRoot = nil
+M.repos       = {}
+M.activeRoot  = nil
+M.activeFile  = nil
+M.locked      = false  -- prevents BufEnter from overwriting activeRoot while git-panel is open
 
 local function updateActiveRoot()
-  if M.pinnedRoot then return end
+  if M.locked then return end
   local file = vim.fn.expand('%:p')
   if file == '' then return end
   local root = M.gitRoot(vim.fn.fnamemodify(file, ':h'))
@@ -50,7 +51,7 @@ function M.repoList()
 end
 
 function M.getActiveRoot()
-  return M.pinnedRoot or M.activeRoot or M.repoList()[1]
+  return M.activeRoot or M.repoList()[1]
 end
 
 function M.getBranch(root)

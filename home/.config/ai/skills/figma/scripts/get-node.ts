@@ -1,4 +1,4 @@
-import { parseFigmaArgs, getFile } from "./utils"
+import { parseFigmaArgs, getFile } from './utils'
 
 const { fileKey, nodeId, extra } = parseFigmaArgs(process.argv.slice(2))
 const depth = extra[0] ? parseInt(extra[0]) : undefined
@@ -63,23 +63,29 @@ const findNode = (root: FigmaNode, targetId: string): FigmaNode => {
 
 const simplifyFills = (fills?: any[]) => {
   if (!fills?.length) return
-  const visible = fills.filter((f) => f.visible !== false)
+  const visible = fills.filter(f => f.visible !== false)
   if (!visible.length) return
 
   return visible
-    .map((f) => {
-      if (f.type === "SOLID") {
+    .map(f => {
+      if (f.type === 'SOLID') {
         const { r, g, b } = f.color
         const a = f.opacity ?? 1
         return a < 1
           ? `rgba(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)},${a.toFixed(2)})`
-          : `#${Math.round(r * 255).toString(16).padStart(2, "0")}${Math.round(g * 255).toString(16).padStart(2, "0")}${Math.round(b * 255).toString(16).padStart(2, "0")}`
+          : `#${Math.round(r * 255)
+              .toString(16)
+              .padStart(2, '0')}${Math.round(g * 255)
+              .toString(16)
+              .padStart(2, '0')}${Math.round(b * 255)
+              .toString(16)
+              .padStart(2, '0')}`
       }
-      if (f.type === "IMAGE") return "image"
-      if (f.type.includes("GRADIENT")) return f.type.toLowerCase().replace("_", "-")
+      if (f.type === 'IMAGE') return 'image'
+      if (f.type.includes('GRADIENT')) return f.type.toLowerCase().replace('_', '-')
       return f.type
     })
-    .join(", ")
+    .join(', ')
 }
 
 const simplifyNode = (node: FigmaNode, currentDepth: number, maxDepth?: number): SimplifiedNode | null => {
@@ -88,7 +94,7 @@ const simplifyNode = (node: FigmaNode, currentDepth: number, maxDepth?: number):
   const result: SimplifiedNode = {
     id: node.id,
     name: node.name,
-    type: node.type === "VECTOR" ? "IMAGE-SVG" : node.type,
+    type: node.type === 'VECTOR' ? 'IMAGE-SVG' : node.type
   }
 
   if (node.characters) result.text = node.characters
@@ -96,7 +102,7 @@ const simplifyNode = (node: FigmaNode, currentDepth: number, maxDepth?: number):
   if (node.absoluteBoundingBox) {
     result.size = {
       w: Math.round(node.absoluteBoundingBox.width),
-      h: Math.round(node.absoluteBoundingBox.height),
+      h: Math.round(node.absoluteBoundingBox.height)
     }
   }
 
@@ -105,13 +111,11 @@ const simplifyNode = (node: FigmaNode, currentDepth: number, maxDepth?: number):
       mode: node.layoutMode.toLowerCase(),
       gap: node.itemSpacing,
       align: node.counterAxisAlignItems?.toLowerCase(),
-      justify: node.primaryAxisAlignItems?.toLowerCase(),
+      justify: node.primaryAxisAlignItems?.toLowerCase()
     }
-    const p = [node.paddingTop, node.paddingRight, node.paddingBottom, node.paddingLeft].filter(
-      (v) => v !== undefined
-    )
-    if (p.length && p.some((v) => v !== 0)) {
-      result.layout.padding = p.join(" ")
+    const p = [node.paddingTop, node.paddingRight, node.paddingBottom, node.paddingLeft].filter(v => v !== undefined)
+    if (p.length && p.some(v => v !== 0)) {
+      result.layout.padding = p.join(' ')
     }
   }
 
@@ -125,7 +129,7 @@ const simplifyNode = (node: FigmaNode, currentDepth: number, maxDepth?: number):
 
   if (node.cornerRadius) result.borderRadius = `${node.cornerRadius}px`
   if (node.rectangleCornerRadii) {
-    result.borderRadius = node.rectangleCornerRadii.map((r) => `${r}px`).join(" ")
+    result.borderRadius = node.rectangleCornerRadii.map(r => `${r}px`).join(' ')
   }
 
   if (node.componentId) result.componentId = node.componentId
@@ -133,15 +137,12 @@ const simplifyNode = (node: FigmaNode, currentDepth: number, maxDepth?: number):
   // Default: traverse all children (no depth limit unless specified)
   if (node.children && (maxDepth === undefined || currentDepth < maxDepth)) {
     const children = node.children
-      .map((c) => simplifyNode(c, currentDepth + 1, maxDepth))
+      .map(c => simplifyNode(c, currentDepth + 1, maxDepth))
       .filter((c): c is SimplifiedNode => c !== null)
 
-    const svgTypes = new Set(["IMAGE-SVG", "STAR", "LINE", "ELLIPSE", "REGULAR_POLYGON", "RECTANGLE"])
-    if (
-      ["FRAME", "GROUP", "INSTANCE"].includes(node.type) &&
-      children.every((c) => svgTypes.has(c.type))
-    ) {
-      result.type = "IMAGE-SVG"
+    const svgTypes = new Set(['IMAGE-SVG', 'STAR', 'LINE', 'ELLIPSE', 'REGULAR_POLYGON', 'RECTANGLE'])
+    if (['FRAME', 'GROUP', 'INSTANCE'].includes(node.type) && children.every(c => svgTypes.has(c.type))) {
+      result.type = 'IMAGE-SVG'
     } else if (children.length) {
       result.children = children
     }
@@ -156,6 +157,6 @@ try {
   const simplified = simplifyNode(targetNode, 0, depth)
   console.log(JSON.stringify(simplified, null, 2))
 } catch (error: any) {
-  console.error("Error:", error.message)
+  console.error('Error:', error.message)
   process.exit(1)
 }
