@@ -1,2 +1,4 @@
 - Feature-first architecture e.g. git related keymaps, theme, logic in `git/git.lua` not keymaps.lua
 - Don't add backup keymaps, only have primary shortcuts
+- Use Neovim native highlight groups/tokens (e.g. `Normal`, `Comment`) instead of hardcoding hex
+- Avoid `pcall`, `ok`, import directly

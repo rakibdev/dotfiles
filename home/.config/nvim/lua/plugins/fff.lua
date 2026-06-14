@@ -115,11 +115,12 @@ return {
   },
   config = function()
     require('fff').setup()
-    local primary = vim.g.theme and vim.g.theme.primary or '#4f8ef7'
     local function applyHl()
-      local p = vim.g.theme and vim.g.theme.primary or '#4f8ef7'
-      vim.api.nvim_set_hl(0, 'FffSelected',       { bg = p, fg = '#1a1a1a', bold = true })
-      vim.api.nvim_set_hl(0, 'SnacksPickerMatch', { bg = p, fg = '#1a1a1a' })
+      local p = vim.api.nvim_get_hl(0, { name = 'Title', link = false }).fg
+      if p then
+        vim.api.nvim_set_hl(0, 'FffSelected',       { bg = p, fg = '#1a1a1a', bold = true })
+        vim.api.nvim_set_hl(0, 'SnacksPickerMatch', { bg = p, fg = '#1a1a1a' })
+      end
     end
     applyHl()
     vim.api.nvim_create_autocmd('ColorScheme', {

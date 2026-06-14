@@ -20,7 +20,6 @@ return {
         local f    = io.open(path)
         local config = vim.json.decode(f:read('*a'))
         f:close()
-        vim.g.theme  = config
         local dark   = config.darkMode ~= false
         local syntax = materialCode.createSyntaxColors(config.primary, dark)
         local colors = vim.tbl_extend('force', config, {
@@ -29,6 +28,7 @@ return {
           popover = config.background,
         })
         materialCode.apply(materialCode.createNeovimTheme(colors), dark)
+        vim.api.nvim_exec_autocmds('ColorScheme', { pattern = 'material-code' })
         -- for _, group in ipairs(transparent) do
         --   vim.api.nvim_set_hl(0, group, { bg = 'none' })
         -- end

@@ -34,8 +34,8 @@ vim.keymap.set('i', '<C-BS>', '<C-W>', { noremap = true })
 vim.keymap.set('c', '<C-H>',  '<C-W>', { noremap = true })
 
 -- save / undo / redo
-vim.keymap.set({'n','v','s'}, '<C-s>', '<cmd>w<CR>')
-vim.keymap.set('i', '<C-s>', '<Esc><cmd>w<CR>a')
+vim.keymap.set({'n','v','s'}, '<C-s>', '<cmd>silent w<CR>')  -- silent disables ctrl+s save messages in command line
+vim.keymap.set('i', '<C-s>', '<Esc><cmd>silent w<CR>a')
 vim.keymap.set({'n','i','v','s'}, '<C-z>', '<cmd>undo<CR>')
 vim.keymap.set({'n','i','v','s'}, '<C-y>', '<cmd>redo<CR>')
 -- prevent accidental suspend when holding shift during redo

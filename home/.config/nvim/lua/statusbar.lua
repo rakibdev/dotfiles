@@ -4,36 +4,25 @@ M.fileProvider = nil
 
 local SKIP_FT = { snacks_picker_list = true, [''] = true }
 local GAP = '  '
+local git = require('utils.git')
 
-local modeLabels = {
-	n = 'NORMAL',
-	no = 'NORMAL',
-	nov = 'NORMAL',
-	i = 'INSERT',
-	ic = 'INSERT',
-	v = 'VISUAL',
-	V = 'V-LINE',
-	['\22'] = 'V-BLOCK',
-	s = 'SELECT',
-	S = 'S-LINE',
-	['\19'] = 'S-BLOCK',
-	R = 'REPLACE',
-	Rc = 'REPLACE',
-	c = 'COMMAND',
-	cv = 'COMMAND',
-	t = 'TERMINAL',
-}
-
-local modeHl = {
-	NORMAL = 'SLNormal',
-	INSERT = 'SLInsert',
-	VISUAL = 'SLVisual',
-	['V-LINE'] = 'SLVisual',
-	['V-BLOCK'] = 'SLVisual',
-	SELECT = 'SLVisual',
-	REPLACE = 'SLReplace',
-	COMMAND = 'SLCommand',
-	TERMINAL = 'SLTerminal',
+local modes = {
+	n = { 'NORMAL', 'SLNormal' },
+	no = { 'NORMAL', 'SLNormal' },
+	nov = { 'NORMAL', 'SLNormal' },
+	i = { 'INSERT', 'SLInsert' },
+	ic = { 'INSERT', 'SLInsert' },
+	v = { 'VISUAL', 'SLVisual' },
+	V = { 'V-LINE', 'SLVisual' },
+	['\22'] = { 'V-BLOCK', 'SLVisual' },
+	s = { 'SELECT', 'SLVisual' },
+	S = { 'S-LINE', 'SLNormal' },
+	['\19'] = { 'S-BLOCK', 'SLNormal' },
+	R = { 'REPLACE', 'SLReplace' },
+	Rc = { 'REPLACE', 'SLReplace' },
+	c = { 'COMMAND', 'SLCommand' },
+	cv = { 'COMMAND', 'SLCommand' },
+	t = { 'TERMINAL', 'SLTerminal' },
 }
 
 local function hl(group, text)
@@ -42,13 +31,14 @@ end
 
 local function sectionMode()
 	local raw = vim.fn.mode()
-	local label = modeLabels[raw] or raw:upper()
-	local group = modeHl[label] or 'SLNormal'
+	local m = modes[raw]
+	local label = m and m[1] or raw:upper()
+	local group = m and m[2] or 'SLNormal'
 	return hl(group, ' ' .. label .. ' ')
 end
 
 local function sectionBranch()
-	local name = require('utils.git').getBranch()
+	local name = git.getBranch()
 	if not name then
 		return ''
 	end
@@ -93,17 +83,11 @@ local function sectionDiagnostics()
 	local counts = vim.diagnostic.count(0)
 	local errors = counts[vim.diagnostic.severity.ERROR] or 0
 	local warns = counts[vim.diagnostic.severity.WARN] or 0
-	local out = ''
-	if errors > 0 then
-		out = out .. hl('SLError', '󰅙 ' .. errors) .. ' '
-	end
-	if warns > 0 then
-		out = out .. hl('SLWarn', '󰀦 ' .. warns) .. ' '
-	end
-	if out ~= '' then
-		out = GAP .. out
-	end
-	return out
+	if errors == 0 and warns == 0 then return '' end
+
+	local err_str = errors > 0 and hl('SLError', '󰅙 ' .. errors) .. ' ' or ''
+	local warn_str = warns > 0 and hl('SLWarn', '󰀦 ' .. warns) .. ' ' or ''
+	return GAP .. err_str .. warn_str
 end
 
 function M.render()
@@ -112,16 +96,14 @@ function M.render()
 		sectionBranch(),
 		sectionFile(),
 		sectionDiagnostics(),
-		'%=',
 	}
 end
 
 function M.setup()
 	-- single global statusline
 	vim.opt.laststatus = 3
-	vim.opt.statusline = '%!v:lua.Statusbar()'
+	vim.opt.statusline = '%!v:lua.require("statusbar").render()'
 
-	_G.Statusbar = M.render
 	_G.StatusbarBranchClick = function()
 		require('branch-picker').open()
 	end
