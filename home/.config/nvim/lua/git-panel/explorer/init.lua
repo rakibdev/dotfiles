@@ -123,8 +123,19 @@ M.refresh = git.async(function(state)
 	end
 end)
 
+local function getSnacksExplorerWidth()
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		local buf = vim.api.nvim_win_get_buf(win)
+		local ok, ft = pcall(vim.api.nvim_buf_get_option, buf, 'filetype')
+		if ok and ft == 'snacks_picker_list' then
+			return vim.api.nvim_win_get_width(win)
+		end
+	end
+	return require('plugins.explorer').sidebarWidth
+end
+
 local function setupWin(state, win)
-	local SIDEBAR_WIDTH = require('plugins.explorer').sidebarWidth
+	local SIDEBAR_WIDTH = getSnacksExplorerWidth()
 	vim.api.nvim_win_set_buf(win, state.explorerBuf)
 	vim.api.nvim_win_set_width(win, SIDEBAR_WIDTH)
 	vim.wo[win].winfixwidth = true

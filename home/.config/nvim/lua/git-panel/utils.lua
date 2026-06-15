@@ -121,35 +121,40 @@ function M.getStatus(gitRoot)
       local path = oldPath and newPath or pathPart
       local isRename = oldPath ~= nil
 
-      if isConflictStatus(indexStatus, worktreeStatus) then
-        table.insert(result.conflicts, {
-          path = path,
-          status = "!",
-          conflictType = indexStatus .. worktreeStatus,
-        })
-      else
-        if indexStatus ~= " " and indexStatus ~= "?" then
-          local s = stagedStats[path] or {}
-          table.insert(result.files, {
-            path = path,
-            status = indexStatus,
-            oldPath = isRename and oldPath or nil,
-            added = s.added,
-            deleted = s.deleted,
-            group = 'staged',
-          })
-        end
+      local fullPath = gitRoot .. "/" .. path:gsub("/+$", "")
+      local isSubmodule = require("utils.git").repos[fullPath] or vim.uv.fs_stat(fullPath .. "/.git")
 
-        if worktreeStatus ~= " " then
-          local s = unstagedStats[path] or {}
-          table.insert(result.files, {
+      if not isSubmodule then
+        if isConflictStatus(indexStatus, worktreeStatus) then
+          table.insert(result.conflicts, {
             path = path,
-            status = worktreeStatus == "?" and "??" or worktreeStatus,
-            oldPath = isRename and oldPath or nil,
-            added = s.added,
-            deleted = s.deleted,
-            group = 'unstaged',
+            status = "!",
+            conflictType = indexStatus .. worktreeStatus,
           })
+        else
+          if indexStatus ~= " " and indexStatus ~= "?" then
+            local s = stagedStats[path] or {}
+            table.insert(result.files, {
+              path = path,
+              status = indexStatus,
+              oldPath = isRename and oldPath or nil,
+              added = s.added,
+              deleted = s.deleted,
+              group = 'staged',
+            })
+          end
+
+          if worktreeStatus ~= " " then
+            local s = unstagedStats[path] or {}
+            table.insert(result.files, {
+              path = path,
+              status = worktreeStatus == "?" and "??" or worktreeStatus,
+              oldPath = isRename and oldPath or nil,
+              added = s.added,
+              deleted = s.deleted,
+              group = 'unstaged',
+            })
+          end
         end
       end
     end

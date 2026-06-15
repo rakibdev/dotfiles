@@ -33,7 +33,13 @@ end
 function M.open()
   if M._state and M._state.tab and vim.api.nvim_tabpage_is_valid(M._state.tab) then
     if vim.api.nvim_get_current_tabpage() == M._state.tab then
+      local state = M._state
+      -- restore the diff file in the coding tab before closing
+      local absPath = state.selected and (state.gitRoot .. '/' .. state.selected.entry.path)
       vim.cmd('tabclose')
+      if absPath and vim.fn.filereadable(absPath) == 1 then
+        vim.schedule(function() vim.cmd('edit ' .. vim.fn.fnameescape(absPath)) end)
+      end
     else
       vim.api.nvim_set_current_tabpage(M._state.tab)
     end

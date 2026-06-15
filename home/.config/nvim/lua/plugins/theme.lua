@@ -14,18 +14,25 @@ return {
     priority = 1000,
     config   = function()
       local materialCode = require('material-code')
-      local path         = vim.fn.expand('~/.config/system-ui/system-ui.json')
+      local configPath   = vim.fn.expand('~/.config/system-ui/system-ui.json')
+
+      local function readJson(path)
+        local f = io.open(path)
+        if not f then return {} end
+        local data = vim.json.decode(f:read('*a'))
+        f:close()
+        return data or {}
+      end
 
       local function applyTheme()
-        local f    = io.open(path)
-        local config = vim.json.decode(f:read('*a'))
-        f:close()
+        local config = readJson(configPath)
+        local theme  = config.theme or {}
         local dark   = config.darkMode ~= false
-        local syntax = materialCode.createSyntaxColors(config.primary, dark)
-        local colors = vim.tbl_extend('force', config, {
-          syntax = syntax,
+        local syntax = materialCode.createSyntaxColors(theme.primary, dark)
+        local colors = vim.tbl_extend('force', theme, {
+          syntax   = syntax,
           darkMode = dark,
-          popover = config.background,
+          popover  = theme.background,
         })
         materialCode.apply(materialCode.createNeovimTheme(colors), dark)
         vim.api.nvim_exec_autocmds('ColorScheme', { pattern = 'material-code' })
@@ -36,7 +43,7 @@ return {
 
       applyTheme()
       local watcher = vim.uv.new_fs_event()
-      watcher:start(path, {}, function(err, _, events)
+      watcher:start(configPath, {}, function(err, _, events)
         if err or not events.change then return end
         vim.defer_fn(applyTheme, 100)
       end)
