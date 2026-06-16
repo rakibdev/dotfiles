@@ -13,9 +13,29 @@ function M.sortEntries(entries)
   end)
 end
 
-local function addFile(entry, group, winWidth, lines, lineMap)
+local function shortDir(dir)
+  local parts = {}
+  for seg in dir:gmatch('[^/]+') do table.insert(parts, seg) end
+  local len = #parts
+  if len <= 2 then return dir end
+  return parts[len - 1] .. '/' .. parts[len]
+end
+
+local function addDirHeader(dir, lines, lineMap)
+  table.insert(lines, indent .. shortDir(dir))
+  lineMap[#lines] = { type = 'dir' }
+end
+
+local function addFile(entry, group, gitRoot, winWidth, lines, lineMap)
   local name = vim.fn.fnamemodify(entry.path, ':t')
-  local icon, iconColor = require('nvim-web-devicons').get_icon(name, nil, { default = true })
+  local stat = vim.uv.fs_lstat(gitRoot .. '/' .. entry.path)
+  local isSymlink = stat and stat.type == 'link'
+  local icon, iconColor
+  if isSymlink then
+    icon, iconColor = '↩', 'GitPanelDir'
+  else
+    icon, iconColor = require('nvim-web-devicons').get_icon(name, nil, { default = true })
+  end
 
   local isDelete = entry.status == 'D'
   local addedPart   = (entry.added or 0) > 0 and ('+' .. entry.added) or nil
@@ -30,47 +50,25 @@ local function addFile(entry, group, winWidth, lines, lineMap)
     badge = addedPart or deletedPart or ''
   end
 
-  local parentStr = vim.fn.fnamemodify(entry.path, ':h:t')
-  if parentStr == '' or parentStr == '.' then parentStr = nil end
-
-  local prefix  = indent .. icon .. ' '
+  local prefix  = indent .. indent .. icon .. ' '
   local prefixW = vim.api.nvim_strwidth(prefix)
   local badgeW  = vim.api.nvim_strwidth(badge)
-  local totalW  = winWidth - rightMargin - prefixW - badgeW - 1
-
-  -- reserve up to 40% for parent, rest for name
-  local maxParentW = parentStr and math.min(vim.api.nvim_strwidth(parentStr), math.max(0, math.floor(totalW * 0.4))) or 0
-  local maxNameW   = totalW - (parentStr and (maxParentW + 1) or 0)
+  local maxNameW = winWidth - rightMargin - prefixW - badgeW - 1
 
   if vim.api.nvim_strwidth(name) > maxNameW then
     name = vim.fn.strcharpart(name, 0, maxNameW - 1) .. '…'
   end
 
-  local parentDisplay
-  if parentStr then
-    local pw = vim.api.nvim_strwidth(parentStr)
-    if pw > maxParentW then
-      parentStr = '…' .. vim.fn.strcharpart(parentStr, pw - maxParentW + 1)
-    end
-    parentDisplay = parentStr
-  end
-
-  local nameW   = vim.api.nvim_strwidth(name)
-  local parentChunk = parentDisplay and (' ' .. parentDisplay) or ''
-  local pad     = winWidth - rightMargin - prefixW - nameW - vim.api.nvim_strwidth(parentChunk) - badgeW
-
-  local text       = prefix .. name .. parentChunk .. string.rep(' ', pad) .. badge
-  local parentStart = parentDisplay and (#prefix + #name + 1) or nil  -- +1 for space
-  local parentEnd   = parentDisplay and (parentStart + #parentDisplay) or nil
-  local badgeStart  = #prefix + #name + #parentChunk + pad
+  local nameW      = vim.api.nvim_strwidth(name)
+  local pad        = winWidth - rightMargin - prefixW - nameW - badgeW
+  local badgeStart = #prefix + #name + pad
+  local text       = prefix .. name .. string.rep(' ', pad) .. badge
   table.insert(lines, text)
   lineMap[#lines] = {
     entry        = entry,
     group        = group,
-    iconStart    = #indent,
-    iconEnd      = #indent + #icon,
-    parentStart  = parentStart,
-    parentEnd    = parentEnd,
+    iconStart    = #indent + #indent,
+    iconEnd      = #indent + #indent + #icon,
     badgeStart   = badgeStart,
     badgeEnd     = badgeStart + #badge,
     addedStart   = addedPart   and badgeStart                              or nil,
@@ -89,6 +87,7 @@ function M.render(state)
   if not win or not vim.api.nvim_win_is_valid(win) then return end
 
   local winWidth = vim.api.nvim_win_get_width(win)
+  local gitRoot  = state.gitRoot
   local lines    = {}
   local lineMap  = {}
 
@@ -143,13 +142,31 @@ function M.render(state)
     else table.insert(unstaged, e) end
   end
 
+  local function renderGroup(entries, group)
+    local byDir = {}
+    local dirOrder = {}
+    for _, e in ipairs(entries) do
+      local dir = vim.fn.fnamemodify(e.path, ':h')
+      if dir == '.' then dir = '' end
+      if not byDir[dir] then
+        byDir[dir] = {}
+        table.insert(dirOrder, dir)
+      end
+      table.insert(byDir[dir], e)
+    end
+    for _, dir in ipairs(dirOrder) do
+      if dir ~= '' then addDirHeader(dir, lines, lineMap) end
+      for _, e in ipairs(byDir[dir]) do addFile(e, group, gitRoot, winWidth, lines, lineMap) end
+    end
+  end
+
   table.insert(lines, indent .. 'Staged (' .. #staged .. ')')
-  for _, e in ipairs(staged) do addFile(e, 'staged', winWidth, lines, lineMap) end
+  renderGroup(staged, 'staged')
 
   table.insert(lines, '')
 
   table.insert(lines, indent .. 'Changes (' .. #unstaged .. ')')
-  for _, e in ipairs(unstaged) do addFile(e, 'unstaged', winWidth, lines, lineMap) end
+  renderGroup(unstaged, 'unstaged')
 
   state.lineMap = lineMap
 
@@ -171,6 +188,8 @@ function M.render(state)
         if info.deletedStart then
           vim.api.nvim_buf_add_highlight(buf, ns, 'GitPanelDelete', lnum - 1, info.deletedStart, info.deletedEnd)
         end
+      elseif info.type == 'dir' then
+        vim.api.nvim_buf_add_highlight(buf, ns, 'GitPanelDir', lnum - 1, 0, -1)
       else
         if state.selected
             and state.selected.entry.path == info.entry.path
@@ -179,9 +198,6 @@ function M.render(state)
         end
         if info.iconColor then
           vim.api.nvim_buf_add_highlight(buf, ns, info.iconColor, lnum - 1, info.iconStart, info.iconEnd)
-        end
-        if info.parentStart then
-          vim.api.nvim_buf_add_highlight(buf, ns, 'GitPanelDir', lnum - 1, info.parentStart, info.parentEnd)
         end
         if info.isDelete then
           vim.api.nvim_buf_add_highlight(buf, ns, 'GitPanelDelete', lnum - 1, info.badgeStart, info.badgeEnd)

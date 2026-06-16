@@ -196,6 +196,7 @@ function M.init(state)
 			end
 			return
 		end
+		if info.type == 'dir' then return end
 		local absPath = state.gitRoot .. '/' .. info.entry.path
 		local stat = vim.uv.fs_stat(absPath)
 		if stat and stat.type == 'directory' then
@@ -222,7 +223,7 @@ function M.init(state)
 		local entries = {}
 		for lnum = startLine, endLine do
 			local info = state.lineMap[lnum]
-			if info and info.type ~= 'repo' then
+			if info and info.type ~= 'repo' and info.type ~= 'dir' then
 				table.insert(entries, info)
 			end
 		end
@@ -308,9 +309,23 @@ function M.init(state)
 		nextDiscard()
 	end
 
+	local function navigate(direction)
+		local totalLines = vim.api.nvim_buf_line_count(buf)
+		local lnum = vim.api.nvim_win_get_cursor(state.explorerWin)[1]
+		local info
+		repeat
+			lnum = lnum + direction
+			info = state.lineMap[lnum]
+		until lnum < 1 or lnum > totalLines or (info and info.type ~= 'dir')
+		lnum = math.max(1, math.min(totalLines, lnum))
+		vim.api.nvim_win_set_cursor(state.explorerWin, { lnum, 0 })
+	end
+
 	local o = { buffer = buf, nowait = true, silent = true }
 	vim.keymap.set('n', '<CR>', openAtCursor, o)
 	vim.keymap.set('n', '<LeftRelease>', openAtCursor, o)
+	vim.keymap.set('n', '<Up>',   function() navigate(-1) end, o)
+	vim.keymap.set('n', '<Down>', function() navigate(1) end, o)
 	vim.keymap.set({ 'n', 'v' }, '=', function()
 		stageFiles 'stage'
 	end, o)
