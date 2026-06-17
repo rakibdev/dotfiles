@@ -91,8 +91,8 @@ function M.open(state)
         vim.keymap.set({ 'n', 'v' }, '=', function() hunk.stageUnstage(state, 'stage') end, o)
         vim.keymap.set({ 'n', 'v' }, '-', function() hunk.stageUnstage(state, 'unstage') end, o)
         vim.keymap.set({ 'n', 'v' }, '_', function() hunk.discard(state) end, o)
-        vim.keymap.set('n', '[', function() hunk.gotoHunk(state, 'prev') end, o)
-        vim.keymap.set('n', ']', function() hunk.gotoHunk(state, 'next') end, o)
+        vim.keymap.set('n', '<CR>', function() hunk.gotoHunk(state, 'next') end, o)
+        vim.keymap.set('n', '<S-CR>', function() hunk.gotoHunk(state, 'prev') end, o)
       end
     end
   end

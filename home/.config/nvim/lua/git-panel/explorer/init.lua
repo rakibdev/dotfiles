@@ -51,18 +51,20 @@ local function fetchRepoStats(state)
 	end
 end
 
-function M.selectFile(state, absPath)
+function M.selectFile(state, absPath, group)
 	local entry
 	for _, e in ipairs(state.status.files) do
 		if state.gitRoot .. '/' .. e.path == absPath then
-			entry = e
-			break
+			if not group or e.group == group then
+				entry = e
+				break
+			end
 		end
 	end
 	if not entry then
 		return
 	end
-	state.selected = { entry = entry, group = entry.group }
+	state.selected = { entry = entry, group = group or entry.group }
 	require('utils.git').activeFile = absPath
 	render.render(state)
 	require('git-panel.diff').open(state)
@@ -99,14 +101,8 @@ M.refresh = git.async(function(state)
 		end
 
 		if foundEntry then
-			local groupChanged = state.selected.group ~= foundEntry.group
-			state.selected.group = foundEntry.group
 			state.selected.entry = foundEntry
-			if groupChanged then
-				require('git-panel.diff').open(state)
-			else
-				require('git-panel.diff').reload(state)
-			end
+			require('git-panel.diff').reload(state)
 		else
 			state.selected = nil
 			require('git-panel.diff').clear(state)
@@ -202,7 +198,7 @@ function M.init(state)
 		if stat and stat.type == 'directory' then
 			return
 		end
-		M.selectFile(state, absPath)
+		M.selectFile(state, absPath, info.group)
 	end
 
 	local function getSelectedEntries()

@@ -2,6 +2,23 @@ local M = {}
 local git         = require('git-panel.utils')
 local computeDiff = require('git-panel.diff.libdiff').computeDiff
 local ns          = vim.api.nvim_create_namespace('git_panel_diff')
+local nsFiller    = vim.api.nvim_create_namespace('git_panel_filler')
+
+local FILLER_TEXT = string.rep('╱', 500)
+
+local function insertFillers(buf, afterLine, count)
+  if count <= 0 then return end
+  local above = afterLine < 0
+  local line = above and 0 or afterLine
+  local virtLines = {}
+  for _ = 1, count do
+    table.insert(virtLines, { { FILLER_TEXT, 'NonText' } })
+  end
+  vim.api.nvim_buf_set_extmark(buf, nsFiller, line, 0, {
+    virt_lines       = virtLines,
+    virt_lines_above = above,
+  })
+end
 
 local timers = {}
 
@@ -29,6 +46,8 @@ local function applyHighlights(origBuf, modBuf, origLines, modLines, state, isIn
 
   vim.api.nvim_buf_clear_namespace(origBuf, ns, 0, -1)
   vim.api.nvim_buf_clear_namespace(modBuf,  ns, 0, -1)
+  vim.api.nvim_buf_clear_namespace(origBuf, nsFiller, 0, -1)
+  vim.api.nvim_buf_clear_namespace(modBuf,  nsFiller, 0, -1)
 
   for _, change in ipairs(result.changes) do
     local o, m = change.original, change.modified
@@ -42,6 +61,15 @@ local function applyHighlights(origBuf, modBuf, origLines, modLines, state, isIn
       local oc, mc = ic.original, ic.modified
       vim.api.nvim_buf_add_highlight(origBuf, ns, 'DiffDeleteWord', oc.start_line - 1, oc.start_col - 1, oc.end_col - 1)
       vim.api.nvim_buf_add_highlight(modBuf,  ns, 'DiffAddWord',    mc.start_line - 1, mc.start_col - 1, mc.end_col - 1)
+    end
+
+    local oLen = o.end_line - o.start_line
+    local mLen = m.end_line - m.start_line
+    local diff = oLen - mLen
+    if diff > 0 then
+      insertFillers(modBuf, m.end_line <= 1 and -1 or m.end_line - 2, diff)
+    elseif diff < 0 then
+      insertFillers(origBuf, o.end_line <= 1 and -1 or o.end_line - 2, -diff)
     end
   end
 
@@ -128,6 +156,7 @@ end
 function M.clear(buf)
   if buf and vim.api.nvim_buf_is_valid(buf) then
     vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+    vim.api.nvim_buf_clear_namespace(buf, nsFiller, 0, -1)
   end
 end
 

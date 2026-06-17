@@ -24,13 +24,18 @@ function M.gotoHunk(state, direction)
 			end
 		end
 	end
+	if not foundChange then
+		foundChange = direction == 'next' and changes[1] or changes[#changes]
+	end
 
 	if foundChange then
 		if state.diffOrigWin and vim.api.nvim_win_is_valid(state.diffOrigWin) then
 			pcall(vim.api.nvim_win_set_cursor, state.diffOrigWin, { math.max(1, foundChange.original.start_line), 0 })
+			vim.api.nvim_win_call(state.diffOrigWin, function() vim.cmd 'normal! zz' end)
 		end
 		if state.diffModWin and vim.api.nvim_win_is_valid(state.diffModWin) then
 			pcall(vim.api.nvim_win_set_cursor, state.diffModWin, { math.max(1, foundChange.modified.start_line), 0 })
+			vim.api.nvim_win_call(state.diffModWin, function() vim.cmd 'normal! zz' end)
 		end
 	end
 end

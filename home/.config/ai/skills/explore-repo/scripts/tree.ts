@@ -1,7 +1,8 @@
 import { $ } from 'bun'
 
 const input = process.argv[2]
-const [, owner, repo] = input.match(/github\.com[/:]([^/]+)\/([^/\s.]+)/)
+const [, owner, repo, , branchInUrl, subdir] =
+  input.match(/github\.com[/:]([^/]+)\/([^/\s]+?)(\/tree\/([^/]+)(\/.*)?)?$/) ?? []
 const localPath = `/tmp/github/${owner}/${repo}`
 const repoUrl = `https://github.com/${owner}/${repo}`
 
@@ -9,10 +10,17 @@ if (!(await Bun.file(localPath + '/.git/HEAD').exists())) {
   await $`git clone --filter=blob:none --no-checkout --depth=1 --quiet ${repoUrl} ${localPath}`
 }
 
-const branch = (await $`git -C ${localPath} rev-parse --abbrev-ref HEAD`.text()).trim()
-const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`
+const branch =
+  branchInUrl ??
+  (await $`git ls-remote --symref ${repoUrl} HEAD`.text()).match(/ref: refs\/heads\/(\S+)\s+HEAD/)?.[1] ??
+  'main'
+const subdirPath = subdir?.replace(/^\//, '') || '.'
+const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${subdirPath === '.' ? '' : subdirPath}`
 
-const files = (await $`git -C ${localPath} ls-tree -r --name-only HEAD`.text()).trim().split('\n').filter(Boolean)
+const files = (await $`git -C ${localPath} ls-tree -r --name-only HEAD -- ${subdirPath}`.text())
+  .trim()
+  .split('\n')
+  .filter(Boolean)
 
 const tree: Record<string, any> = {}
 for (const file of files) {
