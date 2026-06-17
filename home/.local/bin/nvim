@@ -1,0 +1,4 @@
+#!/bin/sh
+# font size=15 divides evenly into Hyprland window height eliminating gap below statusbar
+# text-binding overrides foot.ini to restore default behavior of shift+enter
+exec foot -o pad=0x0 -o font="SF Mono:size=15" -o key-bindings.search-start=none -o text-bindings.'\x1b\x0d'=none /usr/bin/nvim "$@"
