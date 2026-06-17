@@ -64,10 +64,19 @@ vim.keymap.set('i', '<A-Down>', '<Esc><cmd>m .+1<CR>==gi')
 vim.keymap.set('s', '<A-Up>', "<C-g><cmd>'<,'>m '<-2<CR>gv=gv<C-g>")
 vim.keymap.set('s', '<A-Down>', "<C-g><cmd>'<,'>m '>+1<CR>gv=gv<C-g>")
 
--- ctrl+shift+arrow → word selection (keymodel covers plain shift, not ctrl variant)
-vim.keymap.set('n', '<C-S-Right>', 'vw')
-vim.keymap.set('n', '<C-S-Left>',  'vb')
-vim.keymap.set({'v','s'}, '<C-S-Right>', 'w')
+-- ctrl+shift+arrow → word selection in SELECT mode (keymodel covers plain shift, not ctrl variant).
+-- not using plain `<C-g>w<C-g>` because at the buffer end it removes the selection.
+local function word_extend(motion)
+  return function()
+    vim.cmd('normal! \28\14gv')          -- <C-\><C-N> → normal, then gv restores selection
+    pcall(vim.cmd, 'normal! ' .. motion) -- pcall: motion at boundary won't error
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-g>', true, false, true), 'n', false)
+  end
+end
+vim.keymap.set('n', '<C-S-Right>', 'vw<C-g>')
+vim.keymap.set('n', '<C-S-Left>',  'vb<C-g>')
+vim.keymap.set({'v','s'}, '<C-S-Right>', word_extend('w'))
+vim.keymap.set({'v','s'}, '<C-S-Left>',  word_extend('b'))
 
 -- alt+wheel → horizontal scroll
 vim.keymap.set({'n', 'v', 'i'}, '<A-ScrollWheelUp>', '<ScrollWheelLeft>')

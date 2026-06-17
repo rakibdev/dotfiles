@@ -24,4 +24,9 @@ vim.opt.updatetime  = 800
 vim.opt.mousescroll  = 'ver:6,hor:6'
 vim.opt.mousemodel   = 'extend'  -- right-click was showing inspect/select all dropdown
 vim.opt.diffopt:append('iwhite')
+-- treat hyphen as a word char so word motions don't stop on it.
+-- e.g. "google-chrome": by default ctrl+left from the end stops at "-chrome",
+-- then "-", then "google" (3 stops). with this it's one word, so ctrl+left
+-- jumps straight to the "g". applies everywhere: w/b/e, dw, ciw, *, completion.
+vim.opt.iskeyword:append('-')
 
