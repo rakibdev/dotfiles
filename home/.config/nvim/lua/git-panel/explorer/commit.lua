@@ -7,6 +7,11 @@ local spinnerFrames = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', 
 function M.setupWin(state, win)
 	vim.api.nvim_win_set_buf(win, state.commitBuf)
 	vim.wo[win].wrap = true
+
+	-- Hides thick grey line beside placeholder
+	vim.wo[win].colorcolumn = ''
+	vim.wo[win].cursorline = false
+
 	vim.wo[win].signcolumn = 'no'
 	vim.wo[win].winfixheight = true
 	-- Hide borders and intersection handles to blend window seamlessly
