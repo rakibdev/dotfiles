@@ -3,9 +3,6 @@ local M = {}
 local function applyWinOpts(win)
   vim.wo[win].scrollbind     = true
   vim.wo[win].cursorbind     = true
-  vim.wo[win].number         = false
-  vim.wo[win].relativenumber = false
-  vim.wo[win].wrap           = false
   vim.wo[win].signcolumn     = 'no'
 end
 

@@ -136,8 +136,6 @@ local function setupWin(state, win)
 	vim.api.nvim_win_set_width(win, SIDEBAR_WIDTH)
 	vim.wo[win].winfixwidth = true
 	vim.wo[win].winfixbuf = true -- disables opening files in this window; when explorer is focused and fff opens a file, nvim would open it here instead of diff area
-	vim.wo[win].number = false
-	vim.wo[win].relativenumber = false
 	vim.wo[win].signcolumn = 'no'
 	vim.wo[win].cursorline = true
 	vim.wo[win].fillchars = 'eob: ,vert: ,horiz:─,vertleft: '
