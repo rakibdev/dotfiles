@@ -4,8 +4,9 @@ description: Explore github repo to understand feature implementation
 pattern: github\.com/[\w-]+/[\w-]+
 ---
 
-1. Read directory tree once: `bun scripts/tree.ts <github_url>`
-2. Then webfetch individual files using raw URL
+- Read directory tree once: `bun scripts/tree.ts <github_url>`
+- Then webfetch/curl individual files using raw URL
+- Never download files e.g. git clone or git grep
 
 <output>
 - Cite code snippets, pseudo-code for representing complex logic and execution flow across files

@@ -41,6 +41,11 @@ vim.keymap.set({'n','i','v','s'}, '<C-y>', '<cmd>redo<CR>')
 -- prevent accidental suspend when holding shift during redo
 vim.keymap.set({'n','i','v','s'}, '<C-S-z>', '<Nop>')
 
+-- select all
+vim.keymap.set('n', '<C-a>', 'ggVG<C-g>', { desc = 'Select all' })
+vim.keymap.set({'v', 's'}, '<C-a>', '<Esc>ggVG<C-g>', { desc = 'Select all' })
+vim.keymap.set('i', '<C-a>', '<Esc>ggVG<C-g>', { desc = 'Select all' })
+
 local copyText = require('selection').copyText
 
 -- copy / cut

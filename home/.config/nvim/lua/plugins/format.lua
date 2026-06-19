@@ -12,6 +12,7 @@ return {
 			c = { 'clang_format' },
 			cpp = { 'clang_format' },
 			lua = { 'stylua' },
+			vue = { 'oxfmt' },
 		},
 		-- fixes statusbar keeps showing file modified dot
 		format_on_save = { undojoin = true },

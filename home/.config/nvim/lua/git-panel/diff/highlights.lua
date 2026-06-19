@@ -39,7 +39,7 @@ end
 
 local function applyHighlights(origBuf, modBuf, origLines, modLines, state, isInitial)
   if not (vim.api.nvim_buf_is_valid(origBuf) and vim.api.nvim_buf_is_valid(modBuf)) then return end
-  local ok, result = pcall(computeDiff, origLines, modLines)
+  local ok, result = pcall(computeDiff, origLines, modLines, { ignore_trim_whitespace = true })
   if not ok or not result then return end
 
   state.diffChanges = result.changes
@@ -71,6 +71,7 @@ local function applyHighlights(origBuf, modBuf, origLines, modLines, state, isIn
     elseif diff < 0 then
       insertFillers(origBuf, o.end_line <= 1 and -1 or o.end_line - 2, -diff)
     end
+
   end
 
   if isInitial and #result.changes > 0 then
