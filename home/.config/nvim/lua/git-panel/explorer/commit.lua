@@ -14,6 +14,7 @@ function M.setupWin(state, win)
 
 	vim.wo[win].signcolumn = 'no'
 	vim.wo[win].winfixheight = true
+	vim.wo[win].winfixbuf = true -- prevent files opening into the commit box
 	-- Hide borders and intersection handles to blend window seamlessly
 	vim.wo[win].fillchars = 'eob: ,vert: ,horiz:─,vertleft: '
 	vim.wo[win].statuscolumn = ' '

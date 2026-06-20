@@ -6,11 +6,28 @@ local function applyWinOpts(win)
   vim.wo[win].signcolumn     = 'no'
 end
 
+local function isSidebar(win)
+  local buf = vim.api.nvim_win_get_buf(win)
+  local ok, ft = pcall(function() return vim.bo[buf].filetype end)
+  return ok and ft == 'snacks_picker_list'
+end
+
+-- returns the main editor window (existing diff area if valid, else first
+-- non-sidebar window), used as the anchor when (re)opening git-mode.
+function M.editorWin(state)
+  if state.diffModWin and vim.api.nvim_win_is_valid(state.diffModWin) then
+    return state.diffModWin
+  end
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if not isSidebar(win) then return win end
+  end
+  return vim.api.nvim_get_current_win()
+end
+
 function M.ensureDiffArea(state)
   if state.diffAreaWin and vim.api.nvim_win_is_valid(state.diffAreaWin) then return end
-  local tabWins = vim.api.nvim_tabpage_list_wins(state.tab)
-  for _, w in ipairs(tabWins) do
-    if w ~= state.explorerWin then
+  for _, w in ipairs(vim.api.nvim_list_wins()) do
+    if w ~= state.explorerWin and w ~= state.commitWin and not isSidebar(w) then
       state.diffAreaWin = w
       return
     end

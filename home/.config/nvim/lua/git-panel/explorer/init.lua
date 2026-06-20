@@ -119,21 +119,9 @@ M.refresh = git.async(function(state)
 	end
 end)
 
-local function getSnacksExplorerWidth()
-	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		local buf = vim.api.nvim_win_get_buf(win)
-		local ok, ft = pcall(vim.api.nvim_buf_get_option, buf, 'filetype')
-		if ok and ft == 'snacks_picker_list' then
-			return vim.api.nvim_win_get_width(win)
-		end
-	end
-	return require('plugins.explorer').sidebarWidth
-end
-
 local function setupWin(state, win)
-	local SIDEBAR_WIDTH = getSnacksExplorerWidth()
 	vim.api.nvim_win_set_buf(win, state.explorerBuf)
-	vim.api.nvim_win_set_width(win, SIDEBAR_WIDTH)
+	vim.api.nvim_win_set_width(win, require('plugins.explorer').sidebarWidth)
 	vim.wo[win].winfixwidth = true
 	vim.wo[win].winfixbuf = true -- disables opening files in this window; when explorer is focused and fff opens a file, nvim would open it here instead of diff area
 	vim.wo[win].signcolumn = 'no'
@@ -141,20 +129,43 @@ local function setupWin(state, win)
 	vim.wo[win].fillchars = 'eob: ,vert: ,horiz:─,vertleft: '
 end
 
-function M.toggleWin(state)
+function M.closeWin(state)
+	if state.commitWin and vim.api.nvim_win_is_valid(state.commitWin) then
+		vim.api.nvim_win_close(state.commitWin, false)
+		state.commitWin = nil
+	end
 	if state.explorerWin and vim.api.nvim_win_is_valid(state.explorerWin) then
-		if state.commitWin and vim.api.nvim_win_is_valid(state.commitWin) then
-			vim.api.nvim_win_close(state.commitWin, false)
-			state.commitWin = nil
-		end
 		vim.api.nvim_win_close(state.explorerWin, false)
 		state.explorerWin = nil
+	end
+end
+
+local function openWin(state)
+	local leftmostWin = (state.diffOrigWin and vim.api.nvim_win_is_valid(state.diffOrigWin))
+		and state.diffOrigWin or state.diffAreaWin
+	vim.api.nvim_set_current_win(leftmostWin)
+	vim.cmd('leftabove vsplit')
+	state.explorerWin = vim.api.nvim_get_current_win()
+	setupWin(state, state.explorerWin)
+	render.render(state)
+	vim.api.nvim_set_current_win(state.explorerWin)
+	vim.cmd('belowright 2split')
+	state.commitWin = vim.api.nvim_get_current_win()
+	require('git-panel.explorer.commit').setupWin(state, state.commitWin)
+	vim.api.nvim_set_current_win(state.diffAreaWin)
+end
+
+function M.toggleWin(state)
+	if state.explorerWin and vim.api.nvim_win_is_valid(state.explorerWin) then
+		M.closeWin(state)
 	else
-		local leftmostWin = (state.diffOrigWin and vim.api.nvim_win_is_valid(state.diffOrigWin))
-			and state.diffOrigWin or state.diffAreaWin
-		vim.api.nvim_set_current_win(leftmostWin)
-		vim.cmd('leftabove vsplit')
-		state.explorerWin = vim.api.nvim_get_current_win()
+		openWin(state)
+	end
+end
+
+function M.init(state)
+	-- re-entering git-mode: buffer/keymaps/commit already set up, just reattach window
+	if state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
 		setupWin(state, state.explorerWin)
 		render.render(state)
 		vim.api.nvim_set_current_win(state.explorerWin)
@@ -162,10 +173,11 @@ function M.toggleWin(state)
 		state.commitWin = vim.api.nvim_get_current_win()
 		require('git-panel.explorer.commit').setupWin(state, state.commitWin)
 		vim.api.nvim_set_current_win(state.diffAreaWin)
+		require('git-panel.explorer.watcher').start(state)
+		M.refresh(state)
+		return
 	end
-end
 
-function M.init(state)
 	local buf = vim.api.nvim_create_buf(false, true)
 	vim.bo[buf].buftype = 'nofile'
 	vim.bo[buf].bufhidden = 'hide'
@@ -336,7 +348,7 @@ function M.init(state)
 	vim.api.nvim_create_autocmd({ 'FocusGained', 'BufWritePost' }, {
 		group = refreshGroup,
 		callback = function()
-			if state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
+			if require('git-panel').active and state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
 				M.refresh(state)
 			end
 		end,
@@ -345,7 +357,7 @@ function M.init(state)
 	vim.api.nvim_create_autocmd('WinResized', {
 		group = vim.api.nvim_create_augroup('GitPanelExplorerResize', { clear = true }),
 		callback = function()
-			if state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
+			if require('git-panel').active and state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
 				render.render(state)
 			end
 		end,

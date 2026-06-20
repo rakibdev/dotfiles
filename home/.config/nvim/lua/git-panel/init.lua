@@ -1,12 +1,17 @@
 local M = {}
 
 M._state = nil
+M.active = false
+
+local function closeSnacksSidebar()
+  for _, picker in ipairs(Snacks.picker.get({ source = 'explorer' })) do
+    picker:close()
+  end
+end
 
 local function newState(gitRoot)
   return {
     gitRoot          = gitRoot,
-    tab              = nil,
-    origShowtabline  = vim.o.showtabline,
     explorerWin      = nil,
     explorerBuf      = nil,
     diffAreaWin      = nil,
@@ -25,24 +30,24 @@ local function newState(gitRoot)
 end
 
 function M.refreshIfOpen()
-  if M._state and M._state.tab and vim.api.nvim_tabpage_is_valid(M._state.tab) then
+  if M.active and M._state then
     require('git-panel.explorer').refresh(M._state)
   end
 end
 
+local function exit()
+  local state = M._state
+  require('git-panel.explorer').closeWin(state)
+  require('git-panel.explorer.watcher').stop(state)
+  require('utils.git').locked       = false
+  require('statusbar').fileProvider = nil
+  M.active = false
+  vim.schedule(function() Snacks.explorer.open() end)
+end
+
 function M.open()
-  if M._state and M._state.tab and vim.api.nvim_tabpage_is_valid(M._state.tab) then
-    if vim.api.nvim_get_current_tabpage() == M._state.tab then
-      local state = M._state
-      -- restore the diff file in the coding tab before closing
-      local absPath = state.selected and (state.gitRoot .. '/' .. state.selected.entry.path)
-      vim.cmd('tabclose')
-      if absPath and vim.fn.filereadable(absPath) == 1 then
-        vim.schedule(function() vim.cmd('edit ' .. vim.fn.fnameescape(absPath)) end)
-      end
-    else
-      vim.api.nvim_set_current_tabpage(M._state.tab)
-    end
+  if M.active then
+    exit()
     return
   end
 
@@ -57,8 +62,13 @@ function M.open()
   gitUtil.locked     = true
   local currentFile  = vim.fn.expand('%:p')
   local lastFile     = gitUtil.activeFile
-  local state        = newState(root)
-  state.preselect    = (currentFile ~= '' and vim.fn.filereadable(currentFile) == 1) and currentFile or lastFile
+  local firstOpen    = not M._state
+  local state        = M._state or newState(root)
+  state.gitRoot      = root
+  -- preselect only on first open; re-entering git-mode must not touch the main buffer
+  if firstOpen then
+    state.preselect = (currentFile ~= '' and vim.fn.filereadable(currentFile) == 1) and currentFile or lastFile
+  end
   require('statusbar').fileProvider = function()
     if not state.selected then return nil end
     local path    = state.selected.entry.path
@@ -68,34 +78,23 @@ function M.open()
     return path, isModified
   end
   M._state = state
+  M.active = true
 
-  vim.o.showtabline = 0
-  vim.cmd('tabnew')
-  state.tab = vim.api.nvim_get_current_tabpage()
-  state.diffAreaWin = vim.api.nvim_get_current_win()
+  closeSnacksSidebar()
 
-  vim.cmd('leftabove vsplit')
-  state.explorerWin = vim.api.nvim_get_current_win()
+  -- picker:close() defers its window teardown via vim.schedule; queue ours
+  -- after so the snacks sidebar is gone before we capture/split windows,
+  -- else explorer can land between diff columns or duplicate the sidebar
+  vim.schedule(function()
+    state.diffAreaWin = require('git-panel.diff.windows').editorWin(state)
+    vim.api.nvim_set_current_win(state.diffAreaWin)
 
-  require('git-panel.diff')
-  require('git-panel.explorer').init(state)
+    vim.cmd('topleft vsplit')
+    state.explorerWin = vim.api.nvim_get_current_win()
 
-  local group = vim.api.nvim_create_augroup('GitPanelTabClose', { clear = true })
-  vim.api.nvim_create_autocmd('TabClosed', {
-    group = group,
-    callback = function()
-      if vim.api.nvim_tabpage_is_valid(state.tab) then
-        return
-      end
-      vim.o.showtabline   = state.origShowtabline
-      require('git-panel.explorer.watcher').stop(state)
-      pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelRefresh')
-      gitUtil.locked            = false
-      require('statusbar').fileProvider = nil
-      M._state = nil
-      pcall(vim.api.nvim_del_augroup_by_id, group)
-    end,
-  })
+    require('git-panel.diff')
+    require('git-panel.explorer').init(state)
+  end)
 end
 
 return M

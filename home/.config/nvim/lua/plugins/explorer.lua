@@ -6,7 +6,7 @@ return {
   keys = {
     { '<C-b>', function()
         local gp = require('git-panel')
-        if gp._state and vim.api.nvim_get_current_tabpage() == gp._state.tab then
+        if gp.active and gp._state then
           require('git-panel.explorer').toggleWin(gp._state)
         else
           Snacks.explorer.open()

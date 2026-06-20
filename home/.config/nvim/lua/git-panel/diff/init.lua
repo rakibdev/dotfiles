@@ -9,7 +9,43 @@ function M.clear(state)
   hl.clear(state.diffModBuf)
 end
 
+-- collapses diff back to a single window, clears highlights, drops scratch buffers.
+-- keeps the real working-file buffer alive (may be reopened normally).
+-- keepWin: window to preserve as the editor (defaults to diffAreaWin).
+function M.teardown(state, keepWin)
+  hl.clear(state.diffOrigBuf)
+  hl.clear(state.diffModBuf)
+  pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelSync')
+  pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelDiffEdit')
+  pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelDiffOwn')
+
+  keepWin = keepWin or state.diffAreaWin
+  for _, win in ipairs({ state.diffOrigWin, state.diffModWin }) do
+    if win and win ~= keepWin and vim.api.nvim_win_is_valid(win) then
+      pcall(vim.api.nvim_win_close, win, true)
+    end
+  end
+  state.diffAreaWin = (keepWin and vim.api.nvim_win_is_valid(keepWin)) and keepWin or state.diffAreaWin
+  state.diffOrigWin = nil
+  state.diffModWin  = nil
+
+  for _, buf in ipairs({ state.diffOrigBuf, state.diffModBuf }) do
+    if buf and vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == 'nofile' then
+      pcall(vim.api.nvim_buf_delete, buf, { force = true })
+    end
+  end
+  state.diffOrigBuf = nil
+  state.diffModBuf  = nil
+  state.selected    = nil
+
+  if state.diffAreaWin and vim.api.nvim_win_is_valid(state.diffAreaWin) then
+    vim.wo[state.diffAreaWin].scrollbind = false
+    vim.wo[state.diffAreaWin].cursorbind = false
+  end
+end
+
 function M.open(state)
+  state.opening   = true
   local sel       = state.selected
   local path      = sel.entry.path
   local absPath   = state.gitRoot .. '/' .. path
@@ -97,7 +133,21 @@ function M.open(state)
     end
   end
 
+  -- self-cleanup: if a foreign buffer is opened into either diff window
+  -- (ctrl+p, explorer, grep), collapse the diff back to a single window.
+  vim.api.nvim_create_autocmd('BufWinEnter', {
+    group = vim.api.nvim_create_augroup('GitPanelDiffOwn', { clear = true }),
+    callback = function(ev)
+      if state.opening then return end
+      local win = vim.fn.bufwinid(ev.buf)
+      if win ~= state.diffOrigWin and win ~= state.diffModWin then return end
+      if ev.buf == state.diffOrigBuf or ev.buf == state.diffModBuf then return end
+      M.teardown(state, win)
+    end,
+  })
+
   hl.reload(state, true)
+  vim.schedule(function() state.opening = false end)
 end
 
 return M

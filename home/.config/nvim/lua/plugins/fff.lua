@@ -5,26 +5,6 @@ local function fileIcon(path)
   return require('nvim-web-devicons').get_icon(name, nil, { default = true })
 end
 
-local function syncGitPanel(filePath)
-  local gpState = require('git-panel')._state
-  if not (gpState and gpState.tab and vim.api.nvim_tabpage_is_valid(gpState.tab)) then return end
-  local fileRepo
-  for _, root in ipairs(require('utils.git').repoList()) do
-    if filePath:sub(1, #root + 1) == root .. '/' then
-      if not fileRepo or #root > #fileRepo then fileRepo = root end
-    end
-  end
-  if not fileRepo then return end
-  local explorer = require('git-panel.explorer')
-  if fileRepo ~= gpState.gitRoot then
-    explorer.switchRepo(gpState, fileRepo)
-    gpState.preselect = filePath
-    explorer.refresh(gpState)
-  else
-    explorer.selectFile(gpState, filePath)
-  end
-end
-
 local pickerUtil = require('utils.picker')
 
 local layout = vim.tbl_deep_extend('force', pickerUtil.layout, {
@@ -54,13 +34,7 @@ function M.findFiles()
     end,
     confirm = function(p, item)
       p:close()
-      -- file was opening inside commit box when it was focused
-      local gpState = require('git-panel')._state
-      if vim.api.nvim_win_is_valid((gpState or {}).diffAreaWin or -1) then
-        vim.api.nvim_set_current_win(gpState.diffAreaWin)
-      end
-      vim.cmd('edit ' .. vim.fn.fnameescape(item.file))
-      syncGitPanel(vim.fn.expand('%:p'))
+      pickerUtil.openFile(item.file)
     end,
   })
 end
@@ -104,8 +78,7 @@ function M.liveGrep()
     confirm = function(p, item)
       if item.isHeader then return end
       p:close()
-      vim.cmd('edit ' .. vim.fn.fnameescape(item.file))
-      vim.api.nvim_win_set_cursor(0, item.pos)
+      pickerUtil.openFile(item.file, item.pos)
     end,
   })
 end
