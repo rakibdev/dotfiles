@@ -5,5 +5,5 @@ devices=$(adb devices | grep -c "device$")
 
 for file in "$@"; do
   [ ! -f "$file" ] && echo "Not found: $file" >&2 && continue
-  adb push "$file" /sdcard/Downloads/
+  adb push "$file" /sdcard/Download/
 done

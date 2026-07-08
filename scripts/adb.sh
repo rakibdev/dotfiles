@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 source ./utils.sh
 
 usage() {
@@ -11,12 +12,12 @@ fi
 
 getUri() {
 	local type=$1
-	for line in $(avahi-browse --terminate --resolve --parsable $type); do
+	while IFS= read -r line; do
 		if [[ $line != =* ]]; then continue; fi
 		ip=$(echo "$line" | cut -d ';' -f 8)
 		port=$(echo "$line" | cut -d ';' -f 9)
 		uri="${ip}:${port}"
-	done
+	done < <(avahi-browse --terminate --resolve --parsable "$type" 2>/dev/null)
 }
 
 connect() {

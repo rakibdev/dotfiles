@@ -152,7 +152,14 @@ vim.lsp.enable 'oxlint'
 
 vim.lsp.config('tailwindcss', {
 	cmd = { 'tailwindcss-language-server', '--stdio' },
-	filetypes = { 'html', 'css', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-	root_markers = { 'tailwind.config.js', 'tailwind.config.ts' },
+	filetypes = { 'html', javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
+	root_markers = { 'package.json', '.git' },
+	settings = {
+		tailwindCSS = {
+			includeLanguages = {
+				vue = 'html',
+			},
+		},
+	},
 })
 vim.lsp.enable 'tailwindcss'

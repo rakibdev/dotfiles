@@ -9,7 +9,7 @@ dialog entry {
   background-color: @card;
 }
 
-entry:placeholder-text {
+entry:placeholder {
   color: @mutedForeground;
 }
 

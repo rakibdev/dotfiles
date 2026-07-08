@@ -1,18 +1,15 @@
-@define-color foreground #ced5db;
-@define-color mutedForeground #7b858c;
+@define-color foreground #d5d4d8;
+@define-color mutedForeground #919194;
 
-@define-color background #12191d;
+@define-color background #17171a;
 
-@define-color card #182126;
-@define-color popover #192329;
-@define-color hover #1c272e;
-@define-color border #2a3136;
+@define-color card #201f23;
+@define-color popover #222125;
+@define-color hover #26262a;
+@define-color border #313134;
 
-@define-color primary #85cff9;
-@define-color primaryForeground #003549;
+@define-color primary #c9bcff;
+@define-color primaryForeground #352260;
 
-@define-color secondary #234b60;
-@define-color secondaryForeground #a4cce5;
-
-@define-color surface alpha(@hover, 0.8);
-@define-color surface-variant alpha(@foreground, 0.2);
+@define-color secondary #494069;
+@define-color secondaryForeground #c8bff0;
