@@ -6,7 +6,7 @@ pattern: github\.com/[\w-]+/[\w-]+
 
 - Read directory tree once: `bun scripts/tree.ts <github_url>`
 - Then webfetch/curl individual files using raw URL
-- Never download files e.g. git clone or git grep
+- Never download files locally (e.g. git clone, git grep, or git -C)
 
 <output>
 - Cite code snippets, pseudo-code for representing complex logic and execution flow across files

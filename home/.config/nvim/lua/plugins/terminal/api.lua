@@ -1,5 +1,5 @@
 local M = {}
-local copyText = require('selection').copyText
+local copyClean = require('selection').copyClean
 
 local terminals = {}
 local activeIndex = nil
@@ -61,7 +61,7 @@ local function createTerminal(cwd)
 
   local options = { buffer = buffer }
   vim.keymap.set("t", "<Esc>", function() vim.fn.chansend(channel, "\27") end, options)
-  vim.keymap.set("v", "<LeftRelease>", copyText, { buffer = buffer, silent = true })
+  vim.keymap.set("v", "<LeftRelease>", copyClean, { buffer = buffer, silent = true })
 
   vim.api.nvim_create_autocmd("TermClose", {
     buffer = buffer,

@@ -284,7 +284,7 @@ function M.init(state)
 			return
 		end
 
-		local choice = vim.fn.confirm(string.format('Discard changes in %d files?', #targets), '&Yes\n&No', 2)
+		local choice = vim.fn.confirm(string.format('Discard %d files?', #targets), '&Yes\n&No', 2)
 		if choice ~= 1 then
 			return
 		end
@@ -304,6 +304,8 @@ function M.init(state)
 				cmd = { 'git', 'clean', '-f', '--', entry.path }
 			elseif entry.status == 'A' then
 				cmd = { 'git', 'rm', '-f', '--', entry.path }
+			elseif entry.group == 'unstaged' then
+				cmd = { 'git', 'checkout', '--', entry.path }
 			else
 				cmd = { 'git', 'checkout', 'HEAD', '--', entry.path }
 			end
@@ -345,10 +347,13 @@ function M.init(state)
 	require('git-panel.explorer.commit').init(state)
 
 	local refreshGroup = vim.api.nvim_create_augroup('GitPanelRefresh', { clear = true })
-	vim.api.nvim_create_autocmd({ 'FocusGained', 'BufWritePost' }, {
+	vim.api.nvim_create_autocmd({ 'FocusGained', 'BufWritePost', 'FileChangedShellPost', 'BufEnter' }, {
 		group = refreshGroup,
 		callback = function()
 			if require('git-panel').active and state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
+				if vim.o.autoread then
+					vim.cmd('checktime')
+				end
 				M.refresh(state)
 			end
 		end,

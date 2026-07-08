@@ -1,20 +1,16 @@
 -- neovim output (e.g. :messages, LSP errors, terminal) has lots of padding whitespace.
 -- when copying to send to AI, that wastes tokens and context window. so trim it.
-local function copyText()
-  local s = vim.fn.line('v')
-  local e = vim.fn.line('.')
-  if s > e then s, e = e, s end
-  local lines = vim.api.nvim_buf_get_lines(0, s - 1, e, false)
+local function copyClean()
+  vim.cmd('normal! "+y')
+  local text = vim.fn.getreg('+')
   local trimmed = {}
-  for _, l in ipairs(lines) do
-    trimmed[#trimmed + 1] = l:match('^%s*(.-)%s*$')
+  for line in (text .. '\n'):gmatch('(.-)\r?\n') do
+    trimmed[#trimmed + 1] = line:match('^%s*(.-)%s*$')
   end
-  local text = table.concat(trimmed, '\n')
-  -- collapse multiple blank lines into one, collapse multiple spaces into one
+  text = table.concat(trimmed, '\n')
   text = text:gsub('\n\n+', '\n\n'):gsub(' +', ' '):match('^%s*(.-)%s*$')
   vim.fn.setreg('+', text)
   vim.fn.setreg('"', text)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'nx', false)
 end
 
 vim.keymap.set({ 'n', 'i', 'v', 's' }, '<S-LeftMouse>', function()
@@ -44,4 +40,4 @@ vim.keymap.set({ 'n', 'i', 'v', 's' }, '<S-LeftMouse>', function()
   end
 end)
 
-return { copyText = copyText }
+return { copyClean = copyClean }

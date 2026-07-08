@@ -149,10 +149,14 @@ function M.discard(state)
 
 	local patchText = M.makePatch(state)
 	if not patchText then
+		vim.notify('No changes under cursor to discard', vim.log.levels.WARN)
 		return
 	end
 
-	local choice = vim.fn.confirm('Discard selected changes?', '&Yes\n&No', 2)
+	local lineCount = 0
+	for _ in patchText:gmatch('%-[^\n]') do lineCount = lineCount + 1 end
+
+	local choice = vim.fn.confirm(string.format('Discard %d lines?', lineCount), '&Yes\n&No', 2)
 	if choice ~= 1 then
 		return
 	end

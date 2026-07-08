@@ -1,3 +1,5 @@
+local copyClean = require('selection').copyClean
+
 vim.keymap.set('n', '<C-q>', '<cmd>qa<CR>')
 
 -- comment toggle (native gc, nvim 0.10+)
@@ -17,7 +19,7 @@ local function open_diag()
   local close = function() pcall(vim.api.nvim_win_close, winnr, true) end
   -- map both modes so Esc closes instantly without first exiting visual
   vim.keymap.set({ 'n', 'v' }, '<Esc>', close, { buffer = bufnr, nowait = true })
-  vim.keymap.set('v', '<C-c>', '"+y', { buffer = bufnr, nowait = true })
+  vim.keymap.set('v', '<C-c>', copyClean, { buffer = bufnr, nowait = true })
 end
 
 vim.keymap.set('n', '<leader>d', open_diag)
@@ -46,10 +48,15 @@ vim.keymap.set('n', '<C-a>', 'ggVG<C-g>', { desc = 'Select all' })
 vim.keymap.set({'v', 's'}, '<C-a>', '<Esc>ggVG<C-g>', { desc = 'Select all' })
 vim.keymap.set('i', '<C-a>', '<Esc>ggVG<C-g>', { desc = 'Select all' })
 
-local copyText = require('selection').copyText
-
 -- copy / cut
-vim.keymap.set('v', '<C-c>', copyText)
+vim.keymap.set('v', '<C-c>', function()
+  -- empty buftype means editor area. copy exactly.
+  if vim.bo.buftype == "" then
+    vim.cmd('normal! "+y')
+  else
+    copyClean()
+  end
+end)
 vim.keymap.set('s', '<C-c>', '<C-g>"+y')
 vim.keymap.set('v', '<C-x>', '"+d')
 vim.keymap.set('s', '<C-x>', '<C-g>"+d')
@@ -80,6 +87,8 @@ local function word_extend(motion)
 end
 vim.keymap.set('n', '<C-S-Right>', 'vw<C-g>')
 vim.keymap.set('n', '<C-S-Left>',  'vb<C-g>')
+vim.keymap.set('i', '<C-S-Right>', '<C-o>vw<C-g>')
+vim.keymap.set('i', '<C-S-Left>',  '<C-o>vb<C-g>')
 vim.keymap.set({'v','s'}, '<C-S-Right>', word_extend('w'))
 vim.keymap.set({'v','s'}, '<C-S-Left>',  word_extend('b'))
 

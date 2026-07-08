@@ -15,7 +15,7 @@ const branch =
   (await $`git ls-remote --symref ${repoUrl} HEAD`.text()).match(/ref: refs\/heads\/(\S+)\s+HEAD/)?.[1] ??
   'main'
 const subdirPath = subdir?.replace(/^\//, '') || '.'
-const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${subdirPath === '.' ? '' : subdirPath}`
+const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}`
 
 const files = (await $`git -C ${localPath} ls-tree -r --name-only HEAD -- ${subdirPath}`.text())
   .trim()
