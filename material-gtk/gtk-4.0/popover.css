@@ -1,0 +1,54 @@
+popover, dropdown popover {
+  background-color: transparent;
+  border: none;
+}
+
+popover > contents, dropdown popover > contents {
+  background-color: @popover;
+  border-radius: 24px;
+  padding: 4px;
+}
+
+popover modelbutton, dropdown popover listview row {
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 16px;
+}
+
+popover modelbutton:first-child, dropdown popover listview row:first-child {
+  border-radius: 16px 16px 0 0;
+}
+
+popover modelbutton:last-child, dropdown popover listview row:last-child {
+  border-radius: 0 0 16px 16px;
+}
+
+popover modelbutton:hover {
+  background-color: @hover;
+}
+
+popover separator, dropdown popover separator {
+  background-color: @hover;
+  margin: 4px 0;
+}
+
+dropdown popover listview row:selected {
+  background-color: @secondary;
+  color: @secondaryForeground;
+}
+
+/* row:selected overrides row:hover. so using row:selected:hover */
+dropdown popover listview row:selected:hover {
+  background-color: @hover;
+}
+
+dropdown > button arrow {
+  -gtk-icon-source: -gtk-icontheme('pan-down-symbolic');
+  min-width: 16px;
+  min-height: 16px;
+}
+
+/* when dropdown open trigger button bg changes to primary */
+dropdown > button:checked {
+  background-color: @card;
+}

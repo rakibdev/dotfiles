@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Neovim
+Icon=nvim
+Exec=~/.local/bin/nvim
+Terminal=false

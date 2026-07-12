@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Code Insiders
-Exec=code-insiders --ozone-platform-hint=wayland %F
-Icon=vscode-insiders
-Type=Application

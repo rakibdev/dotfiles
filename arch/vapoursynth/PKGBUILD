@@ -1,0 +1,11 @@
+pkgname=vapoursynth
+pkgver=77
+pkgrel=1
+pkgdesc="Dummy replacement for vapoursynth"
+arch=('any')
+url="http://www.vapoursynth.com/"
+license=('LGPL-2.1-only')
+
+package() {
+    :
+}

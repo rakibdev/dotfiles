@@ -14,7 +14,7 @@ return {
     priority = 1000,
     config   = function()
       local materialCode = require('material-code')
-      local configPath   = vim.fn.expand('~/.config/system-ui/system-ui.json')
+      local configPath   = vim.fn.expand('~/.config/system-ui/theme.json')
 
       local function readJson(path)
         local f = io.open(path)
@@ -25,9 +25,8 @@ return {
       end
 
       local function applyTheme()
-        local config = readJson(configPath)
-        local theme  = config.theme or {}
-        local dark   = config.darkMode ~= false
+        local theme  = readJson(configPath)
+        local dark   = theme.darkMode ~= false
         local syntax = materialCode.createSyntaxColors(theme.primary, dark)
         local colors = vim.tbl_extend('force', theme, {
           syntax   = syntax,

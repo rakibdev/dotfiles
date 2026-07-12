@@ -1,9 +1,10 @@
+#!/bin/bash
 PLUGIN_DIR="$HOME/Downloads/dotfiles/hyprland-scrolling"
 
 echo "Rebuilding hyprland-scrolling..."
 cd "$PLUGIN_DIR" || exit 1
 
-hyprctl plugin unload "$PLUGIN_DIR/libhyprland-scrolling.so" 2>/dev/null
+hyprctl plugin unload "$PLUGIN_DIR/libhyprland-scrolling.so"
 
 make clean && make
 

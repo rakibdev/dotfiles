@@ -1,8 +1,7 @@
 ---
 name: code
-description:
 ---
-- Reuse code. Split identical functions, turn magic number/string to named `const`
+- Always reuse. Split identical functions, turn magic number/string to named `const`
 - Clean redundant or fallback code
 - Update references e.g. sync frontend fetch urls after editing backend
 - Preserve existing code comments, don't clutter by adding more
