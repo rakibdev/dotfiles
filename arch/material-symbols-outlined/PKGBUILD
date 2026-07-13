@@ -1,0 +1,21 @@
+pkgname=material-symbols-outlined
+pkgver=1.0
+pkgrel=1
+pkgdesc="Material Symbols Outlined"
+arch=('any')
+license=('Apache-2.0')
+makedepends=('curl' 'grep')
+
+prepare() {
+    cd "$srcdir"
+    cssUrl="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+    curl -s "$cssUrl" > material-symbols-outlined.css
+    fontUrl=$(grep -o 'https://[^)]*\.ttf' material-symbols-outlined.css | head -n 1)
+    curl -L -o "MaterialSymbolsOutlined.ttf" "$fontUrl"
+}
+
+package() {
+    cd "$srcdir"
+    install -d "$pkgdir/usr/share/fonts/$pkgname"
+    install -Dm644 "MaterialSymbolsOutlined.ttf" "$pkgdir/usr/share/fonts/$pkgname/"
+}

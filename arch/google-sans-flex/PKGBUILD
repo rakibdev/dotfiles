@@ -1,0 +1,39 @@
+pkgname=google-sans-flex
+pkgver=1.0
+pkgrel=1
+pkgdesc="Google Sans Flex"
+arch=('any')
+license=('OFL')
+makedepends=('curl' 'grep')
+
+prepare() {
+    cd "$srcdir"
+    
+    cssUrl="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;700&display=swap"
+    curl -s "$cssUrl" > google-sans-flex.css
+    
+    mapfile -t fontUrls < <(grep -o 'https://[^)]*\.ttf' google-sans-flex.css)
+    
+
+    fontNames=(
+        "GoogleSansFlex-Regular.ttf"
+        "GoogleSansFlex-Medium.ttf"
+        "GoogleSansFlex-Bold.ttf"
+    )
+    
+    for i in "${!fontUrls[@]}"; do
+        if [ $i -lt ${#fontNames[@]} ]; then
+            echo "Downloading ${fontNames[$i]}..."
+            curl -L -o "${fontNames[$i]}" "${fontUrls[$i]}"
+        fi
+    done
+}
+
+package() {
+    cd "$srcdir"
+    
+    install -d "$pkgdir/usr/share/fonts/$pkgname"
+    for font in *.ttf; do
+        [ -f "$font" ] && install -Dm644 "$font" "$pkgdir/usr/share/fonts/$pkgname/"
+    done
+}
