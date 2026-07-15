@@ -34,4 +34,12 @@
 	<patterns>*.rar;*.zip;*.7z;*.gz;*.tar,;*.xz</patterns>
 	<other-files/>
 </action>
+<action>
+	<icon>image-x-generic</icon>
+	<name>Set as wallpaper</name>
+	<unique-id>1752345678901234-5</unique-id>
+	<command>ui /usr/lib/desktop/desktop.so wallpaper %f &amp;&amp; ~/Downloads/dotfiles/scripts/system-theme/theme.sh --source %f</command>
+	<patterns>*.jpg;*.jpeg;*.png;*.webp</patterns>
+	<image-files/>
+</action>
 </actions>

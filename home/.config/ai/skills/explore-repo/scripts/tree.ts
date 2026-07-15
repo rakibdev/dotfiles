@@ -14,7 +14,7 @@ const branch =
   branchInUrl ??
   (await $`git ls-remote --symref ${repoUrl} HEAD`.text()).match(/ref: refs\/heads\/(\S+)\s+HEAD/)?.[1] ??
   'main'
-const subdirPath = subdir?.replace(/^\//, '') || '.'
+const subdirPath = subdir?.slice(1) || '.'
 const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}`
 
 const files = (await $`git -C ${localPath} ls-tree -r --name-only HEAD -- ${subdirPath}`.text())
@@ -29,23 +29,29 @@ for (const file of files) {
   for (const part of parts) node = node[part] ??= {}
 }
 
-const render = (node: Record<string, any>, prefix = ''): string => {
-  const keys = Object.keys(node).sort((a, b) => {
-    const aDir = Object.keys(node[a]).length > 0
-    const bDir = Object.keys(node[b]).length > 0
-    if (aDir !== bDir) return aDir ? -1 : 1
-    return a.localeCompare(b)
-  })
+const startDepth = subdirPath === '.' ? 0 : subdirPath.split('/').length
+const maxDepth = 3
+
+const isDir = (val: Record<string, any>) => Object.keys(val).length > 0
+
+const render = (node: Record<string, any>, prefix = '', currentDepth = 0): string => {
+  const keys = Object.keys(node).sort((a, b) => 
+    Number(isDir(node[b])) - Number(isDir(node[a])) || a.localeCompare(b)
+  )
+  const isPastSubdir = currentDepth >= startDepth
+  const relativeDepth = isPastSubdir ? currentDepth - startDepth : 0
+
   return keys
     .map((key, i) => {
       const isLast = i === keys.length - 1
-      const connector = isLast ? '└' : '├'
+      const connector = isLast ? '└─' : '├─'
       const children = node[key]
-      const isDir = Object.keys(children).length > 0
-      const line = `${prefix}${connector}${key}${isDir ? '/' : ''}`
-      if (isDir) {
-        const childPrefix = prefix + (isLast ? ' ' : '│')
-        return line + '\n' + render(children, childPrefix)
+      const dir = isDir(children)
+      const line = `${prefix}${connector}${key}${dir ? '/' : ''}`
+      if (dir) {
+        if (isPastSubdir && relativeDepth >= maxDepth - 1) return line
+        const childPrefix = prefix + (isLast ? '  ' : '│ ')
+        return `${line}\n${render(children, childPrefix, currentDepth + 1)}`
       }
       return line
     })

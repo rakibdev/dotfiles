@@ -18,13 +18,10 @@
 #include <hyprland/src/layout/algorithm/tiled/scrolling/ScrollTapeController.hpp>
 #undef private
 
-#include <hyprland/src/helpers/varlist/VarList.hpp>
-#include <hyprutils/string/VarList2.hpp>
 using namespace Layout::Tiled;
 using namespace Layout;
 
 inline CFunctionHook* g_pNewTargetHook = nullptr;
-inline CFunctionHook* g_pLayoutMsgHook = nullptr;
 
 void hkNewTarget(CScrollingAlgorithm* self, SP<ITarget> target) {
     auto droppingOn = Desktop::focusState()->window();
@@ -67,32 +64,6 @@ void hkNewTarget(CScrollingAlgorithm* self, SP<ITarget> target) {
     self->m_scrollingData->recalculate();
 }
 
-std::expected<void, std::string> hkLayoutMsg(CScrollingAlgorithm* self, const std::string_view& sv) {
-    const auto ARGS = CVarList(std::string{sv}, 0, ' ');
-
-    if (ARGS[0] == "move" && (ARGS[1] == "+col" || ARGS[1] == "col")) {
-        const auto TDATA = self->dataFor(Desktop::focusState()->window() ? Desktop::focusState()->window()->layoutTarget() : nullptr);
-        if (!TDATA)
-            return std::unexpected("no window");
-
-        const auto COL = self->m_scrollingData->next(TDATA->column.lock());
-        if (!COL) {
-            const auto   USABLE        = self->usableArea();
-            const bool   isHoriz       = self->m_scrollingData->controller->isPrimaryHorizontal();
-            const double usablePrimary = isHoriz ? USABLE.w : USABLE.h;
-            const double maxOffset     = std::max(0.0, self->m_scrollingData->maxWidth() - usablePrimary);
-            self->m_scrollingData->controller->setOffset(maxOffset);
-            self->m_scrollingData->centerOrFitCol(TDATA->column.lock());
-            self->m_scrollingData->recalculate();
-            self->focusTargetUpdate(nullptr);
-            return {};
-        }
-    }
-
-    using origFn = std::expected<void, std::string> (*)(CScrollingAlgorithm*, const std::string_view&);
-    return (*(origFn)g_pLayoutMsgHook->m_original)(self, sv);
-}
-
 APICALL EXPORT std::string PLUGIN_API_VERSION() {
     return HYPRLAND_API_VERSION;
 }
@@ -124,7 +95,6 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
     };
 
     hookFn("newTarget", (void*)hkNewTarget, g_pNewTargetHook);
-    hookFn("layoutMsg",  (void*)hkLayoutMsg,  g_pLayoutMsgHook);
 
     HyprlandAPI::addNotification(handle, "[hs] loaded", CHyprColor{0.2, 1.0, 0.2, 1.0}, 5000);
 
@@ -134,6 +104,4 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
 APICALL EXPORT void PLUGIN_EXIT() {
     if (g_pNewTargetHook)
         g_pNewTargetHook->unhook();
-    if (g_pLayoutMsgHook)
-        g_pLayoutMsgHook->unhook();
 }
