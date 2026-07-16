@@ -3,7 +3,6 @@ Plugin patches for Hyprland's built-in scrolling layout.
 ## Features
 
 - Horizontal drag/drop windows. Not above/below.
-- Removes desktop screen in last column
 
 ## Build
 

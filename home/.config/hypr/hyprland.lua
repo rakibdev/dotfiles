@@ -12,10 +12,13 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("mako")
 	hl.exec_cmd("wl-paste --type image/png --watch cat > /tmp/copy.png")
 	hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+
+	-- doesn't auto start
 	hl.exec_cmd("systemctl --user start system-ui.service")
+
 	hl.exec_cmd("pactl set-card-profile alsa_card.pci-0000_07_00.6 output:analog-stereo+input:analog-stereo")
 	hl.exec_cmd("amixer -c 1 sset 'Headphone' 100% unmute")
-	hl.exec_cmd(ui .. " /usr/lib/desktop/desktop.so'")
+	hl.exec_cmd("sh -c 'sleep 0.2 && " .. ui .. " /usr/lib/desktop/desktop.so'")
 	hl.exec_cmd(home .. "/Downloads/userscripts/material-web/serve 9999 " .. home .. "/.config/system-ui/theme.json")
 end)
 
