@@ -14,6 +14,11 @@ pkgs=(
   ddcutil
   tumbler
   ffmpegthumbnailer
+
+  # -wlr is must for chromium screen share to work
+  xdg-desktop-portal
+  xdg-desktop-portal-gtk
+  xdg-desktop-portal-wlr
 )
 
 missing=()
