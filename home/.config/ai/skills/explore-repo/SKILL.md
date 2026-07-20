@@ -1,32 +1,22 @@
 ---
 name: explore-repo
 description: Explore github repo to understand feature implementation
-pattern: github\.com/[\w-]+/[\w-]+
 ---
 
-- Read directory tree `bun scripts/tree.ts <github_url>`. Default depth limit is 3; use subdir URL like `https://github.com/user/repo/tree/branch/subdir` to explore deeper.
-- Then webfetch/curl individual file raw URLs
-- Banned commands: git clone, git grep, git -C
+1. Read file tree `bun scripts/tree.ts <github_url>`. Depth is upto 3 level; tree.ts on subdir URL to explore deeper.
+2. webfetch/curl raw URLs to read individual file
 
-<output>
-- Cite code, pseudo-code for representing complex logic and execution flow across files
-- Brief comments explaining inner workings before each code block
-- List relevant full github paths at bottom
+Banned commands: git clone, git grep, git -C
 
-<format>
-Entrypoint in index.ts#L5:
+# Output
+- Reference code, symbols, file paths, end-to-end logic flow step-by-step
+- Inline comments explaining inner workings of code
+
+<output-format>
+rating.ts#L22
+// Bayesian avg
 ```typescript
-export const run = () => execute()
+const score = (avg  v + C  m) / (v + m)
 ```
-
-Core logic in core.ts#L10:
-```typescript
-export const execute = () => console.log("run")
-```
-
-Files:
-- github.com/user/repo/blob/main/index.ts
-- github.com/user/repo/blob/main/core.ts
-</format>
-
-</output>
+...
+</output-format>
