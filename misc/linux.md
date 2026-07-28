@@ -87,3 +87,13 @@ Settings → Search engine
 | Name | Shortcut | URL |
 |------|----------|-----|
 | GitHub Code Search | `gh` | `https://github.com/search?q=%s&type=code` |
+
+## WebGPU lagging in Chrome (AMD iGPU)
+
+[https://reze.design/](https://reze.design) initially showed "WebGPU not enabled" and when forced via `chrome://flags/#enable-unsafe-webgpu` it loaded but lagged badly. Cause: Vulkan was disabled in `chrome://gpu` (no AMD Vulkan driver installed), so WebGPU fell back to a slower unaccelerated path.
+
+```
+sudo pacman -S --needed vulkan-radeon
+```
+
+Then enable the flag `chrome://flags/#enable-vulkan`  (Vulkan stays off by default). `enable-unsafe-webgpu` no longer needed.
