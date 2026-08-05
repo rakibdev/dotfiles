@@ -97,3 +97,5 @@ sudo pacman -S --needed vulkan-radeon
 ```
 
 Then enable the flag `chrome://flags/#enable-vulkan`  (Vulkan stays off by default). `enable-unsafe-webgpu` no longer needed.
+
+Issue: Video renders white when Vulkan enabled. Disable after use.
