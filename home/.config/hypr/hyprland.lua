@@ -96,8 +96,10 @@ hl.bind("SUPER + F", hl.dsp.layout("colresize +conf"))
 
 hl.bind("SUPER + up", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 15%+ --limit 0.4"))
 hl.bind("SUPER + down", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 15%-"))
-hl.bind("SUPER + SHIFT + up", hl.dsp.exec_cmd("ddcutil setvcp 10 + 15"))
-hl.bind("SUPER + SHIFT + down", hl.dsp.exec_cmd("ddcutil setvcp 10 - 15"))
+-- without --bus 0, ddcutil scans all i2c buses and pegs cpu 100%, freezing hyprland
+-- https://discuss.cachyos.org/t/bug-with-recent-ddcutil-3-0-0-1-1-causes-gpu-failure/35639/15
+hl.bind("SUPER + SHIFT + up", hl.dsp.exec_cmd("ddcutil --bus 0 --noverify setvcp 10 + 15"))
+hl.bind("SUPER + SHIFT + down", hl.dsp.exec_cmd("ddcutil --bus 0 --noverify setvcp 10 - 15"))
 
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("media play-pause"))
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("media play-pause"))
@@ -138,7 +140,10 @@ end)
 hl.bind("mouse:275", function()
 	local w = hl.get_active_window()
 	if w and (w.class == "foot" or w.class == "thunar") then
-		hl.dispatch(hl.dsp.window.close())
+		-- nvim in foot closes only via SUPER+Q, not mouse side button
+		if not w.title:match("Nvim$") then
+			hl.dispatch(hl.dsp.window.close())
+		end
 	else
 		-- send_shortcut spams "wwwwww" after closing tabs.
 		-- send_key_state and state = "up" both needed to fix

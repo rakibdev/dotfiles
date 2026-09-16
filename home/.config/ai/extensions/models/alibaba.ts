@@ -5,7 +5,7 @@ import {
   type Context,
   type Model,
   type SimpleStreamOptions
-} from '@mariozechner/pi-ai'
+} from '@earendil-works/pi-ai'
 
 const convertPrompt = (context: Context) => {
   const prompt: any[] = []
