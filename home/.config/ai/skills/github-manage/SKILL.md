@@ -1,7 +1,7 @@
 ---
 name: github-manage
 description: View and comment on GitHub issues and pull requests
-pattern: github\.com/[\w-]+/[\w-]+/(pull|issues)/\d+
+trigger: github\.com/[\w-]+/[\w-]+/(pull|issues)/\d+
 ---
 
 # Pull Request & Issue Operations

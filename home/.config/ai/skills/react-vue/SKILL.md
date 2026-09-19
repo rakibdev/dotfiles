@@ -1,7 +1,6 @@
 ---
 name: react-vue
 description: React and Vue rules
-pattern: \.(vue|tsx?|jsx?)(\s|$)
 ---
 
 - Minimize DOM nesting (avoid useless wrappers, use Fragments / `<template v-if>`)
