@@ -1,8 +1,8 @@
-local SIDEBAR_WIDTH = 40
+local SIDEBAR_WIDTH = require('utils.sidebar').width
+local pickerUtil    = require('utils.picker')
 
 return {
 	'folke/snacks.nvim',
-	sidebarWidth = SIDEBAR_WIDTH, -- exported: require('plugins.explorer').sidebarWidth
 	keys = {
 		{
 			'<C-b>',
@@ -43,7 +43,7 @@ return {
 					hidden = true,
 					ignored = true,
 					git_status = false,
-					exclude = { 'node_modules', 'build', 'dist', '.git' },
+					exclude = pickerUtil.excluded,
 					diagnostics = false,
 					win = {
 						list = {
@@ -51,12 +51,13 @@ return {
 							keys = {
 								['<LeftRelease>'] = 'confirm',
 								['<Esc>'] = false,
-								['<C-p>'] = false, -- unblock fff find_files keymap
+								['<C-p>'] = false, -- unblock global find files keymap
 								['<C-g>'] = false, -- unblock git panel keymap
 								['<C-b>'] = 'close',
 								['<C-c>'] = { 'explorer_yank', mode = { 'n', 'v' } },
 								['t'] = 'open_terminal',
 								['n'] = 'explorer_add',
+								['<Delete>'] = 'explorer_del',
 							},
 						},
 					},
@@ -66,8 +67,6 @@ return {
 	},
 	config = function(_, opts)
 		require('snacks').setup(opts)
-		vim.schedule(function()
-			Snacks.explorer.open()
-		end)
+		require('utils.sidebar').setup()
 	end,
 }

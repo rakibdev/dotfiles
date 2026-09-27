@@ -4,16 +4,13 @@
   "permissions": {
     "bash": {
       "*": "allow",
-      "/\\brm\\s/": "ask",
+      "/\\btsc\\b/": "ask",
       // not needed because terminal already ask password
       // "sudo *": "ask"
       "git *": "ask",
       "git diff *": "allow",
       "git status *": "allow",
       "git show *": "allow",
-
-      // todo: not working. e.g. `echo env`
-      "*env*": "ask",
 
       // mongodb skill: allow only read operations
       "*db.*find*": "allow",
@@ -27,11 +24,4 @@
       "prompt": "~/.config/ai/general.md"
     }
   }
-  //  "lsp": [
-  //  {
-  //     "command": ["tsgo", "--lsp", "--stdio"],
-  //     "extensions": [".ts", ".tsx", ".js", ".jsx"],
-  //     "diagDebounce": 500
-  //  }
-  // ]
 }
