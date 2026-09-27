@@ -24,6 +24,9 @@ source $pluginsDir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 alias -s {jpg,jpeg,png,gif,webp,md,json,js,ts}=xdg-open
 alias poolkit=/usr/lib/xfce-polkit/xfce-polkit
 alias ls='ls --color=auto'
+alias yay="yay --noconfirm --sudoloop"
+# bun update ignores package.json if version has ^ prefix, --latest forces
+alias bun-update="bun update --latest"
 # alias yarn=bun
 alias npm=bun
 

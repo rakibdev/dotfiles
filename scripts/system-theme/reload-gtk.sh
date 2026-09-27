@@ -1,4 +1,5 @@
 config=~/.config/gtk-3.0/settings.ini
+themeJson=~/.config/system-ui/theme.json
 schema="org.gnome.desktop.interface"
 
 while IFS='=' read -r key value
@@ -28,3 +29,7 @@ gsettings set "$schema" icon-theme "$iconTheme"
 gsettings set "$schema" cursor-theme "$cursorTheme"
 gsettings set "$schema" cursor-size "$cursorSize"
 gsettings set "$schema" font-name "$fontName"
+
+# apps like Chrome ignores gtk-theme
+darkMode=$(jq -r '.darkMode' "$themeJson")
+gsettings set "$schema" color-scheme "$([ "$darkMode" = "true" ] && echo prefer-dark || echo prefer-light)"

@@ -1,14 +1,14 @@
-local colorsFile="$HOME/.config/foot/colors.ini"
+colorsFile="$HOME/.config/foot/colors.ini"
 
 if [ ! -f "$colorsFile" ]; then
   echo "Colors file not found: $colorsFile" >&2
   exit 1
 fi
 
-local background=$(grep "^background=" "$colorsFile" | cut -d'=' -f2)
-local foreground=$(grep "^foreground=" "$colorsFile" | cut -d'=' -f2)
-local selectionForeground=$(grep "^selection-foreground=" "$colorsFile" | cut -d'=' -f2)
-local selectionBackground=$(grep "^selection-background=" "$colorsFile" | cut -d'=' -f2)
+background=$(grep "^background=" "$colorsFile" | cut -d'=' -f2)
+foreground=$(grep "^foreground=" "$colorsFile" | cut -d'=' -f2)
+selectionForeground=$(grep "^selection-foreground=" "$colorsFile" | cut -d'=' -f2)
+selectionBackground=$(grep "^selection-background=" "$colorsFile" | cut -d'=' -f2)
 
 for tty in /dev/pts/*; do
   if [ -c "$tty" ] && [ -w "$tty" ]; then

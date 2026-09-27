@@ -1,16 +1,20 @@
 import { createAlibaba } from '@ai-sdk/alibaba'
 import {
   createAssistantMessageEventStream,
+  getCurrentSystemPrompt,
+  getCurrentTools,
   type AssistantMessage,
   type Context,
   type Model,
-  type SimpleStreamOptions
+  type SimpleStreamOptions,
+  type TranscriptContext
 } from '@earendil-works/pi-ai'
 
-const convertPrompt = (context: Context) => {
+const convertPrompt = (context: TranscriptContext) => {
   const prompt: any[] = []
+  const system = getCurrentSystemPrompt(context.messages)
 
-  if (context.systemPrompt) prompt.push({ role: 'system', content: context.systemPrompt })
+  if (system) prompt.push({ role: 'system', content: system })
 
   for (const msg of context.messages) {
     if (msg.role === 'user') {
@@ -66,7 +70,7 @@ const convertTools = (tools: Context['tools']) => {
   }))
 }
 
-export const streamAlibaba = (model: Model<any>, context: Context, options?: SimpleStreamOptions) => {
+export const streamAlibaba = (model: Model<any>, context: TranscriptContext, options?: SimpleStreamOptions) => {
   const stream = createAssistantMessageEventStream()
 
   ;(async () => {
@@ -91,7 +95,7 @@ export const streamAlibaba = (model: Model<any>, context: Context, options?: Sim
     try {
       const alibaba = createAlibaba({ apiKey: options?.apiKey, baseURL: model.baseUrl })
       const lm = alibaba.languageModel(model.id as any)
-      const tools = convertTools(context.tools)
+      const tools = convertTools(getCurrentTools(context.messages))
       const { stream: vs } = await lm.doStream({
         prompt: convertPrompt(context),
         ...(tools?.length && { tools }),
