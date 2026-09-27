@@ -1,8 +1,7 @@
 import { $ } from 'bun'
+import { parseUrl, excludeDir } from './github'
 
-const input = process.argv[2]
-const [, owner, repo, , branchInUrl, subdir] =
-  input.match(/github\.com[/:]([^/]+)\/([^/\s]+?)(\/tree\/([^/]+)(\/.*)?)?$/) ?? []
+const { owner, repo, branch: branchInUrl, subdir } = parseUrl(process.argv[2])
 const localPath = `/tmp/github/${owner}/${repo}`
 const repoUrl = `https://github.com/${owner}/${repo}`
 
@@ -14,13 +13,16 @@ const branch =
   branchInUrl ??
   (await $`git ls-remote --symref ${repoUrl} HEAD`.text()).match(/ref: refs\/heads\/(\S+)\s+HEAD/)?.[1] ??
   'main'
-const subdirPath = subdir?.slice(1) || '.'
+const subdirPath = subdir || '.'
 const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}`
 
-const files = (await $`git -C ${localPath} ls-tree -r --name-only HEAD -- ${subdirPath}`.text())
-  .trim()
-  .split('\n')
-  .filter(Boolean)
+const files = excludeDir(
+  (await $`git -C ${localPath} ls-tree -r --name-only HEAD -- ${subdirPath}`.text())
+    .trim()
+    .split('\n')
+    .filter(Boolean),
+  '.github'
+)
 
 const tree: Record<string, any> = {}
 for (const file of files) {
@@ -42,16 +44,13 @@ const render = (node: Record<string, any>, prefix = '', currentDepth = 0): strin
   const relativeDepth = isPastSubdir ? currentDepth - startDepth : 0
 
   return keys
-    .map((key, i) => {
-      const isLast = i === keys.length - 1
-      const connector = isLast ? '└─' : '├─'
+    .map(key => {
       const children = node[key]
       const dir = isDir(children)
-      const line = `${prefix}${connector}${key}${dir ? '/' : ''}`
+      const line = `${prefix}${key}${dir ? '/' : ''}`
       if (dir) {
         if (isPastSubdir && relativeDepth >= maxDepth - 1) return line
-        const childPrefix = prefix + (isLast ? '  ' : '│ ')
-        return `${line}\n${render(children, childPrefix, currentDepth + 1)}`
+        return `${line}\n${render(children, prefix + '  ', currentDepth + 1)}`
       }
       return line
     })
