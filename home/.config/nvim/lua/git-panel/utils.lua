@@ -28,16 +28,35 @@ local function runGitAsync(args, opts)
     text = true,
   }, function(result)
     vim.schedule(function()
+      local ok, err
       if result.code == 0 then
-        coroutine.resume(thread, nil, result.stdout or "")
+        ok, err = coroutine.resume(thread, nil, result.stdout or "")
       else
         local errMsg = (result.stderr and result.stderr ~= '') and result.stderr:gsub('%s+$', '') or 'Error'
-        coroutine.resume(thread, errMsg)
+        ok, err = coroutine.resume(thread, errMsg)
+      end
+      -- resuming past a yield means errors surface here, not at the async()
+      -- call site; without this they'd be swallowed and the op half-applied
+      if not ok then
+        vim.notify(debug.traceback(thread, tostring(err)), vim.log.levels.ERROR)
       end
     end)
   end)
 
   return coroutine.yield()
+end
+
+-- blocking twin of runGitAsync for callers that must not yield (diff render:
+-- selecting a file and rendering its diff has to be one uninterrupted step)
+local function runGitSync(args, opts)
+  if opts.cwd and vim.fn.isdirectory(opts.cwd) == 0 then
+    return "Directory does not exist: " .. opts.cwd
+  end
+  local result = vim.system(vim.list_extend({ "git" }, args), { cwd = opts.cwd, text = true }):wait()
+  if result.code == 0 then
+    return nil, result.stdout or ""
+  end
+  return (result.stderr and result.stderr ~= '') and result.stderr:gsub('%s+$', '') or 'Error'
 end
 
 function M.async(fn)
@@ -50,6 +69,7 @@ function M.async(fn)
   end
 end
 
+-- blocking. see runGitSync
 function M.getFileContent(revision, gitRoot, relPath)
   local isMutable = revision:match("^:[0-3]$")
   if not isMutable then
@@ -61,7 +81,7 @@ function M.getFileContent(revision, gitRoot, relPath)
   end
 
   local gitObject = revision .. ":" .. relPath
-  local err, output = runGitAsync({ "show", gitObject }, { cwd = gitRoot })
+  local err, output = runGitSync({ "show", gitObject }, { cwd = gitRoot })
   if err then
     return err
   end
@@ -97,13 +117,13 @@ local function parseNumstat(output)
 end
 
 function M.getStatus(gitRoot)
-  local err, porcelainOut = runGitAsync({ "status", "--porcelain", "-uall", "-M" }, { cwd = gitRoot })
+  local err, porcelainOut = runGitAsync({ "--no-optional-locks", "status", "--porcelain", "-uall", "-M" }, { cwd = gitRoot })
   if err then return err end
 
-  local err2, unstagedOut = runGitAsync({ "diff", "--numstat" }, { cwd = gitRoot })
+  local err2, unstagedOut = runGitAsync({ "--no-optional-locks", "diff", "--numstat" }, { cwd = gitRoot })
   if err2 then return err2 end
 
-  local err3, stagedOut = runGitAsync({ "diff", "--cached", "--numstat" }, { cwd = gitRoot })
+  local err3, stagedOut = runGitAsync({ "--no-optional-locks", "diff", "--cached", "--numstat" }, { cwd = gitRoot })
   if err3 then return err3 end
 
   local unstagedStats = parseNumstat(unstagedOut or "")
@@ -195,9 +215,32 @@ function M.commit(gitRoot, msg)
   return err
 end
 
-function M.push(gitRoot)
-  local err = runGitAsync({ "push" }, { cwd = gitRoot })
+function M.push(gitRoot, branch)
+  local args = branch and { "push", "-u", "origin", branch } or { "push" }
+  local err = runGitAsync(args, { cwd = gitRoot })
   return err
+end
+
+function M.pull(gitRoot)
+  local err = runGitAsync({ "pull", "--rebase" }, { cwd = gitRoot })
+  return err
+end
+
+function M.aheadCount(gitRoot)
+  local err, out = runGitAsync({ "rev-list", "--count", "@{u}..HEAD" }, { cwd = gitRoot })
+  if err then return 0 end
+  return tonumber(vim.trim(out)) or 0
+end
+
+function M.hasUpstream(gitRoot)
+  local err = runGitAsync({ "rev-parse", "--symbolic-full-name", "@{u}" }, { cwd = gitRoot })
+  return err == nil
+end
+
+function M.currentBranch(gitRoot)
+  local err, out = runGitAsync({ "rev-parse", "--abbrev-ref", "HEAD" }, { cwd = gitRoot })
+  if err then return err end
+  return nil, vim.trim(out)
 end
 
 return M

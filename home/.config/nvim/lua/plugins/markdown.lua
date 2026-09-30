@@ -1,22 +1,27 @@
+local headings = {}
+for level = 1, 6 do
+	headings['heading_' .. level] = { sign = false }
+end
+
 return {
-	'MeanderingProgrammer/render-markdown.nvim',
-	ft = { 'markdown' },
+	'OXY2DEV/markview.nvim',
+	lazy = false, -- plugin lazy-loads itself
+	init = function()
+		-- wide tables shows unstyled if wrap is true
+		vim.api.nvim_create_autocmd('FileType', {
+			pattern = 'markdown',
+			callback = function()
+				vim.opt_local.wrap = false
+			end,
+		})
+	end,
 	opts = {
-		-- fixes double click toggling raw text
-		render_modes = { 'n', 's', 'S', '\19' },
-		latex = { enabled = false },
-		sign = { enabled = false },
-		anti_conceal = { enabled = false },
-		heading = {
-			sign = false,
-			backgrounds = {},
-			-- inline removes left gap in heading
-			position = 'inline',
+		preview = {
+			icon_provider = 'devicons',
 		},
-		code = { sign = false },
-		link = {
-			image = false,
-			image_custom = false,
+		markdown = {
+			headings = headings,
+			code_blocks = { sign = false },
 		},
 	},
 }

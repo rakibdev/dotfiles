@@ -17,8 +17,8 @@ local function shortDir(dir)
   local parts = {}
   for seg in dir:gmatch('[^/]+') do table.insert(parts, seg) end
   local len = #parts
-  if len <= 2 then return dir end
-  return parts[len - 1] .. '/' .. parts[len]
+  if len <= 3 then return dir end
+  return parts[len - 2] .. '/' .. parts[len - 1] .. '/' .. parts[len]
 end
 
 local function addDirHeader(dir, lines, lineMap)
@@ -91,50 +91,55 @@ function M.render(state)
   local lines    = {}
   local lineMap  = {}
 
-  -- repo list (only when more than one repo)
-  local repos = require('utils.git').repoList()
-  if #repos > 1 then
-    table.insert(lines, indent .. 'Repositories')
-    for _, root in ipairs(repos) do
-      local name     = vim.fn.fnamemodify(root, ':t')
-      local isActive = root == state.gitRoot
-      local prefix   = indent .. (isActive and '● ' or '○ ')
-      local prefixW  = vim.api.nvim_strwidth(prefix)
-
-      local stats = state.repoStats and state.repoStats[root]
-      local addedPart   = stats and stats.added > 0 and ('+' .. stats.added) or nil
-      local deletedPart = stats and stats.deleted > 0 and ('-' .. stats.deleted) or nil
-
-      local badge
-      if addedPart and deletedPart then
-        badge = addedPart .. ' ' .. deletedPart
-      else
-        badge = addedPart or deletedPart or ''
+    -- repo line(s): a switcher list when multiple repos, otherwise just the active repo's status
+    local repos = require('utils.git').repoList()
+    if #repos > 0 then
+      if #repos > 1 then
+        table.insert(lines, indent .. 'Repositories')
       end
+      for _, root in ipairs(repos) do
+        local name     = vim.fn.fnamemodify(root, ':t')
+        local isActive = root == state.gitRoot
+        local prefix   = indent .. (isActive and '● ' or '○ ')
+        local prefixW  = vim.api.nvim_strwidth(prefix)
 
-      local badgeW   = vim.api.nvim_strwidth(badge)
-      local maxNameW = winWidth - rightMargin - prefixW - badgeW - 1
-      if vim.api.nvim_strwidth(name) > maxNameW then
-        name = vim.fn.strcharpart(name, 0, maxNameW - 1) .. '…'
+        local stats = state.repoStats and state.repoStats[root]
+        local aheadPart   = stats and stats.ahead > 0 and ('↑' .. stats.ahead) or nil
+        local addedPart   = stats and stats.added > 0 and ('+' .. stats.added) or nil
+        local deletedPart = stats and stats.deleted > 0 and ('-' .. stats.deleted) or nil
+
+        local badgeParts = {}
+        if aheadPart then table.insert(badgeParts, aheadPart) end
+        if addedPart then table.insert(badgeParts, addedPart) end
+        if deletedPart then table.insert(badgeParts, deletedPart) end
+        local badge = table.concat(badgeParts, ' ')
+
+        local badgeW   = vim.api.nvim_strwidth(badge)
+        local maxNameW = winWidth - rightMargin - prefixW - badgeW - 1
+        if vim.api.nvim_strwidth(name) > maxNameW then
+          name = vim.fn.strcharpart(name, 0, maxNameW - 1) .. '…'
+        end
+        local pad      = winWidth - rightMargin - prefixW - vim.api.nvim_strwidth(name) - badgeW
+        local text     = prefix .. name .. string.rep(' ', pad) .. badge
+        local badgeStart = #prefix + #name + pad
+        local afterAhead = aheadPart and badgeStart + #aheadPart + 1 or badgeStart
+        table.insert(lines, text)
+        lineMap[#lines] = {
+          type         = 'repo',
+          root         = root,
+          isActive     = isActive,
+          badgeStart   = badgeStart,
+          badgeEnd     = badgeStart + #badge,
+          aheadStart   = aheadPart   and badgeStart                                          or nil,
+          aheadEnd     = aheadPart   and badgeStart + #aheadPart                              or nil,
+          addedStart   = addedPart   and afterAhead                                           or nil,
+          addedEnd     = addedPart   and afterAhead + #addedPart                              or nil,
+          deletedStart = deletedPart and afterAhead + (addedPart and #addedPart + 1 or 0)      or nil,
+          deletedEnd   = deletedPart and afterAhead + (addedPart and #addedPart + 1 or 0) + #deletedPart or nil,
+        }
       end
-      local pad      = winWidth - rightMargin - prefixW - vim.api.nvim_strwidth(name) - badgeW
-      local text     = prefix .. name .. string.rep(' ', pad) .. badge
-      local badgeStart = #prefix + #name + pad
-      table.insert(lines, text)
-      lineMap[#lines] = {
-        type         = 'repo',
-        root         = root,
-        isActive     = isActive,
-        badgeStart   = badgeStart,
-        badgeEnd     = badgeStart + #badge,
-        addedStart   = addedPart   and badgeStart                              or nil,
-        addedEnd     = addedPart   and badgeStart + #addedPart                 or nil,
-        deletedStart = deletedPart and badgeStart + (addedPart and #addedPart + 1 or 0) or nil,
-        deletedEnd   = deletedPart and badgeStart + (addedPart and #addedPart + 1 or 0) + #deletedPart or nil,
-      }
+      table.insert(lines, '')
     end
-    table.insert(lines, '')
-  end
 
   local staged, unstaged = {}, {}
   for _, e in ipairs(state.status.files) do
@@ -180,9 +185,12 @@ function M.render(state)
     if info then
       if info.type == 'repo' then
         if info.isActive then
-          vim.api.nvim_buf_add_highlight(buf, ns, 'GitPanelHeading', lnum - 1, 0, -1)
-        end
-        if info.addedStart then
+            vim.api.nvim_buf_add_highlight(buf, ns, 'GitPanelHeading', lnum - 1, 0, -1)
+          end
+          if info.aheadStart then
+            vim.api.nvim_buf_add_highlight(buf, ns, 'GitPanelChange', lnum - 1, info.aheadStart, info.aheadEnd)
+          end
+          if info.addedStart then
           vim.api.nvim_buf_add_highlight(buf, ns, 'GitPanelAdd', lnum - 1, info.addedStart, info.addedEnd)
         end
         if info.deletedStart then

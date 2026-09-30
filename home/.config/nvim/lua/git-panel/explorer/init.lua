@@ -28,30 +28,40 @@ local function fetchRepoStats(state)
 	end
 
 	local a, d = sumStatus(state.status)
-	state.repoStats[state.gitRoot] = { added = a, deleted = d }
+	state.repoStats[state.gitRoot] = { added = a, deleted = d, ahead = git.aheadCount(state.gitRoot) }
 
 	for _, root in ipairs(repos) do
 		if root ~= state.gitRoot then
-			state.repoStats[root] = { added = 0, deleted = 0 }
-			local function onDiff(result)
-				if result.code == 0 then
-					local ra, rd = parseNumstatTotals(result.stdout or '')
-					state.repoStats[root].added = state.repoStats[root].added + ra
-					state.repoStats[root].deleted = state.repoStats[root].deleted + rd
-				end
+			state.repoStats[root] = { added = 0, deleted = 0, ahead = 0 }
+			local function rerender()
 				vim.schedule(function()
 					if state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
 						render.render(state)
 					end
 				end)
 			end
-			vim.system({ 'git', 'diff', '--numstat' }, { cwd = root, text = true }, onDiff)
-			vim.system({ 'git', 'diff', '--cached', '--numstat' }, { cwd = root, text = true }, onDiff)
+			local function onDiff(result)
+				if result.code == 0 then
+					local ra, rd = parseNumstatTotals(result.stdout or '')
+					state.repoStats[root].added = state.repoStats[root].added + ra
+					state.repoStats[root].deleted = state.repoStats[root].deleted + rd
+				end
+				rerender()
+			end
+			vim.system({ 'git', '--no-optional-locks', 'diff', '--numstat' }, { cwd = root, text = true }, onDiff)
+			vim.system({ 'git', '--no-optional-locks', 'diff', '--cached', '--numstat' }, { cwd = root, text = true }, onDiff)
+			vim.system({ 'git', '--no-optional-locks', 'rev-list', '--count', '@{u}..HEAD' }, { cwd = root, text = true }, function(result)
+				if result.code == 0 then
+					state.repoStats[root].ahead = tonumber(vim.trim(result.stdout or '0')) or 0
+				end
+				rerender()
+			end)
 		end
 	end
 end
 
-function M.selectFile(state, absPath, group)
+-- line: optional, opens the diff on that line instead of its first change
+function M.selectFile(state, absPath, group, line)
 	local entry
 	for _, e in ipairs(state.status.files) do
 		if state.gitRoot .. '/' .. e.path == absPath then
@@ -67,7 +77,7 @@ function M.selectFile(state, absPath, group)
 	state.selected = { entry = entry, group = group or entry.group }
 	require('utils.git').activeFile = absPath
 	render.render(state)
-	require('git-panel.diff').open(state)
+	require('git-panel.diff').open(state, line)
 end
 
 function M.switchRepo(state, root)
@@ -113,17 +123,17 @@ M.refresh = git.async(function(state)
 	render.render(state)
 
 	if state.preselect then
-		local filepath = state.preselect
+		local preselect = state.preselect
 		state.preselect = nil
-		M.selectFile(state, filepath)
+		M.selectFile(state, preselect.path, nil, preselect.line)
 	end
 end)
 
 local function setupWin(state, win)
 	vim.api.nvim_win_set_buf(win, state.explorerBuf)
-	vim.api.nvim_win_set_width(win, require('plugins.explorer').sidebarWidth)
+	require('utils.sidebar').apply(win)
 	vim.wo[win].winfixwidth = true
-	vim.wo[win].winfixbuf = true -- disables opening files in this window; when explorer is focused and fff opens a file, nvim would open it here instead of diff area
+	vim.wo[win].winfixbuf = true -- disables opening files in this window; when explorer is focused and a file is opened, nvim would open it here instead of diff area
 	vim.wo[win].signcolumn = 'no'
 	vim.wo[win].cursorline = true
 	vim.wo[win].fillchars = 'eob: ,vert: ,horiz:─,vertleft: '
@@ -190,12 +200,17 @@ function M.init(state)
 	setupWin(state, state.explorerWin)
 
 	local function openAtCursor()
-		local lnum = vim.api.nvim_win_get_cursor(state.explorerWin)[1]
+		local pos = vim.api.nvim_win_get_cursor(state.explorerWin)
+		local lnum, col = pos[1], pos[2]
 		local info = state.lineMap[lnum]
 		if not info then
 			return
 		end
 		if info.type == 'repo' then
+			if info.isActive and info.aheadStart and col >= info.aheadStart and col < info.aheadEnd then
+				require('git-panel.explorer.commit').push(state)
+				return
+			end
 			if not info.isActive then
 				M.switchRepo(state, info.root)
 				M.refresh(state)
@@ -236,20 +251,19 @@ function M.init(state)
 		return entries
 	end
 
-	local function stageFiles(action)
-		local selected = getSelectedEntries()
-		local paths = {}
-		for _, info in ipairs(selected) do
-			if action == 'stage' and info.group == 'unstaged' then
-				table.insert(paths, info.entry.path)
-			elseif action == 'unstage' and info.group == 'staged' then
-				table.insert(paths, info.entry.path)
-			end
-		end
+ local function stageFiles(action, selected)
+ 	local paths = {}
+ 	for _, info in ipairs(selected) do
+ 		if action == 'stage' and info.group == 'unstaged' then
+ 			table.insert(paths, info.entry.path)
+ 		elseif action == 'unstage' and info.group == 'staged' then
+ 			table.insert(paths, info.entry.path)
+ 		end
+ 	end
 
-		if #paths == 0 then
-			return
-		end
+ 	if #paths == 0 then
+ 		return
+ 	end
 
 		local gitArgs
 		if action == 'stage' then
@@ -273,11 +287,12 @@ function M.init(state)
 		end)
 	end
 
-	local function discardFiles()
-		local selected = getSelectedEntries()
-		local targets = {}
+ local function discardFiles(selected)
+ 	local targets = {}
 		for _, info in ipairs(selected) do
-			table.insert(targets, info.entry)
+			if info.group == 'unstaged' then
+				table.insert(targets, info.entry)
+			end
 		end
 
 		if #targets == 0 then
@@ -304,13 +319,14 @@ function M.init(state)
 				cmd = { 'git', 'clean', '-f', '--', entry.path }
 			elseif entry.status == 'A' then
 				cmd = { 'git', 'rm', '-f', '--', entry.path }
-			elseif entry.group == 'unstaged' then
-				cmd = { 'git', 'checkout', '--', entry.path }
 			else
-				cmd = { 'git', 'checkout', 'HEAD', '--', entry.path }
+				cmd = { 'git', 'checkout', '--', entry.path }
 			end
 
-			vim.system(cmd, { cwd = state.gitRoot }, function()
+			vim.system(cmd, { cwd = state.gitRoot }, function(result)
+				if result.code ~= 0 then
+					vim.schedule(function() vim.notify(result.stderr, vim.log.levels.ERROR) end)
+				end
 				nextDiscard()
 			end)
 		end
@@ -334,13 +350,14 @@ function M.init(state)
 	vim.keymap.set('n', '<LeftRelease>', openAtCursor, o)
 	vim.keymap.set('n', '<Up>',   function() navigate(-1) end, o)
 	vim.keymap.set('n', '<Down>', function() navigate(1) end, o)
-	vim.keymap.set({ 'n', 'v' }, '=', function()
-		stageFiles 'stage'
-	end, o)
-	vim.keymap.set({ 'n', 'v' }, '-', function()
-		stageFiles 'unstage'
-	end, o)
-	vim.keymap.set({ 'n', 'v' }, '_', discardFiles, o)
+ vim.keymap.set({ 'n', 'v' }, '=', function()
+ 	stageFiles('stage', getSelectedEntries())
+ end, o)
+ vim.keymap.set({ 'n', 'v' }, '-', function()
+ 	local selected = getSelectedEntries()
+ 	stageFiles('unstage', selected)
+ 	discardFiles(selected)
+ end, o)
 
 	require('git-panel.explorer.watcher').start(state)
 	M.refresh(state)
@@ -350,7 +367,7 @@ function M.init(state)
 	vim.api.nvim_create_autocmd({ 'FocusGained', 'BufWritePost', 'FileChangedShellPost', 'BufEnter' }, {
 		group = refreshGroup,
 		callback = function()
-			if require('git-panel').active and state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
+			if require('git-panel').isActive() and state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
 				if vim.o.autoread then
 					vim.cmd('checktime')
 				end
@@ -362,7 +379,7 @@ function M.init(state)
 	vim.api.nvim_create_autocmd('WinResized', {
 		group = vim.api.nvim_create_augroup('GitPanelExplorerResize', { clear = true }),
 		callback = function()
-			if require('git-panel').active and state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
+			if require('git-panel').isActive() and state.explorerBuf and vim.api.nvim_buf_is_valid(state.explorerBuf) then
 				render.render(state)
 			end
 		end,

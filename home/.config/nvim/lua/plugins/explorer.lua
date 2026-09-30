@@ -8,7 +8,7 @@ return {
 			'<C-b>',
 			function()
 				local gp = require 'git-panel'
-				if gp.active and gp._state then
+				if gp.isActive() and gp._state then
 					require('git-panel.explorer').toggleWin(gp._state)
 				else
 					Snacks.explorer.open()
