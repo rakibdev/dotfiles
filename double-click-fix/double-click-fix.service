@@ -1,9 +1,12 @@
 [Unit]
 Description=R65 keyboard double-click fix
 After=systemd-udevd.service
+StartLimitIntervalSec=0
 
 [Service]
 ExecStart=/bin/sh -c 'exec /usr/bin/double-click-fix /dev/input/by-id/usb-Hangsheng_RK-R65-*event*'
+Restart=always
+RestartSec=1
 
 [Install]
 WantedBy=multi-user.target
