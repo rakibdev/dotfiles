@@ -6,7 +6,7 @@
 #include <hyprland/src/includes.hpp>
 #include <hyprland/src/Compositor.hpp>
 #include <hyprland/src/desktop/state/FocusState.hpp>
-#include <hyprland/src/desktop/view/Window.hpp>
+#include <hyprland/src/desktop/view/window/Window.hpp>
 #include <hyprland/src/config/ConfigManager.hpp>
 #include <hyprland/src/config/ConfigValue.hpp>
 #include <hyprland/src/managers/input/InputManager.hpp>
@@ -27,8 +27,8 @@ void hkNewTarget(CScrollingAlgorithm* self, SP<ITarget> target) {
     auto droppingOn = Desktop::focusState()->window();
 
     if (droppingOn && droppingOn->layoutTarget() == target)
-        droppingOn = g_pCompositor->vectorToWindowUnified(g_pInputManager->getMouseCoordsInternal(),
-                                                          Desktop::View::RESERVED_EXTENTS | Desktop::View::INPUT_EXTENTS);
+        droppingOn = Desktop::viewState()->hitTest().windowAt(g_pInputManager->getMouseCoordsInternal(),
+                                                                 Desktop::View::RESERVED_EXTENTS | Desktop::View::INPUT_EXTENTS);
 
     SP<SScrollingTargetData> droppingData   = droppingOn ? self->dataFor(droppingOn->layoutTarget()) : nullptr;
     SP<SColumnData>          droppingColumn = droppingData ? droppingData->column.lock() : nullptr;

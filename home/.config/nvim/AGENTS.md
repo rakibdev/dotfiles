@@ -2,3 +2,4 @@
 - Don't add backup keymaps, only have primary shortcuts
 - Use Neovim native highlight groups/tokens (e.g. `Normal`, `Comment`) instead of hardcoding hex
 - Avoid `pcall`, `ok`, import directly
+- Use `vim.fn.confirm` not `vim.ui.select` for yes/no prompts
