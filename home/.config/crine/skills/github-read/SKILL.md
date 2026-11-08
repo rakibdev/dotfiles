@@ -1,5 +1,5 @@
 ---
-name: explore-repo
+name: github-read
 description: Read/grep in github repo. Use this over git clone
 trigger: github\.com/[\w.-]+/[\w.-]+
 ---
@@ -9,8 +9,3 @@ trigger: github\.com/[\w.-]+/[\w.-]+
 3. webfetch/curl raw URLs to read individual file
 
 Banned commands: git clone, git grep, git -C
-
-## Output
-- File tree + inline summary per file
-- Explain internal architecture with execution steps, input + output data examples. Quote magic lines from code
-- Explicit reference: "UserHandler in handlers/user.go" not "the handler"

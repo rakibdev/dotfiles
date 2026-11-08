@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@ai-sdk/alibaba": "latest",
+    "@earendil-works/pi-ai": "0.87.1",
+    "@twinkleplop/theme-github": "^0.2.4"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.2"
+  }
+}

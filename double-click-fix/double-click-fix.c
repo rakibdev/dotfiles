@@ -89,8 +89,15 @@ void run(long argc, char **argv) {
       continue;
     for (int i = 0; i < n; i++) {
       struct input_event e;
-      if (read(events[i].data.fd, &e, sizeof(e)) != sizeof(e))
+      if (read(events[i].data.fd, &e, sizeof(e)) != sizeof(e)) {
+        // USB replug kills the fd; epoll reports EPOLLERR forever -> 100% CPU
+        // spin. Drop dead fd, exit when none left; systemd
+        // (StartLimitIntervalSec=0) restarts us to re-open new event nodes.
+        epoll_ctl(ep, EPOLL_CTL_DEL, events[i].data.fd, 0);
+        if (--nfds == 0)
+          exit(1);
         continue;
+      }
       if (e.type == EV_KEY && e.code < KEY_MAX) {
         int src = events[i].data.fd;
         if (e.value == 1) {

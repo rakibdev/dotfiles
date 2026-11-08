@@ -24,7 +24,8 @@ source $pluginsDir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 alias -s {jpg,jpeg,png,gif,webp,md,json,js,ts}=xdg-open
 alias poolkit=/usr/lib/xfce-polkit/xfce-polkit
 alias ls='ls --color=auto'
-alias yay="yay --noconfirm --sudoloop"
+# --builddir builds in /tmp (tmpfs, in RAM) to avoid disk writes
+alias yay="yay --sudoloop --builddir /tmp"
 # bun update ignores package.json if version has ^ prefix, --latest forces
 alias bun-update="bun update --latest"
 # alias yarn=bun
