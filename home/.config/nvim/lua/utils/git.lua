@@ -2,7 +2,6 @@ local M = {}
 
 M.repos       = {}
 M.activeRoot  = nil
-M.activeFile  = nil
 M.locked      = false  -- prevents BufEnter from overwriting activeRoot while git-panel is open
 
 local function updateActiveRoot()
@@ -16,9 +15,17 @@ end
 local grp = vim.api.nvim_create_augroup('GitActiveRoot', { clear = true })
 vim.api.nvim_create_autocmd('VimEnter', { group = grp, once = true, callback = updateActiveRoot })
 vim.api.nvim_create_autocmd('BufEnter', { group = grp, callback = updateActiveRoot })
+vim.api.nvim_create_autocmd('DirChanged', {
+  group    = grp,
+  callback = function()
+    M.activeRoot = nil -- falls back to repoList()[1] until BufEnter picks one
+    M.scanRepos()
+  end,
+})
 
 function M.scanRepos()
   local cwd = vim.fn.getcwd()
+  M.repos = {} -- drop the previous project's repos
   vim.system(
     { 'find', '.', '-maxdepth', '3', '-name', '.git', '-type', 'd', '-not', '-path', '*/.git/*' },
     { cwd = cwd, text = true },
@@ -58,7 +65,7 @@ function M.getBranch(root)
   root = root or M.getActiveRoot()
   if not root then return nil end
   local branch = vim.fn.systemlist(
-    'git -C ' .. vim.fn.shellescape(root) .. ' rev-parse --abbrev-ref HEAD'
+    'git --no-optional-locks -C ' .. vim.fn.shellescape(root) .. ' rev-parse --abbrev-ref HEAD'
   )[1]
   return (vim.v.shell_error == 0 and branch ~= 'HEAD') and branch or nil
 end
@@ -178,17 +185,17 @@ function M.getStatus(gitRoot, callback)
     callback(nil, result)
   end
 
-  runGitAsync({ "status", "--porcelain", "-uall", "-M" }, { cwd = gitRoot }, function(err, out)
+  runGitAsync({ "--no-optional-locks", "status", "--porcelain", "-uall", "-M" }, { cwd = gitRoot }, function(err, out)
     if err and not firstErr then firstErr = err end
     porcelainOut = out or ""
     done()
   end)
-  runGitAsync({ "diff", "--numstat" }, { cwd = gitRoot }, function(err, out)
+  runGitAsync({ "--no-optional-locks", "diff", "--numstat" }, { cwd = gitRoot }, function(err, out)
     if err and not firstErr then firstErr = err end
     unstagedStats = parseNumstat(out or "")
     done()
   end)
-  runGitAsync({ "diff", "--cached", "--numstat" }, { cwd = gitRoot }, function(err, out)
+  runGitAsync({ "--no-optional-locks", "diff", "--cached", "--numstat" }, { cwd = gitRoot }, function(err, out)
     if err and not firstErr then firstErr = err end
     stagedStats = parseNumstat(out or "")
     done()

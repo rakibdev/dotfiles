@@ -5,30 +5,24 @@ vim.keymap.set('n', '<C-q>', '<cmd>qa<CR>')
 -- comment toggle (native gc, nvim 0.10+)
 vim.keymap.set('n', '<C-/>', 'gcc', { remap = true })
 vim.keymap.set('x', '<C-/>', 'gc', { remap = true })
+vim.keymap.set('s', '<C-/>', '<C-g>gc', { remap = true })
 vim.keymap.set('i', '<C-/>', '<cmd>norm gcc<CR>')
-
-local function open_diag()
-  local bufnr, winnr = vim.diagnostic.open_float({
-    focusable    = true,
-    focus        = true,
-    close_events = {}, -- selecting text was closing the float
-    border       = 'rounded',
-    source       = true,
-  })
-  if not winnr then return end
-  local close = function() pcall(vim.api.nvim_win_close, winnr, true) end
-  -- map both modes so Esc closes instantly without first exiting visual
-  vim.keymap.set({ 'n', 'v' }, '<Esc>', close, { buffer = bufnr, nowait = true })
-  vim.keymap.set('v', '<C-c>', copyClean, { buffer = bufnr, nowait = true })
-end
-
-vim.keymap.set('n', '<leader>d', open_diag)
 
 -- word jump
 vim.keymap.set({'n','v'}, '<C-Left>',  'b')
 vim.keymap.set({'n','v'}, '<C-Right>', 'w')
 vim.keymap.set('i', '<C-Left>',  '<C-o>b')
 vim.keymap.set('i', '<C-Right>', '<C-o>w')
+
+-- move by display rows so wrapped lines don't get skipped
+for key, motion in pairs({ Up = 'gk', Down = 'gj' }) do
+  vim.keymap.set({'n','x'}, '<' .. key .. '>', motion)
+  vim.keymap.set('i', '<' .. key .. '>', '<C-o>' .. motion)
+  vim.keymap.set('n', '<S-' .. key .. '>', 'v' .. motion .. '<C-g>')
+  vim.keymap.set('i', '<S-' .. key .. '>', '<C-o>v' .. motion .. '<C-g>')
+  vim.keymap.set('x', '<S-' .. key .. '>', motion)
+  vim.keymap.set('s', '<S-' .. key .. '>', '<C-o>' .. motion)
+end
 
 -- ctrl+backspace delete word
 vim.keymap.set('i', '<C-H>',  '<C-W>', { noremap = true })
@@ -40,8 +34,8 @@ vim.keymap.set({'n','v','s'}, '<C-s>', '<cmd>silent w<CR>')  -- silent disables 
 vim.keymap.set('i', '<C-s>', '<Esc><cmd>silent w<CR>a')
 vim.keymap.set({'n','i','v','s'}, '<C-z>', '<cmd>undo<CR>')
 vim.keymap.set({'n','i','v','s'}, '<C-y>', '<cmd>redo<CR>')
--- prevent accidental suspend when holding shift during redo
 vim.keymap.set({'n','i','v','s'}, '<C-S-z>', '<Nop>')
+vim.keymap.set('n', 'u', '<Nop>') -- disable undo, use <C-z> instead
 
 -- select all
 vim.keymap.set('n', '<C-a>', 'ggVG<C-g>', { desc = 'Select all' })
@@ -65,16 +59,16 @@ vim.keymap.set('n', '<C-x>', '"+dd')
 vim.keymap.set('i', '<C-x>', '<Esc>"+ddi')
 
 -- Tab / Shift-Tab to indent / outdent selection
-vim.keymap.set('s', '<Tab>', '<C-g>>gv<C-g>')
-vim.keymap.set('s', '<S-Tab>', '<C-g><gv<C-g>')
+vim.keymap.set({'v','s'}, '<Tab>', '>gv')
+vim.keymap.set({'v','s'}, '<S-Tab>', '<gv')
 
 -- Alt+Arrow to move line / selection up / down
 vim.keymap.set('n', '<A-Up>', '<cmd>m .-2<CR>==')
 vim.keymap.set('n', '<A-Down>', '<cmd>m .+1<CR>==')
 vim.keymap.set('i', '<A-Up>', '<Esc><cmd>m .-2<CR>==gi')
 vim.keymap.set('i', '<A-Down>', '<Esc><cmd>m .+1<CR>==gi')
-vim.keymap.set('s', '<A-Up>', "<C-g><cmd>'<,'>m '<-2<CR>gv=gv<C-g>")
-vim.keymap.set('s', '<A-Down>', "<C-g><cmd>'<,'>m '>+1<CR>gv=gv<C-g>")
+vim.keymap.set({'v','s'}, '<A-Up>', "<cmd>'<,'>m '<-2<CR>gv=gv")
+vim.keymap.set({'v','s'}, '<A-Down>', "<cmd>'<,'>m '>+1<CR>gv=gv")
 
 -- ctrl+shift+arrow → word selection in SELECT mode (keymodel covers plain shift, not ctrl variant).
 -- not using plain `<C-g>w<C-g>` because at the buffer end it removes the selection.
@@ -95,8 +89,6 @@ vim.keymap.set({'v','s'}, '<C-S-Left>',  word_extend('b'))
 -- alt+wheel → horizontal scroll
 vim.keymap.set({'n', 'v', 'i'}, '<A-ScrollWheelUp>', '<ScrollWheelLeft>')
 vim.keymap.set({'n', 'v', 'i'}, '<A-ScrollWheelDown>', '<ScrollWheelRight>')
-
-vim.keymap.set('n', '<C-p>', function() require('recent-picker').open() end)
 
 vim.keymap.set('n', '<M-Left>', '<C-o>', { desc = 'Jump backward in history' })
 

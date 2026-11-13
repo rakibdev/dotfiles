@@ -1,6 +1,10 @@
 vim.g.mapleader = '\\'
+vim.opt.title = true -- title for hyprland.lua
 vim.opt.fillchars = { eob = ' ', vert = ' ', vertright = ' ', vertleft = ' ', verthoriz = ' ' }
 vim.opt.cmdheight = 0
+-- git-mode lives in its own tabpage; a tabline would shift every window down
+-- a row when it opens. <C-g> is the only way to switch.
+vim.opt.showtabline = 0
 vim.opt.mouse = 'a'
 vim.opt.sidescroll = 6
 vim.opt.keymodel = 'startsel,stopsel' -- shift+arrow starts/stops selection
@@ -10,9 +14,17 @@ vim.opt.whichwrap:append '<,>,[,]' -- wrap left/right arrows to previous/next li
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+
+-- stop .tar.gz, .zip browsing
+vim.g.loaded_tarPlugin = 1
+vim.g.loaded_gzipPlugin = 1
+vim.g.loaded_zipPlugin = 1
+
+require('utils.binary').setup()
+
 vim.opt.termguicolors = true
 vim.opt.clipboard = 'unnamedplus'
-vim.opt.guicursor = 'n-c-v:block,i:ver25' -- block cursor normally, line in insert
+vim.opt.guicursor = 'n-c:block,v:ver25,i:ver25' -- block cursor normally, line in visual/insert
 
 vim.opt.swapfile = false
 vim.opt.number = false
@@ -32,3 +44,11 @@ vim.opt.iskeyword:append '-'
 
 -- overwrite files in-place. Vite file-watching HMR does not work without this
 vim.opt.backupcopy = 'yes'
+
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'json',
+	callback = function()
+		-- treat .json as jsonc so comment toggle works
+		vim.bo.filetype = 'jsonc'
+	end,
+})

@@ -7,22 +7,22 @@ local GAP = '  '
 local git = require('utils.git')
 
 local modes = {
-	n = { 'NORMAL', 'SLNormal' },
-	no = { 'NORMAL', 'SLNormal' },
-	nov = { 'NORMAL', 'SLNormal' },
-	i = { 'INSERT', 'SLInsert' },
-	ic = { 'INSERT', 'SLInsert' },
-	v = { 'VISUAL', 'SLVisual' },
-	V = { 'V-LINE', 'SLVisual' },
-	['\22'] = { 'V-BLOCK', 'SLVisual' },
-	s = { 'SELECT', 'SLVisual' },
-	S = { 'S-LINE', 'SLNormal' },
-	['\19'] = { 'S-BLOCK', 'SLNormal' },
-	R = { 'REPLACE', 'SLReplace' },
-	Rc = { 'REPLACE', 'SLReplace' },
-	c = { 'COMMAND', 'SLCommand' },
-	cv = { 'COMMAND', 'SLCommand' },
-	t = { 'TERMINAL', 'SLTerminal' },
+	n = { 'N', 'SLNormal' },
+	no = { 'N', 'SLNormal' },
+	nov = { 'N', 'SLNormal' },
+	i = { 'I', 'SLInsert' },
+	ic = { 'I', 'SLInsert' },
+	v = { 'V', 'SLVisual' },
+	V = { 'VL', 'SLVisual' },
+	['\22'] = { 'VB', 'SLVisual' },
+	s = { 'S', 'SLVisual' },
+	S = { 'SL', 'SLNormal' },
+	['\19'] = { 'SB', 'SLNormal' },
+	R = { 'R', 'SLReplace' },
+	Rc = { 'R', 'SLReplace' },
+	c = { 'C', 'SLCommand' },
+	cv = { 'C', 'SLCommand' },
+	t = { 'T', 'SLTerminal' },
 }
 
 local function hl(group, text)
@@ -30,11 +30,9 @@ local function hl(group, text)
 end
 
 local function sectionMode()
-	local raw = vim.fn.mode()
-	local m = modes[raw]
-	local label = m and m[1] or raw:upper()
-	local group = m and m[2] or 'SLNormal'
-	return hl(group, ' ' .. label .. ' ')
+	local m = modes[vim.fn.mode()]
+	if not m then return '' end
+	return hl(m[2], ' ' .. m[1] .. ' ')
 end
 
 local function sectionBranch()

@@ -1,34 +1,3 @@
-local MAX_ITEMS = 10
-
-local function recentSection()
-	local recent = require 'recent-picker'
-	local items = {}
-
-	for index, dir in ipairs(recent.recentDirs(MAX_ITEMS)) do
-		local name = vim.fn.fnamemodify(dir, ':t')
-		local parent = vim.fn.fnamemodify(dir, ':~:h')
-		items[index] = {
-			dir = dir,
-			name = name,
-			parent = parent,
-		}
-	end
-
-	return vim.tbl_map(function(item)
-		return {
-			action = function()
-				require('recent-picker').openDir(item.dir)
-			end,
-			align = 'left',
-			text = {
-				Snacks.dashboard.icon(item.dir, 'directory'),
-				{ ' ' .. item.parent .. '/', hl = 'Comment' },
-				{ item.name, hl = 'Normal' },
-			},
-		}
-	end, items)
-end
-
 local function startupSection()
 	local stats = require('lazy.stats').stats()
 	local ms = math.floor(stats.startuptime * 100 + 0.5) / 100
@@ -49,8 +18,6 @@ return {
 		dashboard = {
 			sections = {
 				{ padding = 2 },
-				recentSection,
-				{ padding = 1 },
 				startupSection,
 			},
 		},
@@ -63,7 +30,7 @@ return {
 			group = vim.api.nvim_create_augroup('Welcome', { clear = true }),
 			once = true,
 			callback = function()
-				if vim.env.NVIM_WELCOME ~= '1' then
+				if not vim.env.NVIM_ROOT then
 					Snacks.explorer.open { focus = false }
 					return
 				end

@@ -1,6 +1,6 @@
 vim.diagnostic.config {
 	virtual_text = false,
-	virtual_lines = false,
+	virtual_lines = true,
 	update_in_insert = false,
 	signs = {
 		text = {
@@ -9,11 +9,6 @@ vim.diagnostic.config {
 			[vim.diagnostic.severity.INFO] = '',
 			[vim.diagnostic.severity.HINT] = '',
 		},
-	},
-	float = {
-		focusable = true,
-		border = 'rounded',
-		source = true,
 	},
 }
 
@@ -34,8 +29,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 						return
 					end
 					local item = options.items[1]
-					vim.cmd('edit ' .. vim.fn.fnameescape(item.filename))
-					vim.api.nvim_win_set_cursor(0, { item.lnum, item.col - 1 })
+					require('utils.picker').openFile(item.filename, { item.lnum, item.col - 1 })
 					vim.cmd 'normal! zz'
 					vim.fn.setreg('/', '\\<' .. word .. '\\>')
 					vim.opt.hlsearch = true
@@ -44,10 +38,32 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		end, { buffer = buf, desc = 'Ctrl+click definition' })
 		vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = buf, desc = 'Hover' })
 		vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = buf, desc = 'References' })
+		vim.keymap.set('n', 'r', function()
+			Snacks.picker.lsp_references {
+				format = function(item)
+					return { { vim.fn.fnamemodify(item.file, ':t'), 'SnacksPickerFile' } }
+				end,
+			}
+		end, { buffer = buf, nowait = true, desc = 'References' })
 		vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, { buffer = buf, desc = 'Rename' })
 		vim.keymap.set({ 'n', 'v' }, '<C-S-a>', vim.lsp.buf.code_action, { buffer = buf, desc = 'Code action' })
 	end,
 })
+
+local apply_edit = vim.lsp.util.apply_workspace_edit
+vim.lsp.util.apply_workspace_edit = function(edit, enc)
+	apply_edit(edit, enc)
+	local uris = vim.tbl_keys(edit.changes or {})
+	for _, change in ipairs(edit.documentChanges or {}) do
+		table.insert(uris, change.textDocument.uri)
+	end
+	for _, uri in ipairs(uris) do
+		vim.api.nvim_buf_call(vim.uri_to_bufnr(uri), function()
+			vim.cmd 'silent update'
+		end)
+	end
+	vim.notify('Renamed in ' .. #uris .. ' files')
+end
 
 vim.lsp.handlers['textDocument/references'] = function(_, result, ctx)
 	if not result or #result == 0 then
@@ -104,8 +120,8 @@ vim.lsp.handlers['textDocument/references'] = function(_, result, ctx)
 	vim.keymap.set('n', 'q', close, { buffer = buf, nowait = true })
 end
 
-vim.lsp.config('tsgo', {
-	cmd = { 'tsgo', '--lsp', '--stdio' },
+vim.lsp.config('tsrs', {
+	cmd = { 'tsrs', '--lsp', '-stdio' },
 	filetypes = { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
 	root_dir = function(bufnr, on_dir)
 		local root = vim.fs.root(
@@ -127,7 +143,7 @@ vim.lsp.config('tsgo', {
 		},
 	},
 })
-vim.lsp.enable 'tsgo'
+vim.lsp.enable 'tsrs'
 
 vim.lsp.config('jsonls', {
 	cmd = { 'vscode-json-language-server', '--stdio' },
@@ -151,9 +167,9 @@ vim.lsp.config('oxlint', {
 vim.lsp.enable 'oxlint'
 
 vim.lsp.config('tailwindcss', {
-	cmd = { 'tailwindcss-language-server', '--stdio' },
+	cmd = { 'bun', '--bun', vim.fn.exepath 'tailwindcss-language-server', '--stdio' },
 	filetypes = { 'html', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
-	root_markers = { 'package.json', '.git' },
+	root_markers = { 'tailwind.config.ts' },
 	settings = {
 		tailwindCSS = {
 			includeLanguages = {

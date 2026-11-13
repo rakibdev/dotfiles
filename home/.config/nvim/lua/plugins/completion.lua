@@ -4,6 +4,7 @@ return {
   dependencies = { 'Kaiser-Yang/blink-cmp-dictionary' },
   opts = {
     enabled = function()
+      if vim.b.completion == false then return false end
       local col = vim.api.nvim_win_get_cursor(0)[2]
       local line = vim.api.nvim_get_current_line()
       local char_after = line:sub(col + 1, col + 1)

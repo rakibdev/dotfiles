@@ -1,3 +1,5 @@
+local M = {}
+
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -44,14 +46,31 @@ vim.keymap.set('v', '<C-h>', function()
 	replace(visualSelection())
 end)
 
+-- track search state ourselves; v:hlsearch is unreliable right after a search
+local searching = false
+
+M.searching = function() return searching end
+
+vim.api.nvim_create_autocmd('CmdlineLeave', {
+	pattern = { '/', '?' },
+	callback = function()
+		searching = not vim.v.event.abort
+	end,
+})
+
 -- Esc to exit search
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { silent = true })
+vim.keymap.set('n', '<Esc>', function()
+	searching = false
+	vim.cmd 'nohlsearch'
+end, { silent = true })
 
 -- Enter / Shift+Enter navigate matches when search is active
 vim.keymap.set('n', '<CR>', function()
-	return vim.v.hlsearch == 1 and 'n' or '<CR>'
+	return searching and 'n' or '<CR>'
 end, { expr = true })
 
 vim.keymap.set('n', '<S-CR>', function()
-	return vim.v.hlsearch == 1 and 'N' or '<S-CR>'
+	return searching and 'N' or '<S-CR>'
 end, { expr = true })
+
+return M
