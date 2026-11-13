@@ -3,12 +3,14 @@ return {
   name = 'autoread',
   lazy = false,
   config = function()
-    vim.o.autoread = true
-    -- silence "file no longer available" warning
+    -- silence "file no longer available" warning; external writes (ai agent) win over unsaved edits
     vim.api.nvim_create_autocmd('FileChangedShell', {
       callback = function()
-        if vim.v.fcs_reason == 'deleted' then
+        local reason = vim.v.fcs_reason
+        if reason == 'deleted' then
           vim.v.fcs_choice = 'ignore'
+        elseif reason == 'changed' or reason == 'conflict' then
+          vim.v.fcs_choice = 'reload'
         end
       end,
     })

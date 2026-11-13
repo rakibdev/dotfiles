@@ -1,12 +1,26 @@
-local M = {}
+local M    = {}
 local hl   = require('git-panel.diff.highlights')
 local wins = require('git-panel.diff.windows')
-
-function M.reload(state) hl.reload(state) end
+local data = require('git-panel.diff.data')
 
 function M.clear(state)
   hl.clear(state.diffOrigBuf)
   hl.clear(state.diffModBuf)
+end
+
+-- leaving git-mode: the modified pane holds the REAL file buffer, shared with
+-- the home tab, so its diff highlights/fillers and disabled diagnostics would
+-- follow you out. strip them and stop the edit watcher (which would otherwise
+-- re-add highlights as you type there). re-entry re-renders everything.
+function M.detach(state)
+  hl.clear(state.diffOrigBuf)
+  hl.clear(state.diffModBuf)
+  pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelDiffEdit')
+  for _, buf in ipairs({ state.diffOrigBuf, state.diffModBuf }) do
+    if buf and vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype ~= 'nofile' then
+      vim.diagnostic.enable(true, { bufnr = buf })
+    end
+  end
 end
 
 -- collapses diff back to a single window, clears highlights, drops scratch buffers.
@@ -15,9 +29,7 @@ end
 function M.teardown(state, keepWin)
   hl.clear(state.diffOrigBuf)
   hl.clear(state.diffModBuf)
-  pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelSync')
   pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelDiffEdit')
-  pcall(vim.api.nvim_del_augroup_by_name, 'GitPanelDiffOwn')
 
   keepWin = keepWin or state.diffAreaWin
   for _, win in ipairs({ state.diffOrigWin, state.diffModWin }) do
@@ -28,6 +40,7 @@ function M.teardown(state, keepWin)
   state.diffAreaWin = (keepWin and vim.api.nvim_win_is_valid(keepWin)) and keepWin or state.diffAreaWin
   state.diffOrigWin = nil
   state.diffModWin  = nil
+  state.diffLayout  = nil
 
   for _, buf in ipairs({ state.diffOrigBuf, state.diffModBuf }) do
     if buf and vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == 'nofile' then
@@ -41,73 +54,120 @@ function M.teardown(state, keepWin)
   if state.diffAreaWin and vim.api.nvim_win_is_valid(state.diffAreaWin) then
     vim.wo[state.diffAreaWin].scrollbind = false
     vim.wo[state.diffAreaWin].cursorbind = false
+    vim.wo[state.diffAreaWin].winfixbuf  = false -- callers (e.g. picker) are about to :edit into it
   end
 end
 
-function M.open(state)
-  state.opening   = true
-  local sel       = state.selected
-  local path      = sel.entry.path
-  local absPath   = state.gitRoot .. '/' .. path
-  local status    = sel.entry.status
-  local isStaged  = sel.group == 'staged'
-  local isNew     = status == 'A' or status == '??'
-  local isDeleted = status == 'D'
-  local isSingle  = isNew or isDeleted
-  local ft        = vim.filetype.match({ filename = path })
+local function makeNofileBuf(ft, name, lines)
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.bo[buf].buftype  = 'nofile'
+  vim.bo[buf].swapfile = false
+  if ft then vim.bo[buf].filetype = ft end
+  vim.bo[buf].modifiable = true
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  vim.bo[buf].modifiable = false
+  pcall(vim.api.nvim_buf_set_name, buf, name)
+  return buf
+end
 
-  wins.ensureDiffArea(state)
-  if isSingle then wins.setupSingle(state) else wins.setupDouble(state) end
-
-  local oldOrigBuf = state.diffOrigBuf
-  local oldModBuf  = state.diffModBuf
-
-  local function makeNofileBuf(name)
-    local buf = vim.api.nvim_create_buf(false, true)
-    vim.bo[buf].buftype    = 'nofile'
-    vim.bo[buf].swapfile   = false
-    vim.bo[buf].modifiable = false
-    pcall(vim.api.nvim_buf_set_name, buf, name)
-    if ft then vim.bo[buf].filetype = ft end
-    return buf
+local function setupHunkKeymaps(state)
+  local hunk = require('git-panel.diff.hunk')
+  local keyBufs = { state.diffModBuf }
+  if state.diffOrigBuf then table.insert(keyBufs, state.diffOrigBuf) end
+  for _, buf in ipairs(keyBufs) do
+    if vim.api.nvim_buf_is_valid(buf) then
+      local o = { buffer = buf, nowait = true, silent = true }
+      vim.keymap.set({ 'n', 'v' }, '=', function() hunk.stageUnstage(state, 'stage') end, o)
+      vim.keymap.set({ 'n', 'v' }, '-', function()
+        if state.selected.group == 'staged' then hunk.stageUnstage(state, 'unstage')
+        else hunk.discard(state) end
+      end, o)
+      -- when searching, go to next highlight instead of next diff
+      local function nav(searchKey, dir)
+        return function()
+          -- stale pattern (not in this buffer) throws E486: fall through to hunk jump
+          if require('find-replace').searching()
+              and pcall(vim.cmd.normal, { searchKey, bang = true }) then
+            return
+          end
+          hunk.gotoHunk(state, dir)
+        end
+      end
+      vim.keymap.set('n', '<CR>', nav('n', 'next'), o)
+      vim.keymap.set('n', '<S-CR>', nav('N', 'prev'), o)
+    end
   end
+end
 
-  local origRev = isStaged and 'HEAD' or ':0'
+-- renders a fetched diff (see diff/data.lua) into windows/buffers. synchronous
+-- and self-contained, so it can never be interleaved with another render.
+-- line: optional, lands the cursor there instead of on the first change (when
+-- the modified side has that line)
+local function commit(state, fetched, line)
+  local oldOrigBuf, oldModBuf = state.diffOrigBuf, state.diffModBuf
+  local absPath = state.gitRoot .. '/' .. fetched.path
 
-  if isDeleted then
-    local buf = makeNofileBuf(origRev .. ':' .. path)
+  wins.lockBuffers(state, false) -- may be reusing windows locked by the previous render
+  state.diffKind = fetched.kind
+
+  if fetched.kind == 'deleted' then
+    wins.ensureLayout(state, 'single')
+    local buf = makeNofileBuf(fetched.ft, fetched.origRev .. ':' .. fetched.path, fetched.modLines)
     vim.api.nvim_win_set_buf(state.diffModWin, buf)
-    state.diffOrigBuf = nil
-    state.diffModBuf  = buf
-  elseif isNew then
-    state.diffOrigBuf = nil
-    if isStaged then
-      local buf = makeNofileBuf(':0:' .. path)
-      vim.api.nvim_win_set_buf(state.diffModWin, buf)
-      state.diffModBuf = buf
-    else
-      local buf = vim.fn.bufadd(absPath)
-      vim.fn.bufload(buf)
-      vim.api.nvim_win_set_buf(state.diffModWin, buf)
-      state.diffModBuf = buf
-    end
-  else
-    local origBuf = makeNofileBuf(origRev .. ':' .. path)
-    vim.api.nvim_win_set_buf(state.diffOrigWin, origBuf)
-    state.diffOrigBuf = origBuf
+    state.diffOrigBuf, state.diffModBuf = nil, buf
+    hl.markAllDeleted(buf, #fetched.modLines)
 
-    if isStaged then
-      local modBuf = makeNofileBuf(':0:' .. path)
-      vim.api.nvim_win_set_buf(state.diffModWin, modBuf)
-      state.diffModBuf = modBuf
+  elseif fetched.kind == 'binary' then
+    wins.ensureLayout(state, 'single')
+    local buf = makeNofileBuf(nil, fetched.path, fetched.modLines)
+    vim.api.nvim_win_set_buf(state.diffModWin, buf)
+    state.diffOrigBuf, state.diffModBuf = nil, buf
+
+  elseif fetched.kind == 'new' then
+    wins.ensureLayout(state, 'single')
+    state.diffOrigBuf = nil
+    local buf
+    if fetched.useRealBuffer then
+      buf = vim.fn.bufadd(absPath)
+      vim.fn.bufload(buf)
     else
-      local modBuf = vim.fn.bufadd(absPath)
+      buf = makeNofileBuf(fetched.ft, ':0:' .. fetched.path, fetched.modLines)
+    end
+    vim.api.nvim_win_set_buf(state.diffModWin, buf)
+    state.diffModBuf = buf
+    if line then hl.gotoLine(state, line) end
+
+  else -- modified
+    local origBuf = makeNofileBuf(fetched.ft, fetched.origRev .. ':' .. fetched.path, fetched.origLines)
+    local modBuf, modLines
+    if fetched.useRealBuffer then
+      modBuf = vim.fn.bufadd(absPath)
       vim.fn.bufload(modBuf)
-      vim.api.nvim_win_set_buf(state.diffModWin, modBuf)
-      state.diffModBuf = modBuf
+      modLines = vim.api.nvim_buf_get_lines(modBuf, 0, -1, false)
       hl.watchEdits(state, origBuf, modBuf)
+    else
+      modLines = fetched.modLines
+      modBuf = makeNofileBuf(fetched.ft, ':0:' .. fetched.path, modLines)
+    end
+
+    hl.apply(origBuf, modBuf, fetched.origLines, modLines, state)
+
+    wins.ensureLayout(state, 'double')
+    vim.api.nvim_win_set_buf(state.diffOrigWin, origBuf)
+    vim.api.nvim_win_set_buf(state.diffModWin, modBuf)
+    state.diffOrigBuf, state.diffModBuf = origBuf, modBuf
+    if line and line <= vim.api.nvim_buf_line_count(modBuf) then
+      hl.gotoLine(state, line)
+    else
+      hl.gotoFirstChange(state)
     end
   end
+
+  wins.lockBuffers(state, true)
+
+  -- 30x faster
+  if state.diffOrigBuf then vim.diagnostic.enable(false, { bufnr = state.diffOrigBuf }) end
+  if state.diffModBuf  then vim.diagnostic.enable(false, { bufnr = state.diffModBuf }) end
 
   if oldOrigBuf and vim.api.nvim_buf_is_valid(oldOrigBuf) then
     pcall(vim.api.nvim_buf_delete, oldOrigBuf, { force = true })
@@ -117,37 +177,24 @@ function M.open(state)
     pcall(vim.api.nvim_buf_delete, oldModBuf, { force = true })
   end
 
-  if not isDeleted then
-    local hunk = require('git-panel.diff.hunk')
-    local keyBufs = { state.diffModBuf }
-    if state.diffOrigBuf then table.insert(keyBufs, state.diffOrigBuf) end
-    for _, buf in ipairs(keyBufs) do
-      if vim.api.nvim_buf_is_valid(buf) then
-        local o = { buffer = buf, nowait = true, silent = true }
-        vim.keymap.set({ 'n', 'v' }, '=', function() hunk.stageUnstage(state, 'stage') end, o)
-        vim.keymap.set({ 'n', 'v' }, '-', function() hunk.stageUnstage(state, 'unstage') end, o)
-        vim.keymap.set({ 'n', 'v' }, '_', function() hunk.discard(state) end, o)
-        vim.keymap.set('n', '<CR>', function() hunk.gotoHunk(state, 'next') end, o)
-        vim.keymap.set('n', '<S-CR>', function() hunk.gotoHunk(state, 'prev') end, o)
-      end
-    end
+  if fetched.kind ~= 'deleted' and fetched.kind ~= 'binary' then setupHunkKeymaps(state) end
+end
+
+-- fetch and render in one uninterrupted step: nothing (refresh, reload) can run
+-- between a selection being made and its buffers existing
+function M.open(state, line)
+  commit(state, data.fetch(state, state.selected), line)
+end
+
+-- refreshes the rendered diff. a file can change kind under the same path
+-- (untracked -> modified, ...), and then the buffers/layout must be rebuilt.
+function M.reload(state)
+  local fetched = data.fetch(state, state.selected)
+  if fetched.kind == state.diffKind then
+    hl.reload(state, fetched)
+  else
+    commit(state, fetched)
   end
-
-  -- self-cleanup: if a foreign buffer is opened into either diff window
-  -- (ctrl+p, explorer, grep), collapse the diff back to a single window.
-  vim.api.nvim_create_autocmd('BufWinEnter', {
-    group = vim.api.nvim_create_augroup('GitPanelDiffOwn', { clear = true }),
-    callback = function(ev)
-      if state.opening then return end
-      local win = vim.fn.bufwinid(ev.buf)
-      if win ~= state.diffOrigWin and win ~= state.diffModWin then return end
-      if ev.buf == state.diffOrigBuf or ev.buf == state.diffModBuf then return end
-      M.teardown(state, win)
-    end,
-  })
-
-  hl.reload(state, true)
-  vim.schedule(function() state.opening = false end)
 end
 
 return M

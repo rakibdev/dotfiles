@@ -75,7 +75,6 @@ function M.selectFile(state, absPath, group, line)
 		return
 	end
 	state.selected = { entry = entry, group = group or entry.group }
-	require('utils.git').activeFile = absPath
 	render.render(state)
 	require('git-panel.diff').open(state, line)
 end
@@ -100,11 +99,11 @@ M.refresh = git.async(function(state)
 	state.status = status
 
 	if state.selected then
-		local path = state.selected.entry.path
+		local path, group = state.selected.entry.path, state.selected.group
 		local foundEntry
 
 		for _, e in ipairs(status.files) do
-			if e.path == path then
+			if e.path == path and e.group == group then
 				foundEntry = e
 				break
 			end

@@ -143,7 +143,7 @@ end
 
 function M.discard(state)
 	local sel = state.selected
-	if not sel or sel.group == 'staged' then
+	if not sel then
 		return
 	end
 

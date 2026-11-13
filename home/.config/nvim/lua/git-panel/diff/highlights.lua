@@ -1,15 +1,14 @@
 local M = {}
-local git         = require('git-panel.utils')
 local computeDiff = require('git-panel.diff.libdiff').computeDiff
 local ns          = vim.api.nvim_create_namespace('git_panel_diff')
 local nsFiller    = vim.api.nvim_create_namespace('git_panel_filler')
 
-local FILLER_TEXT = string.rep('╱', 500)
+local FILLER_TEXT = string.rep(' ', 500)
 
-local function insertFillers(buf, afterLine, count)
+local function insertFillers(buf, targetLine, count)
   if count <= 0 then return end
-  local above = afterLine < 0
-  local line = above and 0 or afterLine
+  local above = targetLine < 0
+  local line = above and 0 or targetLine
   local virtLines = {}
   for _ = 1, count do
     table.insert(virtLines, { { FILLER_TEXT, 'NonText' } })
@@ -37,7 +36,7 @@ local function setBufLines(buf, lines)
   end
 end
 
-local function applyHighlights(origBuf, modBuf, origLines, modLines, state, isInitial)
+local function applyHighlights(origBuf, modBuf, origLines, modLines, state)
   if not (vim.api.nvim_buf_is_valid(origBuf) and vim.api.nvim_buf_is_valid(modBuf)) then return end
   local ok, result = pcall(computeDiff, origLines, modLines, { ignore_trim_whitespace = true })
   if not ok or not result then return end
@@ -57,87 +56,77 @@ local function applyHighlights(origBuf, modBuf, origLines, modLines, state, isIn
     for l = m.start_line, m.end_line - 1 do
       vim.api.nvim_buf_add_highlight(modBuf, ns, 'DiffAdd', l - 1, 0, -1)
     end
-    for _, ic in ipairs(change.inner_changes or {}) do
-      local oc, mc = ic.original, ic.modified
-      vim.api.nvim_buf_add_highlight(origBuf, ns, 'DiffDeleteWord', oc.start_line - 1, oc.start_col - 1, oc.end_col - 1)
-      vim.api.nvim_buf_add_highlight(modBuf,  ns, 'DiffAddWord',    mc.start_line - 1, mc.start_col - 1, mc.end_col - 1)
-    end
 
     local oLen = o.end_line - o.start_line
     local mLen = m.end_line - m.start_line
     local diff = oLen - mLen
     if diff > 0 then
-      insertFillers(modBuf, m.end_line <= 1 and -1 or m.end_line - 2, diff)
+      local targetLine = mLen == 0 and (m.start_line <= 1 and -1 or m.start_line - 2) or (m.end_line - 2)
+      insertFillers(modBuf, targetLine, diff)
     elseif diff < 0 then
-      insertFillers(origBuf, o.end_line <= 1 and -1 or o.end_line - 2, -diff)
+      local targetLine = oLen == 0 and (o.start_line <= 1 and -1 or o.start_line - 2) or (o.end_line - 2)
+      insertFillers(origBuf, targetLine, -diff)
     end
-
   end
 
-  if isInitial and #result.changes > 0 then
-    local first = result.changes[1]
-    if state.diffOrigWin and vim.api.nvim_win_is_valid(state.diffOrigWin) then
-      vim.api.nvim_win_set_cursor(state.diffOrigWin, { math.max(1, math.min(first.original.start_line, #origLines)), 0 })
-    end
-    if state.diffModWin and vim.api.nvim_win_is_valid(state.diffModWin) then
-      vim.api.nvim_win_set_cursor(state.diffModWin, { math.max(1, math.min(first.modified.start_line, #modLines)), 0 })
+end
+
+-- jumps both panes to the first change. must run AFTER the diff buffers are
+-- placed in their windows, else the line number is clamped against whatever
+-- buffer the window still shows (the previous file) and can be out of range.
+function M.gotoFirstChange(state)
+  local first = state.diffChanges and state.diffChanges[1]
+  if not first then return end
+  local targets = {
+    { win = state.diffOrigWin, line = first.original.start_line },
+    { win = state.diffModWin,  line = first.modified.start_line },
+  }
+  for _, t in ipairs(targets) do
+    if t.win and vim.api.nvim_win_is_valid(t.win) then
+      local lineCount = vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(t.win))
+      pcall(vim.api.nvim_win_set_cursor, t.win, { math.max(1, math.min(t.line, lineCount)), 0 })
     end
   end
 end
 
-M.reload = git.async(function(state, isInitial)
-  local sel = state.selected
-  if not sel then return end
-  local path      = sel.entry.path
-  local status    = sel.entry.status
-  local isStaged  = sel.group == 'staged'
-  local isNew     = status == 'A' or status == '??'
-  local isDeleted = status == 'D'
-  local origRev   = isStaged and 'HEAD' or ':0'
+-- puts both panes on `line` (clamped). cursorbind keeps them tied afterwards.
+function M.gotoLine(state, line)
+  for _, win in ipairs({ state.diffOrigWin, state.diffModWin }) do
+    if win and vim.api.nvim_win_is_valid(win) then
+      local lineCount = vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(win))
+      vim.api.nvim_win_set_cursor(win, { math.max(1, math.min(line, lineCount)), 0 })
+    end
+  end
+end
 
+-- refreshes an already rendered diff in place. `fetched.kind` must equal the
+-- rendered kind (state.diffKind), else the buffers here don't fit it.
+function M.reload(state, fetched)
   local targetOrigBuf = state.diffOrigBuf
   local targetModBuf  = state.diffModBuf
 
-  if isNew then
-    if isStaged then
-      local _, idxLines = git.getFileContent(':0', state.gitRoot, path)
-      if state.diffModBuf == targetModBuf then
-        setBufLines(targetModBuf, idxLines or {})
-      end
+  if fetched.kind == 'new' then
+    if not fetched.useRealBuffer then
+      setBufLines(targetModBuf, fetched.modLines)
     end
     return
   end
 
-  if isDeleted then
-    local _, lines = git.getFileContent(origRev, state.gitRoot, path)
-    lines = lines or {}
-    if state.diffModBuf == targetModBuf then
-      setBufLines(targetModBuf, lines)
-      if vim.api.nvim_buf_is_valid(targetModBuf) then
-        vim.api.nvim_buf_clear_namespace(targetModBuf, ns, 0, -1)
-        for i = 1, #lines do
-          vim.api.nvim_buf_add_highlight(targetModBuf, ns, 'DiffDelete', i - 1, 0, -1)
-        end
-      end
-    end
+  if fetched.kind == 'binary' then return end
+
+  if fetched.kind == 'deleted' then
+    setBufLines(targetModBuf, fetched.modLines)
+    M.markAllDeleted(targetModBuf, #fetched.modLines)
     return
   end
 
-  local _, origLines = git.getFileContent(origRev, state.gitRoot, path)
-  origLines = origLines or {}
-  if state.diffOrigBuf ~= targetOrigBuf or state.diffModBuf ~= targetModBuf then return end
-  setBufLines(targetOrigBuf, origLines)
-
-  if isStaged then
-    local _, idxLines = git.getFileContent(':0', state.gitRoot, path)
-    if state.diffOrigBuf ~= targetOrigBuf or state.diffModBuf ~= targetModBuf then return end
-    setBufLines(targetModBuf, idxLines or {})
-    applyHighlights(targetOrigBuf, targetModBuf, origLines, idxLines or {}, state, isInitial)
-  else
-    local modLines = vim.api.nvim_buf_get_lines(targetModBuf, 0, -1, false)
-    applyHighlights(targetOrigBuf, targetModBuf, origLines, modLines, state, isInitial)
-  end
-end)
+  setBufLines(targetOrigBuf, fetched.origLines)
+  local modLines = fetched.useRealBuffer
+    and vim.api.nvim_buf_get_lines(targetModBuf, 0, -1, false)
+    or fetched.modLines
+  if not fetched.useRealBuffer then setBufLines(targetModBuf, modLines) end
+  applyHighlights(targetOrigBuf, targetModBuf, fetched.origLines, modLines, state)
+end
 
 function M.watchEdits(state, origBuf, modBuf)
   vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
@@ -154,11 +143,21 @@ function M.watchEdits(state, origBuf, modBuf)
   })
 end
 
+function M.markAllDeleted(buf, count)
+  if not vim.api.nvim_buf_is_valid(buf) then return end
+  vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+  for i = 1, count do
+    vim.api.nvim_buf_add_highlight(buf, ns, 'DiffDelete', i - 1, 0, -1)
+  end
+end
+
 function M.clear(buf)
   if buf and vim.api.nvim_buf_is_valid(buf) then
     vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, nsFiller, 0, -1)
   end
 end
+
+M.apply = applyHighlights
 
 return M

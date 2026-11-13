@@ -1,17 +1,17 @@
 source ~/Downloads/dotfiles/scripts/capture/utils.sh
 
 usage() {
-  echo "Usage: record [--selection] [--audio] [--help]"
+  echo "Usage: record [--selection] [--no-audio] [--help]"
 }
 
 if [[ "$1" == "--help" ]]; then usage; exit 0; fi
 
 selection=false
-audio=false
+audio=true
 while [[ $# -gt 0 ]]; do
   case $1 in
     --selection) selection=true; shift ;;
-    --audio) audio=true; shift ;;
+    --no-audio) audio=false; shift ;;
     *) error "Unknown argument: $1"; exit 1 ;;
   esac
 done

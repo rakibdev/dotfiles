@@ -7,7 +7,7 @@ vim.opt.rtp:prepend(lazypath)
 require("options")
 require("keymaps")
 require("selection")
-require("recent-picker")
+require("workspace")
 require("find-replace")
 require("lsp")
 

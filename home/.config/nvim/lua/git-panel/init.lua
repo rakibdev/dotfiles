@@ -175,12 +175,11 @@ function M.open()
   M._state = state
   state.gitRoot = root
   state.snap = snap
-  -- opens that file's diff if it has one, on the line you were on; otherwise
-  -- the file stays as it is
-  local preselectPath = editorFile or gitUtil.activeFile
-  state.preselect = preselectPath and {
-    path = preselectPath,
-    line = editorFile and vim.api.nvim_win_get_cursor(editorWin)[1] or nil,
+  -- opens the editor file's diff if it has one, on the line you were on;
+  -- otherwise the file stays as it is
+  state.preselect = editorFile and {
+    path = editorFile,
+    line = vim.api.nvim_win_get_cursor(editorWin)[1],
   } or nil
 
   gitUtil.activeRoot = root

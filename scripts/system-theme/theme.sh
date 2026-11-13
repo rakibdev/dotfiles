@@ -10,7 +10,7 @@ for arg in "$@"; do
 done
 
 $themeCli "$@" --template "$templatesDir/foot.ini" > ~/.config/foot/colors.ini
-$themeCli "$@" --template "$templatesDir/hyprland.conf" > ~/.config/hypr/colors.conf
+$themeCli "$@" --template "$templatesDir/hyprland.lua" > ~/.config/hypr/colors.lua
 
 colorsOutput=$($themeCli "$@" --template "$templatesDir/gtk.css")
 
@@ -20,7 +20,7 @@ mkdir -p ~/.config/system-ui
 $themeCli "$@" --template "$templatesDir/gtk.css" --glass > ~/.config/system-ui/colors.css
 $themeCli "$@" --template "$templatesDir/nvim.lua" --glass > ~/.config/nvim/lua/colors.lua
 
-$themeCli "$@" | \
+$themeCli "$@" --glass | \
   jq --argjson darkMode $darkMode '. + {darkMode: $darkMode}' \
   > ~/.config/system-ui/theme.json
 

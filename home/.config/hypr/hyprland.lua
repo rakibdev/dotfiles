@@ -2,13 +2,15 @@ local home = os.getenv("HOME")
 local scripts = home .. "/Downloads/dotfiles/scripts"
 local ui = "/usr/bin/ui"
 
+dofile(home .. "/.config/hypr/colors.lua")
+
 hl.monitor({ output = "", mode = "highrr", position = "auto", scale = 1 })
 
 hl.env("XCURSOR_THEME", "Bibata-Modern-Classic")
 hl.env("XCURSOR_SIZE", "18")
 
 hl.on("hyprland.start", function()
-	hl.exec_cmd("hyprctl plugin load " .. home .. "/Downloads/dotfiles/hyprland-scrolling/libhyprland-scrolling.so")
+	hl.exec_cmd("hyprctl plugin load " .. home .. "/Downloads/dotfiles/hyprland-overview/libhyprland-overview.so")
 	hl.exec_cmd("mako")
 	hl.exec_cmd("wl-paste --type image/png --watch cat > /tmp/copy.png")
 	hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
@@ -43,8 +45,8 @@ hl.config({
 		rounding = 20,
 		blur = {
 			enabled = true,
-			size = 6,
-			passes = 2,
+size = 5,
+passes = 1,
 			popups = true,
 		},
 	},
@@ -108,34 +110,6 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("media previous"))
 
 hl.bind("Page_Up", hl.dsp.exec_cmd(scripts .. "/capture/screenshot.sh --selection"))
 hl.bind("ALT + Page_Up", hl.dsp.exec_cmd(scripts .. "/capture/screenshot.sh --selection --google-lens"))
-
-local cycleForward = true
-hl.bind("mouse:276", function()
-	local win = hl.get_active_window()
-	if not win then
-		return
-	end
-
-	local isLast = true
-	local isFirst = true
-	for _, w in ipairs(hl.get_workspace_windows(hl.get_active_workspace())) do
-		if w.at.x > win.at.x then
-			isLast = false
-		end
-		if w.at.x < win.at.x then
-			isFirst = false
-		end
-	end
-
-	if isLast then
-		cycleForward = false
-	elseif isFirst then
-		cycleForward = true
-	end
-
-	hl.dispatch(hl.dsp.layout(cycleForward and "move +col" or "move -col"))
-	cycleForward = not cycleForward
-end)
 
 hl.bind("mouse:275", function()
 	local w = hl.get_active_window()
